@@ -24,7 +24,7 @@ Task 1: minor (deferred): input integer strings are coerced by Pydantic while ex
 Task 1: minor (deferred): operation_ids reordering changes the numerical design hash despite equivalent operation routing.
 Task 2: in progress; /root/engine, BASE 5f05d47; owns simulation/assessment/numerical fixtures and tests.
 Task 3: in progress; /root/application, BASE 5f05d47; owns API/storage/jobs/coach and related tests; HTTP schema publication precedes frontend dispatch.
-Task 4: pending.
+Task 4: in progress; /root/frontend, consumes backend/openapi.json and .implementation/http-interface.md; owns frontend/ only. Core 17 API paths published; remaining endpoint schemas will follow without changing core shapes.
 Task 5: pending.
 
 Ruling: After the shared contracts pass review, use the dispatching-parallel-agents skill for disjoint engine and application-service implementations, followed by frontend once HTTP shapes are published. The frozen handoff is .implementation/interfaces.md; owners do not modify each other's modules. This replaces serial dispatch only for these independent implementation surfaces and retains task reviews and real integration tests. Cost if wrong: interface mismatch caught and repaired at integration, without merging unverified behavior.

@@ -18,7 +18,7 @@ The API process writes files and owns job statuses/version manifests. It execute
 
 DATA-API-SPEC owns paths and field names. API schemas/OpenAPI are authoritative. Before frontend work begins, API implementer publishes the expanded endpoint shapes here or in a checked-in OpenAPI file. Frontend may build isolated components using test-only fixtures, but production paths must use actual API responses. Never ship fake simulation or model output.
 
-All case metrics use `MetricValue {value, unit, sample_count, reason}`. The exact existing Pydantic schemas must be used, not independent frontend approximations. Baseline/candidate differences and ranking are computed on the server.
+All case metrics use `MetricValue {value, unit, sample_count, unavailable_reason}`. The exact existing Pydantic schemas must be used, not independent frontend approximations. Baseline/candidate differences and ranking are computed on the server.
 
 ## Ownership during independent work
 
