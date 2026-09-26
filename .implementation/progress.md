@@ -19,11 +19,11 @@ Ruling: The provided folder is a new documentation-only workspace with no existi
 
 Task 1: in progress; implementer /root/contracts; BASE 1b280c8.
 Task 1: initial implementation eb79736, 12 tests passing; review /root/contracts_review requires strict per-component exported settings schema and rejection of nonfinite challenge rates. Fix round 1 in progress.
-Task 1: fix round 1 implemented in 98bf6c8; 14 tests passing, schemas regenerated; scoped review pending.
+Task 1: complete (implementation eb79736 + fix 98bf6c8; `.venv/bin/python -m pytest -q` → 14 passed; schema export and uv lock check passed; /root/contracts_review approved both Important fixes and found no new blocking breakage).
 Task 1: minor (deferred): input integer strings are coerced by Pydantic while exported schema requires integer values.
 Task 1: minor (deferred): operation_ids reordering changes the numerical design hash despite equivalent operation routing.
-Task 2: pending.
-Task 3: pending.
+Task 2: in progress; /root/engine, BASE 5f05d47; owns simulation/assessment/numerical fixtures and tests.
+Task 3: in progress; /root/application, BASE 5f05d47; owns API/storage/jobs/coach and related tests; HTTP schema publication precedes frontend dispatch.
 Task 4: pending.
 Task 5: pending.
 
