@@ -1,6 +1,8 @@
 # AI System Design Simulator — prototype documentation
 
-Version 0.1 · 26 September 2026 · Implementation specification, not a completed application
+Version 0.1 · 26 September 2026 · Product and implementation specifications
+
+For application setup and measured verification, start with the [project README](../README.md) and [acceptance evidence](ACCEPTANCE.md). This directory defines the product's intended behavior and document authority.
 
 Build an interactive lab where a learner selects a challenge, draws an architecture, simulates traffic, checks requirements, and tests AI-suggested improvements.
 
@@ -55,4 +57,4 @@ Version all contracts together. Do not silently alter a challenge threshold to m
 
 All default capacities and costs are teaching assumptions. Credits are fictional infrastructure units, not cloud quotations. Results apply to the specified simulation scenarios; they are not production certification, monthly availability forecasts, or proof of a globally optimal design.
 
-The documents are ready for implementation. No application, simulation results, cloud deployment, or runtime benchmark is included in this package.
+This directory preserves the specification package. The application, executed simulation fixtures, and runtime measurements now live in the repository; see the links above for their current verification status. Cloud deployment remains outside scope.

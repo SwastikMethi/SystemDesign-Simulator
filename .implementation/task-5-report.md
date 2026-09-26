@@ -1,0 +1,26 @@
+# Task 5 — integration and release evidence
+
+The implementation is on `feat/system-design-simulator`. The original specification remains under `docs/`; [README.md](../README.md) contains runnable local setup and the optional provider configuration. PRD coverage and measurement limits are recorded in [ACCEPTANCE.md](../docs/ACCEPTANCE.md).
+
+## Numerical verification
+
+- `.venv/bin/python -m backend.fixtures --output .implementation/release-fixtures.json` executed **20 designs and 240 cases** on the corrected engine. Every case completed. All five references passed and all ten intended/budget failures failed. No thresholds or workload seeds were changed. The largest case executed **357,734 events**, below the binding 2,000,000 cap.
+- The full matrix took **322.416 seconds** during concurrent integration work. It used 185,188,352 bytes peak RSS, 152,076,288 bytes above startup. This is not the isolated catalogue benchmark.
+- The isolated catalogue reference benchmark completed all 15 cases in **30.472 seconds**, with **125,222,912 additional peak RSS bytes** (~119.4 MiB), meeting the specified engine targets on Apple M1 Max / 32 GiB. It excludes API persistence, browser rendering and provider requests.
+- The full backend checkpoint after independent engine/API fixes passed **63 tests in 111.06 seconds**, with one dependency deprecation warning. The subsequent review/comparison restart and coach payload changes passed **17 focused tests in 10.95 seconds**; the unchanged long numerical API test was deselected. These are separate executed checkpoints, not a claim that the later code ran in the earlier suite.
+- Focused release checks in `tests/test_storage_jobs.py` exposed a pre-acceptance write failure that left a run queued. Commit `03e2d8c` persists the run, workload and idempotency link before enqueue and rolls them back if that setup fails or the queue is full. **18 API/storage tests passed in 8.73 seconds**, excluding the unchanged long comparison test. Checks inject actual file replacement/link failures, preserve old immutable evidence, terminalize queued/running simulations after restart, cancel a queued run through the real API/manager path, and exercise `Last-Event-ID` replay plus the actual 256-event stream buffer's resync behavior.
+- Pre-run Explain/Hint was added in `7c67c07` using the same provider transport and failure handling. **28 API/coach/storage/guidance tests passed in 12.28 seconds**, with the unchanged long comparison test deselected. Checks cover question-first hints, explicitly requested authored context, valid explanations, draft immutability, consent/provider errors, hostile labels, unsupported quantitative claims, malformed responses and guidance restart interruption.
+
+## Browser verification
+
+- Real Chromium inspection at **1440×900** and **1024×768** confirmed the challenge library and responsive editor. The palette and inspector collapse into drawers at the narrower viewport.
+- `node .implementation/browser-inspect.mjs --check-editor` reproduced the original controlled-node drag defect, then passed after the fix: the node follows the held pointer, remains at the dropped position, and one Undo restores its original position.
+- `node .implementation/browser-inspect.mjs --measure` on the updated UI measured **32.8 ms p95** pointer feedback across 20 selections and **16.8 ms p95** across 240 idle frame intervals, with no uncaught page errors. Raw samples are in `ui-performance.json`; screenshots are in `screenshots/`. This is not a 100-marker playback stress measurement.
+- The core frontend's real-server Playwright journey passed a failing catalogue assessment, operation evidence and recorded state inspection, a passing reference comparison, explicit adoption, real ZIP export/import, and replay controls with both motion preferences. Reopening and replaying saved results issued no AI review requests. A second journey checked the narrow editor. Build and two graph behavior tests passed. Independent review subsequently found UI race/identity defects and a valid-provider rendering defect; their fixes and scoped checks remain in progress.
+- The exported comparison archive was independently opened and CRC-checked: **147 entries, 18,344,457 compressed bytes**. It contains actual baseline/candidate results and workload artifacts. The original journey video lasts 122.68 seconds; its default 800×450 recording is being replaced with a readable 1440×900 recording during the next required browser rerun.
+
+## Review and release limits
+
+The task review history is in [reviews.md](reviews.md). The final frontend and whole-branch reviews are still in progress; this report is not a completed release claim until their results and the outstanding recovery/browser checks are recorded.
+
+No live-provider smoke test or five-person learning study has been performed. Controlled provider tests establish response handling, evidence validation and failure isolation; they do not establish model explanation quality or learning impact. The locked test client emits an `httpx` deprecation warning; production uses the configured `httpx` adapter.

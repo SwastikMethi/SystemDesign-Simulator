@@ -10,7 +10,7 @@ The application remains usable without an AI provider. Show deterministic findin
 
 ## 2. Provider boundary
 
-Use a server-side adapter with two operations: review and suggest_patches. Configuration includes provider/base URL, model ID and credential reference. Provider choice is left configurable because the user's available endpoint is not fixed for this project.
+Use a server-side adapter for review, bounded patch suggestions, and pre-run guidance (Explain/Hint). These operations share the provider transport, timeout, retry and metadata rules. Configuration includes provider/base URL, model ID and credential reference. Provider choice is left configurable because the user's available endpoint is not fixed for this project.
 
 Record prompt version, provider/model identifier, timestamps, latency, raw response, parsed response and validation errors. Token/currency fields remain null if not returned or reliably calculable. Do not mix provider spending with infrastructure credits.
 
@@ -26,15 +26,16 @@ Imported labels and descriptions are untrusted quoted data. Never treat them as 
 
 ## 4. Review output
 
-Required fields:
+The saved review includes an authoritative `assessment_status` and `summary`, both derived by the backend from the saved run. Provider output cannot supply either field. Prompt contract v2 rejects extra fields so a model-authored overall verdict cannot become the review header.
 
-- `summary`: concise plain-language account of the run.
+Required provider fields:
+
 - `strengths`: observations with evidence_refs.
 - `findings`: id, title, severity, requirement_id, node_ids, explanation, evidence_refs, and classification (`observed` or `hypothesis`).
 - `suggested_experiments`: up to two candidates, each with purpose, patch, evidence_refs and expected_tradeoffs.
 - `limitations`: relevant unsupported behaviors and assumptions.
 
-The backend supplies the overall verdict from assessment and renders it separately. Reject any response attempting to overwrite it.
+The backend renders the overall verdict and summary separately from the model's cited explanations and hypotheses. Reject any response attempting to overwrite them. A prose filter may reject unsupported verdict language in explanations, but it is not the source of assessment authority.
 
 Numerical claims must cite an existing evidence item or a validated calculation over evidence items. If the model says a candidate will reduce latency, show that as a hypothesis until the candidate has been simulated. Never synthesize confidence percentages or performance improvements.
 
@@ -67,6 +68,8 @@ The comparison objective defaults to minimum credits/hour among fully passing ca
 **Review:** explain observed failures after assessment.
 
 **Experiment:** propose and test a change. Keep component/route edits inspectable.
+
+Explain and Hint are available for a saved, schema-safe draft, including an incomplete architecture. They send authored challenge/profile context and the frozen design revision, with no invented run or measured outcomes. Label this context as authored rather than observed. Hint initially returns a question; the learner explicitly requests the evidence step. Save the guidance, source revision, provider metadata and validation errors independently of simulation results. The same explicit consent and provider-unavailable behavior applies as for reviews.
 
 Suggested copy: “The database had a growing waiting queue during the burst. Adding app instances might increase pressure on it. Compare that change with caching repeated reads.” Use conditional language until the comparison exists.
 

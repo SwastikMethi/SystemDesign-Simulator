@@ -15,3 +15,4 @@ test-results/
 playwright-report/
 .coverage
 *.egg-info/
+.implementation/screenshots/demo-*.png

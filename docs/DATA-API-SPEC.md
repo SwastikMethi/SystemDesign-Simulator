@@ -93,6 +93,8 @@ Base path `/api/v1`. All POST bodies use validated JSON.
 | GET /runs/{id}/cases/{case_id}/traces/{trace_id} | Selected detailed trace |
 | POST /runs/{id}/reviews | Request AI review; 202 with review_id |
 | GET /runs/{id}/reviews/{review_id} | Review status and validated content |
+| POST /designs/{id}/guidance | Explain or Hint for a saved revision; explicit consent; 202 with guidance_id |
+| GET /designs/{id}/guidance/{guidance_id} | Saved guidance, authored references, provider metadata and errors |
 | POST /comparisons | Baseline plus candidate patches/revisions; 202 with comparison_id |
 | GET /comparisons/{id} | Compatible run links, status, computed differences and objective |
 | POST /exports | Export selected designs/runs/comparison; returns local download token |
