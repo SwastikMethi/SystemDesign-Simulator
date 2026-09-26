@@ -162,6 +162,20 @@ class Store:
                     if isinstance(review, dict) and review.get("status") in {"queued", "running"}:
                         review.update(status="failed", error="Backend restarted; review interrupted. Request a new review.", finished_at=datetime.now(timezone.utc).isoformat())
                         self.write_json(path, review)
+        for design_id in self.ids("designs"):
+            guidance_dir = self.path("designs", design_id, "guidance")
+            if not guidance_dir.exists():
+                continue
+            for path in guidance_dir.glob("*.json"):
+                if path.is_symlink() or not SAFE_ID.fullmatch(path.stem):
+                    continue
+                try:
+                    guidance = self.read_json(path)
+                except (OSError, ValueError):
+                    continue
+                if isinstance(guidance, dict) and guidance.get("status") in {"queued", "running"}:
+                    guidance.update(status="failed", error="Backend restarted; guidance interrupted. Request new guidance.", finished_at=datetime.now(timezone.utc).isoformat())
+                    self.write_json(path, guidance)
         comparisons = self.path("comparisons")
         if comparisons.exists():
             for path in comparisons.glob("*.json"):

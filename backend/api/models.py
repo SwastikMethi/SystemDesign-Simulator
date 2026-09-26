@@ -196,6 +196,43 @@ class ReviewRecord(Strict):
     raw_response: str | None = None
 
 
+class GuidanceRequest(Strict):
+    revision_id: str
+    mode: Literal["hint", "explain"]
+    focus: str | None = Field(default=None, max_length=160)
+    evidence_step: bool = False
+    consent: Literal[True]
+
+
+class GuidanceAccepted(Strict):
+    guidance_id: str
+    status: Literal["queued"] = "queued"
+
+
+class GuidanceRecord(Strict):
+    guidance_id: str
+    design_id: str
+    revision_id: str
+    mode: Literal["hint", "explain"]
+    focus: str | None = None
+    evidence_step: bool = False
+    status: Literal["queued", "completed", "failed"]
+    question: str | None = None
+    explanation: str | None = None
+    authored_refs: list[str] = []
+    provider: str | None = None
+    model: str | None = None
+    prompt_version: str | None = None
+    created_at: datetime
+    finished_at: datetime | None = None
+    latency_ms: int | None = None
+    usage: dict[str, Any] | None = None
+    cost: float | None = None
+    error: str | None = None
+    validation_errors: list[str] = []
+    raw_response: str | None = None
+
+
 class CandidateInput(Strict):
     revision_id: str | None = None
     design_id: str | None = None

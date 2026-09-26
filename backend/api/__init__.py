@@ -25,7 +25,7 @@ from pydantic import ValidationError
 from backend.api.jobs import ASSESSMENT_VERSION, ENGINE_VERSION, Jobs, completion_eligible, now
 from backend.api.models import *
 from backend.content import list_challenges, load_challenge, load_fixture
-from backend.coach import PROMPT_VERSION, ProviderOutputError, render_review, request_review, validate_review
+from backend.coach import GUIDANCE_PROMPT_VERSION, PROMPT_VERSION, ProviderOutputError, render_review, request_guidance, request_review, validate_guidance, validate_review
 from backend.contracts import PROFILES, SETTINGS, Challenge, DesignRevision, apply_patch, compile_design, design_hash, validate_draft
 from backend.storage import Store, digest, new_id, valid_id
 from backend.simulation import fault_bindings
@@ -215,6 +215,48 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     @app.get("/api/v1/designs/{design_id}/revisions/{revision_id}", response_model=DesignRevision)
     def get_revision(design_id: str, revision_id: str):
         return _design(store(), design_id, revision_id)
+
+    @app.post("/api/v1/designs/{design_id}/guidance", response_model=GuidanceAccepted, status_code=202)
+    def create_guidance(design_id: str, body: GuidanceRequest):
+        design = _design(store(), design_id, body.revision_id)
+        challenge = _challenge(design.challenge_id, design.challenge_version)
+        if body.mode == "explain" and body.evidence_step:
+            raise problem(422, "invalid_guidance", "Evidence step applies only to hints")
+        settings = health()
+        if not settings.ai_configured:
+            raise problem(503, "provider_unavailable", "AI provider is not configured", retryable=True)
+        guidance_id = new_id("guidance")
+        record = GuidanceRecord(guidance_id=guidance_id, design_id=design.design_id, revision_id=design.revision_id, mode=body.mode, focus=body.focus, evidence_step=body.evidence_step, status="queued", provider=os.getenv("AISD_AI_BASE_URL"), model=settings.ai_model, prompt_version=GUIDANCE_PROMPT_VERSION, created_at=datetime.now(timezone.utc))
+        path = store().path("designs", design.design_id, "guidance", guidance_id).with_suffix(".json")
+        store().write_json(path, record.model_dump(mode="json"))
+        def work():
+            current = record.model_dump(mode="json")
+            try:
+                parsed, raw, usage, latency = request_guidance(challenge, design, body.mode, body.focus, body.evidence_step)
+                current.update(raw_response=raw, usage=usage, latency_ms=latency)
+                validated = validate_guidance(parsed, body.mode, body.evidence_step, challenge, design)
+                current.update(validated.model_dump(mode="json"), status="completed")
+            except ProviderOutputError as exc:
+                current.update(status="failed", error=str(exc)[:500], validation_errors=[str(exc)[:500]], raw_response=exc.raw_response, usage=exc.usage, latency_ms=exc.latency_ms)
+            except Exception as exc:
+                current.update(status="failed", error=str(exc)[:500], validation_errors=[str(exc)[:500]])
+            current["finished_at"] = now()
+            try:
+                saved = GuidanceRecord.model_validate(current)
+            except ValidationError:
+                fallback = record.model_dump(mode="json")
+                fallback.update(status="failed", finished_at=current["finished_at"], error="Invalid provider response metadata", validation_errors=["Invalid provider response metadata"], raw_response=current.get("raw_response") if isinstance(current.get("raw_response"), str) else None)
+                saved = GuidanceRecord.model_validate(fallback)
+            store().write_json(path, saved.model_dump(mode="json"))
+        threading.Thread(target=work, daemon=True).start()
+        return GuidanceAccepted(guidance_id=guidance_id)
+
+    @app.get("/api/v1/designs/{design_id}/guidance/{guidance_id}", response_model=GuidanceRecord)
+    def get_guidance(design_id: str, guidance_id: str):
+        try:
+            return GuidanceRecord.model_validate(store().read_json(store().path("designs", valid_id(design_id), "guidance", valid_id(guidance_id)).with_suffix(".json")))
+        except (ValueError, ValidationError, FileNotFoundError):
+            raise problem(404, "not_found", "Guidance not found") from None
 
     @app.post("/api/v1/designs/validate", response_model=ValidationResult)
     def validate_design(body: DesignInput):

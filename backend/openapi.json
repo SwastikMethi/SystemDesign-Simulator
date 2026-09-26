@@ -373,6 +373,103 @@
         }
       }
     },
+    "/api/v1/designs/{design_id}/guidance": {
+      "post": {
+        "summary": "Create Guidance",
+        "operationId": "create_guidance_api_v1_designs__design_id__guidance_post",
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Design Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuidanceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidanceAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/designs/{design_id}/guidance/{guidance_id}": {
+      "get": {
+        "summary": "Get Guidance",
+        "operationId": "get_guidance_api_v1_designs__design_id__guidance__guidance_id__get",
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Design Id"
+            }
+          },
+          {
+            "name": "guidance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Guidance Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidanceRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/designs/validate": {
       "post": {
         "summary": "Validate Design",
@@ -2828,6 +2925,276 @@
         "additionalProperties": false,
         "type": "object",
         "title": "GatewaySettings"
+      },
+      "GuidanceAccepted": {
+        "properties": {
+          "guidance_id": {
+            "type": "string",
+            "title": "Guidance Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "queued",
+            "title": "Status",
+            "default": "queued"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "guidance_id"
+        ],
+        "title": "GuidanceAccepted"
+      },
+      "GuidanceRecord": {
+        "properties": {
+          "guidance_id": {
+            "type": "string",
+            "title": "Guidance Id"
+          },
+          "design_id": {
+            "type": "string",
+            "title": "Design Id"
+          },
+          "revision_id": {
+            "type": "string",
+            "title": "Revision Id"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "hint",
+              "explain"
+            ],
+            "title": "Mode"
+          },
+          "focus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus"
+          },
+          "evidence_step": {
+            "type": "boolean",
+            "title": "Evidence Step",
+            "default": false
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "completed",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "question": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Question"
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Explanation"
+          },
+          "authored_refs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Authored Refs",
+            "default": []
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "prompt_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Version"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usage"
+          },
+          "cost": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "validation_errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Validation Errors",
+            "default": []
+          },
+          "raw_response": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Response"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "guidance_id",
+          "design_id",
+          "revision_id",
+          "mode",
+          "status",
+          "created_at"
+        ],
+        "title": "GuidanceRecord"
+      },
+      "GuidanceRequest": {
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "title": "Revision Id"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "hint",
+              "explain"
+            ],
+            "title": "Mode"
+          },
+          "focus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus"
+          },
+          "evidence_step": {
+            "type": "boolean",
+            "title": "Evidence Step",
+            "default": false
+          },
+          "consent": {
+            "type": "boolean",
+            "const": true,
+            "title": "Consent"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "revision_id",
+          "mode",
+          "consent"
+        ],
+        "title": "GuidanceRequest"
       },
       "HTTPValidationError": {
         "properties": {
