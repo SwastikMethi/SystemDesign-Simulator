@@ -1,0 +1,2091 @@
+{
+  "measurement": {
+    "clock": "time.perf_counter wall seconds",
+    "memory": "resource.getrusage(RUSAGE_SELF).ru_maxrss peak RSS; bytes on macOS",
+    "platform": "darwin",
+    "baseline_rss": 33243136,
+    "total_seconds": 27.093,
+    "peak_rss": 174718976,
+    "additional_peak_rss": 141475840
+  },
+  "fixtures": [
+    {
+      "challenge_id": "product-catalogue",
+      "fixture": "reference",
+      "status": "pass",
+      "seconds": 27.006,
+      "cases": [
+        {
+          "scenario_id": "steady",
+          "seed": 101,
+          "seconds": 1.175,
+          "requests": 14533,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 11531,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 578,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.611,
+                "unit": "ms",
+                "sample_count": 11531,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 58.872,
+                "unit": "ms",
+                "sample_count": 578,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 11531,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 11531,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 578,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 202,
+          "seconds": 1.199,
+          "requests": 14316,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 11294,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 596,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.963,
+                "unit": "ms",
+                "sample_count": 11294,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 58.781,
+                "unit": "ms",
+                "sample_count": 596,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 11294,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 11294,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 596,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 303,
+          "seconds": 1.208,
+          "requests": 14214,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 11221,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 591,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.679,
+                "unit": "ms",
+                "sample_count": 11221,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 59.894,
+                "unit": "ms",
+                "sample_count": 591,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 11221,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 11221,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 591,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 404,
+          "seconds": 1.22,
+          "requests": 14523,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 11437,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 624,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.755,
+                "unit": "ms",
+                "sample_count": 11437,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 58.396,
+                "unit": "ms",
+                "sample_count": 624,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 11437,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 11437,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 624,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 505,
+          "seconds": 1.269,
+          "requests": 14643,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 11547,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 643,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.827,
+                "unit": "ms",
+                "sample_count": 11547,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 57.906,
+                "unit": "ms",
+                "sample_count": 643,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 11547,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 11547,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 643,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 101,
+          "seconds": 2.155,
+          "requests": 24110,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20607,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1079,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 36.939,
+                "unit": "ms",
+                "sample_count": 20607,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 58.236,
+                "unit": "ms",
+                "sample_count": 1079,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20607,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20607,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1079,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 202,
+          "seconds": 2.045,
+          "requests": 24102,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20568,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1108,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 36.905,
+                "unit": "ms",
+                "sample_count": 20568,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 58.614,
+                "unit": "ms",
+                "sample_count": 1108,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20568,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20568,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1108,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 303,
+          "seconds": 2.117,
+          "requests": 23832,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20314,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1116,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 36.61,
+                "unit": "ms",
+                "sample_count": 20314,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 58.491,
+                "unit": "ms",
+                "sample_count": 1116,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20314,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20314,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1116,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 404,
+          "seconds": 2.102,
+          "requests": 24047,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20576,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 36.843,
+                "unit": "ms",
+                "sample_count": 20576,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 57.919,
+                "unit": "ms",
+                "sample_count": 1009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20576,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20576,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 505,
+          "seconds": 2.062,
+          "requests": 23833,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20280,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1100,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 36.931,
+                "unit": "ms",
+                "sample_count": 20280,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 58.93,
+                "unit": "ms",
+                "sample_count": 1100,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20280,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20280,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1100,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "cold_cache",
+          "seed": 101,
+          "seconds": 2.175,
+          "requests": 24110,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20607,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-101:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1079,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-101:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "cold_cache",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.011,
+                "unit": "ms",
+                "sample_count": 20607,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-101:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "cold_cache",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 57.761,
+                "unit": "ms",
+                "sample_count": 1079,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-101:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "cold_cache",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20607,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-101:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "cold_cache",
+              "seed": 101,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20607,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-101:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "cold_cache",
+              "seed": 101,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1079,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-101:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "cold_cache",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-101:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "cold_cache",
+          "seed": 202,
+          "seconds": 2.031,
+          "requests": 24102,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20568,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-202:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1108,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-202:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "cold_cache",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.137,
+                "unit": "ms",
+                "sample_count": 20568,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-202:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "cold_cache",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 59.354,
+                "unit": "ms",
+                "sample_count": 1108,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-202:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "cold_cache",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20568,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-202:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "cold_cache",
+              "seed": 202,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20568,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-202:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "cold_cache",
+              "seed": 202,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1108,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-202:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "cold_cache",
+              "seed": 202,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-202:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "cold_cache",
+          "seed": 303,
+          "seconds": 2.141,
+          "requests": 23832,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20314,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-303:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1116,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-303:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "cold_cache",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.18,
+                "unit": "ms",
+                "sample_count": 20314,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-303:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "cold_cache",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 59.383,
+                "unit": "ms",
+                "sample_count": 1116,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-303:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "cold_cache",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20314,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-303:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "cold_cache",
+              "seed": 303,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20314,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-303:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "cold_cache",
+              "seed": 303,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1116,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-303:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "cold_cache",
+              "seed": 303,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-303:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "cold_cache",
+          "seed": 404,
+          "seconds": 2.087,
+          "requests": 24047,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20576,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-404:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-404:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "cold_cache",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.18,
+                "unit": "ms",
+                "sample_count": 20576,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-404:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "cold_cache",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 58.954,
+                "unit": "ms",
+                "sample_count": 1009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-404:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "cold_cache",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20576,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-404:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "cold_cache",
+              "seed": 404,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20576,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-404:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "cold_cache",
+              "seed": 404,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-404:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "cold_cache",
+              "seed": 404,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-404:R07:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "cold_cache",
+          "seed": 505,
+          "seconds": 2.016,
+          "requests": 23833,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 20280,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-505:R01:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R01",
+              "scenario_id": "cold_cache",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 1100,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-505:R01:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "cold_cache",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 37.075,
+                "unit": "ms",
+                "sample_count": 20280,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-505:R02:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "cold_cache",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 57.88,
+                "unit": "ms",
+                "sample_count": 1100,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-505:R03:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "cold_cache",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 20280,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-505:R04:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "cold_cache",
+              "seed": 505,
+              "operation_id": "read_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "fraction",
+                "sample_count": 20280,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-505:R05:read_product"
+              ]
+            },
+            {
+              "requirement_id": "R06",
+              "scenario_id": "cold_cache",
+              "seed": 505,
+              "operation_id": "write_product",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 1100,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-505:R06:write_product"
+              ]
+            },
+            {
+              "requirement_id": "R07",
+              "scenario_id": "cold_cache",
+              "seed": 505,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 82.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "cold_cache-505:R07:design"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
