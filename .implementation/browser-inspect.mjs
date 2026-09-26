@@ -71,5 +71,21 @@ if (process.argv.includes('--check-editor')) {
   assert(Math.hypot(undone.x - before.x, undone.y - before.y) < 2, 'Undo must restore the node position');
   console.log('Browser editor check passed: drag moves the node and Undo restores its position.');
 }
+if (process.argv.includes('--check-keyboard')) {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const before = await page.locator('.react-flow__node').count();
+  await page.getByRole('button', { name: 'Add component by keyboard', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', { name: 'Add component', exact: true });
+  await dialog.getByRole('textbox', { name: 'Search', exact: true }).fill('Cache');
+  await page.keyboard.press('Tab');
+  assert.match(await page.locator(':focus').innerText(), /Cache/);
+  await page.keyboard.press('Enter');
+  await page.waitForFunction(count => document.querySelectorAll('.react-flow__node').length === count + 1, before);
+  await page.getByRole('button', { name: 'Undo', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await page.waitForFunction(count => document.querySelectorAll('.react-flow__node').length === count, before);
+  console.log('Keyboard check passed: Enter opens the component dialog, search/Tab/Enter adds a cache, and keyboard Undo restores the graph.');
+}
 assert.deepEqual(errors, [], 'The browser must not report uncaught page errors');
 await browser.close();

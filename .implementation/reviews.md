@@ -49,4 +49,10 @@ Independent review of frozen `08a5382` (including `RecordedGraph` from `337ccd8`
 
 Minor findings: challenge completion status remains stale until reload, and saving an edited revision can hide the unassessed badge while leaving the old result indicator. Both are included in the same correction round.
 
-The reviewer executed focused reproductions of the valid-coach rendering crash and operation-specific evidence mismatch. The shared comparison selector already includes both scenario and seed; no finding remains there. Pre-run Explain/Hint was already assigned as pending scope and was excluded from this frozen review. One consolidated correction was sent to the frontend owner; scoped re-review remains pending.
+The reviewer executed focused reproductions of the valid-coach rendering crash and operation-specific evidence mismatch. The shared comparison selector already includes both scenario and seed; no finding remains there. Pre-run Explain/Hint was already assigned as pending scope and was excluded from this frozen review. One consolidated correction was sent to the frontend owner.
+
+Scoped round 1 (`e76b8c9`) addressed all six Important findings and both Minor findings. Build, four focused unit tests, the full real-server journey and narrow editor, and a delayed-response race check passed. The new Explain/Hint panel matches its backend contract.
+
+The scoped reviewer reproduced two new Important regressions in the context-reset changes: leaving during a pending load strands `busy=true`, and failed run creation restores the prior run without its active identity/subscription. Both are assigned to the same owner in correction round 2; they require focused failure/navigation checks, not another numerical matrix run.
+
+Scoped round 2 (`5a38139`): both regressions **ADDRESSED**, no new Critical/Important breakage. Leaving clears context-owned busy state; both rollback branches restore active identity, results, comparison and subscription through a shared activation path. Build, four unit checks and two focused real-server lifecycle checks pass. Independent verdicts: **Spec compliance Approved; task quality Approved**.

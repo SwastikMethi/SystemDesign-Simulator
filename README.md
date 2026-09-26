@@ -24,7 +24,7 @@ For frontend development, keep the backend running and run `npm run dev` inside 
 ## First exercise
 
 1. Open **Product catalogue**, inspect the requirements, and start with its initial design.
-2. Use **Quick preview** for a short experiment, then **Assess design** for all required scenarios and five seeds. Preview cannot earn completion.
+2. Use **Preview** for a short experiment, then **Assess design** for all required scenarios and five seeds. Preview cannot earn completion.
 3. Inspect a failed requirement and its trace or aggregate evidence. Playback only reads saved results.
 4. Change the architecture or reveal the reference after an attempt. Compare the saved revision with the immutable assessed baseline.
 5. Inspect both improvements and regressions, adopt a revision explicitly, and export the evidence from saved work.

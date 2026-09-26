@@ -4,20 +4,22 @@ This file maps the v0.1 PRD to implementation evidence. Pending rows are not rel
 
 | PRD | Required behavior | Evidence owner | Status |
 |---|---|---|---|
-| P01 | Five ranked playable challenges | Authored content validation; full fixture runner; library journey | Pending |
-| P02 | Ten editable component types, undo/redo/save | Compiler/profile tests; canvas behavior tests; browser journey | Pending |
+| P01 | Five ranked playable challenges | `tests/test_contracts.py`; all 20 designs/240 cases; ranked library and real learner journey | Verified |
+| P02 | Ten editable component types, undo/redo/save | Compiler/profile and graph tests; live drag/Undo; keyboard component dialog; saved-draft race regression | Verified |
 | P03 | Explicit validated operation routes | `tests/test_contracts.py`; all 20 authored designs compile; draft versus runnable rules | Verified |
 | P04 | Seeded event simulation and terminal outcomes | `tests/test_simulation.py`; exact timing, network conservation, cache races, late writes, shared workers, explicit priority and fault mapping regressions | Verified |
 | P05 | Four-state deterministic assessment with evidence | `tests/test_assessment.py`; all comparator/sample boundaries; final 240-case fixture run | Verified |
 | P06 | Grounded independent AI explanation | `tests/test_coach.py` and API review regressions: server-owned verdict, cited numerical claims, malformed responses, opt-in, and saved errors | Verified with controlled provider responses; live provider untested |
-| P07 | Two-candidate immutable matched comparison | Patch/hash/ranking tests; compare/adopt browser journey | Pending |
-| P08 | First-failure trace or aggregate replay | Saved evidence retention and replay navigation tests | Pending |
-| P09 | Cache assumptions and demand-shift experiment | Warm/cold fixtures; optional scenario scoring isolation | Pending |
-| P10 | Local history and export | Atomic storage; ZIP import/export/reproduction; saved-work journey | Pending |
-| P11 | Pause/speed/step/reduced motion | Browser behavior and manual visual inspection | Pending |
+| P07 | Two-candidate immutable matched comparison | API patch/hash/fault-binding/tie tests; loser preservation; real compare/adopt journey; baseline identity regression | Verified |
+| P08 | First-failure trace or aggregate replay | Exact engine traces; outcome/evidence API retrieval; operation-specific selection test; actual failure replay in Chromium | Verified |
+| P09 | Cache assumptions and demand-shift experiment | Warm/cold catalogue fixtures; seeded Zipf/segment checks; separate experiment mode; reviewed saved-work scenario selection | Verified |
+| P10 | Local history and export | Atomic storage and injected I/O errors; actual comparison ZIP import/export; canonical rerun validation and safe deletion regressions | Verified |
+| P11 | Pause/speed/step/reduced motion | Recorded-time replay, Play/Pause/Step under both motion settings, keyboard graph editing, visual inspection; no AI request during replay | Verified |
 | P12 | AI and interrupted-run failure handling | `tests/test_storage_jobs.py`, API/coach tests: injected write errors, queue rollback, queued cancellation, simulation/review/comparison restart, SSE replay/resync, preserved provider errors | Verified |
 
 ## Release measurements
+
+All 75 backend checks passed across the final sweep and one targeted integration rerun. Four frontend unit checks and six real-server browser checks passed across the documented runs. The browser checks cover the full learner journey at both 1440×900 and 1024×768, a narrow editor, delayed responses and failure recovery. Final whole-branch review is the remaining release check. Exact commands and the timing-only test correction are documented in [task-5-report.md](../.implementation/task-5-report.md).
 
 Final engine fixture verification: **20 designs, 240 completed cases**, with all five references passing and all ten intended/budget failures failing. Maximum case event count was **357,734**, below the 2,000,000 limit. Full matrix wall time was 322.416 seconds while other verification work was running. The exact unrounded requirement values, sample counts and verdicts are in [release-fixtures.json](../.implementation/release-fixtures.json). This rerun includes the corrected event priority, fair shared-worker dispatch, and fault applicability behavior.
 
@@ -37,4 +39,6 @@ Targets are at most 60 seconds and 2 GiB additional memory for the headless cata
 
 ## Manual validation
 
-Live-provider access and the five-person learning study cannot be replaced by deterministic test doubles. Mark each as performed or not performed; do not claim outcomes without observations. Review problem wording, feasibility, feedback and trace evidence for all released challenges.
+The editor was inspected at 1440×900 and 1024×768, with actual keyboard input, live dragging and reduced-motion replay checks. Recorded result views were inspected separately. Local artifacts include the [recorded journey](../frontend/screenshots/demo.webm), [failure view](../frontend/screenshots/failure-1440.png), [comparison view](../frontend/screenshots/comparison-1440.png), and [evidence ZIP](../frontend/screenshots/evidence.zip). The full narrow journey has a separate [recording](../frontend/screenshots/demo-1024.webm), [comparison view](../frontend/screenshots/comparison-1024-journey.png), and [evidence ZIP](../frontend/screenshots/evidence-1024.zip). These generated browser artifacts are retained locally and ignored by Git. The wide recording is 1440×900, 25 fps and 112.40 seconds; sampled frames from a 30-second sequence were inspected alongside full-page screenshots. Narrow journey screenshots showed readable controls and no horizontal clipping.
+
+Live-provider smoke: **not performed**. Five-person learning study: **not performed**. Controlled provider responses verify contracts and failure handling; they do not establish explanation quality or learning impact. The locked FastAPI/Starlette test client emits one `httpx` deprecation warning; no warning suppression was added.
