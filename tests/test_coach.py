@@ -54,7 +54,7 @@ def test_malformed_provider_content_keeps_raw_body(monkeypatch, usage):
     import httpx
     import backend.coach as coach
 
-    real_client = httpx.Client
+    real_client = httpx.AsyncClient
     def handler(request):
         sent = json.loads(request.content)
         context = json.loads(sent["messages"][1]["content"])
@@ -64,7 +64,7 @@ def test_malformed_provider_content_keeps_raw_body(monkeypatch, usage):
         assert context["support_limits"]["component_settings"]["app_service"]["max_retries"] == {"min": 0, "max": 2}
         assert context["support_limits"]["model_scope"]
         return httpx.Response(200, json={"choices": [{"message": {"content": "{bad-json"}}], "usage": usage})
-    monkeypatch.setattr(coach.httpx, "Client", lambda: real_client(transport=httpx.MockTransport(handler)))
+    monkeypatch.setattr(coach.httpx, "AsyncClient", lambda: real_client(transport=httpx.MockTransport(handler)))
     monkeypatch.setenv("AISD_AI_BASE_URL", "http://127.0.0.1:9999")
     monkeypatch.setenv("AISD_AI_MODEL", "test")
     monkeypatch.setenv("AISD_AI_API_KEY", "secret")
@@ -72,3 +72,63 @@ def test_malformed_provider_content_keeps_raw_body(monkeypatch, usage):
         request_review(load_challenge("product-catalogue"), load_fixture("product-catalogue", "reference"), [], {})
     assert failure.value.raw_response == "{bad-json"
     assert failure.value.usage is None
+
+
+@pytest.mark.parametrize("phase", ["connect", "body", "retry_body"])
+def test_total_deadline_cancels_transport_and_closes_partial_body(monkeypatch, phase):
+    import asyncio
+    import time
+    import httpx
+    import backend.coach as coach
+
+    actual_client = httpx.AsyncClient
+    budget = 1.1 if phase == "retry_body" else .15
+    calls, closed = [], []
+    class Trickle(httpx.AsyncByteStream):
+        async def __aiter__(self):
+            yield b'{"partial":'
+            while True:
+                await asyncio.sleep(.03)
+                yield b' '
+        async def aclose(self):
+            closed.append(True)
+    async def handler(request):
+        calls.append(request)
+        if phase == "connect":
+            try:
+                await asyncio.sleep(5)
+            finally:
+                closed.append(True)
+        if phase == "retry_body" and len(calls) == 1:
+            return httpx.Response(503, text="retry diagnostic")
+        return httpx.Response(200, stream=Trickle())
+    monkeypatch.setattr(coach, "PROVIDER_BUDGET_SECONDS", budget)
+    monkeypatch.setattr(coach.httpx, "AsyncClient", lambda: actual_client(transport=httpx.MockTransport(handler)))
+    monkeypatch.setenv("AISD_AI_BASE_URL", "http://127.0.0.1:9999")
+    monkeypatch.setenv("AISD_AI_MODEL", "test")
+    monkeypatch.setenv("AISD_AI_API_KEY", "secret")
+    started = time.monotonic()
+    with pytest.raises(coach.ProviderOutputError, match="total deadline") as failure:
+        request_review(load_challenge("product-catalogue"), load_fixture("product-catalogue", "reference"), [], {})
+    assert budget <= time.monotonic() - started < budget + .5
+    assert budget * 1000 <= failure.value.latency_ms < (budget + .5) * 1000
+    assert len(calls) == (2 if phase == "retry_body" else 1)
+    assert closed == [True]
+    assert failure.value.raw_response.startswith('{"partial":') if phase != "connect" else failure.value.raw_response == ""
+
+
+def test_provider_patch_converts_added_node_settings_and_keeps_bounds():
+    from backend.coach import ProviderPatch
+    challenge = load_challenge("team-notes")
+    design = load_fixture(challenge.challenge_id, "initial")
+    node = next(n for n in design.nodes if n.type == "app_service").model_dump(mode="json")
+    node.update(id="extra", settings=[{"key": "max_retries", "value": 1}])
+    patch = {"base_revision_id": design.revision_id, "operations": [{"op": "add_node", "node": node}]}
+    proposal = ProviderPatch.model_validate(patch).to_patch()
+    assert proposal["operations"][0]["node"]["settings"] == {"max_retries": 1}
+    assert validate_review({"strengths": [], "findings": [], "limitations": [], "suggested_experiments": [{"purpose": "Explore capacity", "patch": proposal, "evidence_refs": [], "expected_tradeoffs": "More cost"}]}, [], design, challenge)
+    with pytest.raises(ValueError):
+        ProviderPatch.model_validate({**patch, "operations": patch["operations"] * 21})
+    node["settings"].append({"key": "max_retries", "value": 2})
+    with pytest.raises(ValueError, match="duplicate"):
+        ProviderPatch.model_validate(patch).to_patch()

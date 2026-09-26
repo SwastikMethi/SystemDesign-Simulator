@@ -71,7 +71,7 @@ On an Apple M1 Max with 32 GiB RAM, the recorded catalogue benchmark completed 1
 - Each assessment evaluates every required scenario at seeds 101, 202, 303, 404, and 505, with 60 seconds of warmup, 300 seconds of measurement, and 30 seconds of drain per case.
 - Limits are 25 nodes, 60 edges, 32 instances per node, 100,000 original arrivals and 2,000,000 events per case, and two comparison candidates. Reaching the event cap makes the run incomplete.
 - One simulation process executes cases sequentially. Canceling or restarting preserves available evidence and does not resume an unfinished simulation silently.
-- Exports contain version and hash evidence. Imports preserve historical evidence as untrusted; a fresh graded rerun requires exact compatibility with the installed canonical workload. Importing an old pass never awards completion.
+- Exports contain version and hash evidence. Imports preserve historical evidence as untrusted; a fresh graded rerun requires exact compatibility with the installed canonical workload. Imported historical runs are retained in quarantine and are not listed in Saved work. Open the imported design and run it again for in-app results and replay. Importing an old pass never awards completion.
 - Results describe this model and its tested scenarios. They do not certify production infrastructure or identify a globally optimal architecture.
 
 The optional live-provider smoke test and five-person learning study have not been performed. Automated provider tests use controlled responses and do not establish model quality or learning impact.

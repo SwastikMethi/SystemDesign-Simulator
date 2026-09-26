@@ -43,6 +43,10 @@ Values in examples are proposed specification fixtures. Implementation must publ
 
 The numerical hash includes node IDs, types, profiles, instance counts, settings, edge IDs, endpoints, kinds, and operation scopes. It excludes labels, positions, revision IDs, and timestamps. Export JSON Schemas with `python -m backend.content content/schemas`. `content/fixtures/{challenge_id}/{initial|reference|failure|budget}.json` are authored hypotheses until executed across all required cases.
 
+Node, edge and operation-scope array ordering does not affect the numerical hash or execution. Route compilation uses canonical edge-ID order, including participating fault-role selection. Engine version `0.1.1` identifies this corrected behavior; comparisons reject baselines recorded with the earlier engine.
+
+JSON Schemas describe canonical serialized values. At the Pydantic input boundary, ordinary integer fields accept losslessly convertible integer strings (for example, `"instance_count":"1"`) and normalize them to integers before storage and hashing. Strict component policy settings retain their explicit type validation. This accepted boundary normalization does not change datetime parsing or general number coercion.
+
 The workload generator precomputes integer-microsecond original arrivals and stable payload IDs. Existing-key reads and product/note writes sample the authored uniform or Zipf distribution. `create_code` and `put_photo` receive unique new keys; this is an authored operation policy rather than a rule for all writes. Store versions advance at commit. Optional `hot_key_shift` rotates Zipf popularity by half the catalogue at measurement second 150 and cannot award completion.
 
 ## 4. Local artifact layout

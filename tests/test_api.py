@@ -135,7 +135,7 @@ def test_comparison_rejects_changed_required_fault_binding(tmp_path, monkeypatch
     challenge_digest = digest(challenge.model_dump(mode="json"))
     store.write_gzip_jsonl(store.path("workloads", bundle_id, case_id).with_suffix(".jsonl.gz"), [case.model_dump(mode="json")])
     store.write_json(store.path("workloads", bundle_id, "manifest").with_suffix(".json"), {"trusted": True, "challenge_id": challenge.challenge_id, "challenge_version": challenge.version, "challenge_hash": challenge_digest, "generator_version": GENERATOR_VERSION, "workload_hash": workload_digest})
-    manifest = RunManifest(run_id=run_id, mode="assessment", execution_status="completed", assessment_status="pass", design_id=baseline.design_id, revision_id=baseline.revision_id, challenge_id=challenge.challenge_id, challenge_version=challenge.version, challenge_hash=challenge_digest, engine_version="0.1.0", assessment_version="0.1.0", profile_version="0.1.0", profile_hash=api.profile_hash(), workload_generator_version=GENERATOR_VERSION, design_hash=design_hash(baseline), workload_hash=workload_digest, run_config_hash="config", workload_bundle_id=bundle_id, case_ids=[case_id], created_at=datetime.now(timezone.utc))
+    manifest = RunManifest(run_id=run_id, mode="assessment", execution_status="completed", assessment_status="pass", design_id=baseline.design_id, revision_id=baseline.revision_id, challenge_id=challenge.challenge_id, challenge_version=challenge.version, challenge_hash=challenge_digest, engine_version=api.ENGINE_VERSION, assessment_version="0.1.0", profile_version="0.1.0", profile_hash=api.profile_hash(), workload_generator_version=GENERATOR_VERSION, design_hash=design_hash(baseline), workload_hash=workload_digest, run_config_hash="config", workload_bundle_id=bundle_id, case_ids=[case_id], created_at=datetime.now(timezone.utc))
     store.save_run_manifest(manifest.model_dump(mode="json"))
     store.write_json(store.path("runs", run_id, "assessment").with_suffix(".json"), AssessmentResult(status="pass", case_results=[], requirement_outcomes=[]).model_dump(mode="json"))
     http = client(tmp_path)
@@ -147,6 +147,9 @@ def test_comparison_rejects_changed_required_fault_binding(tmp_path, monkeypatch
     assert len(record["rejected_candidates"]) == 2
     assert "fault" in record["rejected_candidates"][0]["validation_error"]
     assert "fault instance missing" in record["rejected_candidates"][1]["validation_error"]
+    store.save_run_manifest(manifest.model_copy(update={"engine_version": "0.1.0"}).model_dump(mode="json"))
+    incompatible = http.post("/api/v1/comparisons", json={"baseline_run_id": run_id, "candidates": [{"design_id": candidate.design_id, "revision_id": candidate.revision_id}]})
+    assert incompatible.status_code == 409 and "versions" in incompatible.json()["message"]
 
 
 def create_design(http, fixture="reference"):
@@ -288,13 +291,12 @@ def test_import_bounds_aggregate_expanded_workloads_before_committing(tmp_path, 
     assert Store(tmp_path).ids("workloads") == []
 
 
-def test_assessment_comparison_preserves_loser_and_progress(tmp_path):
+def test_assessment_comparison_preserves_loser_and_progress(tmp_path, monkeypatch):
     # This verifies persisted API behavior; the separate benchmark owns the
     # simulation speed target. Allow for worker contention in the full suite.
     integration_timeout_s = 120
     http = client(tmp_path)
     baseline = create_design(http, "reference")
-    candidate = create_design(http, "failure")
     body = {"design_id": baseline["design_id"], "revision_id": baseline["revision_id"], "challenge_id": "product-catalogue", "challenge_version": "0.1.0", "mode": "assessment"}
     response = http.post("/api/v1/runs", json=body)
     assert response.status_code == 202, response.text
@@ -317,7 +319,47 @@ def test_assessment_comparison_preserves_loser_and_progress(tmp_path):
     assert canonical_run.status_code == 202, canonical_run.text
     assert http.get(f"/api/v1/runs/{canonical_run.json()['run_id']}").json()["trusted_workload"] is True
     http.post(f"/api/v1/runs/{canonical_run.json()['run_id']}/cancel")
-    comparison = http.post("/api/v1/comparisons", json={"baseline_run_id": run_id, "candidates": [{"design_id": candidate["design_id"], "revision_id": candidate["revision_id"]}]})
+    # Propose a supported experiment using ONLY the real outbound provider context.
+    import httpx
+    import backend.coach as coach
+    from backend.content import load_challenge
+    from backend.contracts import DesignRevision
+    actual_client = httpx.AsyncClient
+    captured = []
+    def provider(request):
+        body = json.loads(request.content)
+        schema = body["response_format"]["json_schema"]
+        assert schema["strict"] is True
+        def check_objects(value):
+            if isinstance(value, dict):
+                if value.get("type") == "object":
+                    assert value.get("additionalProperties") is False
+                    assert set(value.get("required", [])) == set(value["properties"])
+                assert "oneOf" not in value and "default" not in value
+                for child in value.values(): check_objects(child)
+            elif isinstance(value, list):
+                for child in value: check_objects(child)
+        check_objects(schema["schema"])
+        context = json.loads(body["messages"][1]["content"])
+        captured.append(context)
+        node = next(node for node in context["design"]["nodes"] if node["settings"].get("invalidation") == "synchronous")
+        choice = next(choice for choice in context["support_limits"]["component_settings"][node["type"]]["invalidation"]["choices"] if choice != "synchronous")
+        assert "remove_edge" in context["patch_grammar"]["operations"]
+        patch = {"base_revision_id": context["design"]["revision_id"], "operations": [
+            *[{"op": "remove_edge", "edge_id": edge["id"]} for edge in context["design"]["edges"] if edge["source"] == node["id"] and edge["kind"] == "invalidate"],
+            {"op": "set_node_setting", "node_id": node["id"], "key": "invalidation", "value": choice}]}
+        payload = {"strengths": [], "findings": [], "limitations": [], "suggested_experiments": [{"purpose": "Test invalidation tradeoffs", "patch": patch, "expected_tradeoffs": "Less synchronous work may allow stale reads.", "evidence_refs": []}]}
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(payload)}}]})
+    monkeypatch.setattr(coach.httpx, "AsyncClient", lambda: actual_client(transport=httpx.MockTransport(provider)))
+    monkeypatch.setenv("AISD_AI_BASE_URL", "http://127.0.0.1:9999")
+    monkeypatch.setenv("AISD_AI_MODEL", "test")
+    monkeypatch.setenv("AISD_AI_API_KEY", "secret")
+    challenge, design = load_challenge("product-catalogue"), DesignRevision.model_validate(baseline["revision"])
+    payload, raw, usage, latency = coach.request_review(challenge, design, [], {})
+    validated = coach.validate_review(payload, [], design, challenge)
+    assert captured[0]["design"]["revision_id"] == baseline["revision_id"]
+    patch = validated.suggested_experiments[0].patch
+    comparison = http.post("/api/v1/comparisons", json={"baseline_run_id": run_id, "candidates": [{"patch": patch}]})
     assert comparison.status_code == 202, comparison.text
     comparison_id = comparison.json()["comparison_id"]
     deadline = time.monotonic() + integration_timeout_s

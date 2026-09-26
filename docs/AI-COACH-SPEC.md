@@ -43,6 +43,8 @@ Numerical claims must cite an existing evidence item or a validated calculation 
 
 Allowed operations: add_node, remove_node, set_node_setting, add_edge, remove_edge. Every patch declares base_revision_id and preserves the challenge/workload/rubric. Each operation uses explicit node/edge IDs, allowlisted types and valid profile settings.
 
+The provider receives the frozen `design.revision_id`, authored operations, profile/settings limits and the supported patch grammar. Its strict response schema uses closed objects with every field required, including explicit operation variants and one to twenty operations per patch. New-node settings are a bounded array of `{key,value}` entries in the provider response, converted to the existing settings object before the common patch validator runs. The thirty-second cancellable transport deadline covers connection, all response-body chunks and the single permitted transient retry; partial response diagnostics are retained on failure.
+
 Reject unknown components, forbidden settings, changed workload/price assumptions, removal of the client, invalid routes and stale base revisions. Invalid suggestions are shown as rejected proposals and may be regenerated once with validator feedback.
 
 Show the learner a diff and a short explanation before Apply revision. Test proposal creates an isolated candidate revision for simulation; it does not modify the active design.
