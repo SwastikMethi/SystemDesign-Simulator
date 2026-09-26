@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Design, Guidance } from '../api/client'
 import { api } from '../api/client'
+import { Dialog } from '../Dialog'
 
 type Props = { aiConfigured: boolean; onClose: () => void; saveDesign: () => Promise<Design | null> }
 
@@ -28,7 +29,7 @@ export function GuidancePanel({ aiConfigured, onClose, saveDesign }: Props) {
     finally { setBusy(false) }
   }
 
-  return <div className="modal-backdrop" onMouseDown={onClose}><div className="modal guidance-modal" role="dialog" aria-modal="true" aria-label="AI coach guidance" onMouseDown={event => event.stopPropagation()}>
+  return <Dialog label="AI coach guidance" className="guidance-modal" onClose={onClose}>
     <div className="panel-heading"><h2>AI coach</h2><button onClick={onClose}>Close</button></div>
     <p>Ask about this saved draft before running it. Guidance can explain authored requirements or ask a question; measured results still come only from simulation.</p>
     <div className="guidance-modes" role="group" aria-label="Guidance mode"><button className={mode === 'hint' ? 'active' : ''} onClick={() => { setMode('hint'); setGuidance(null) }}>Hint</button><button className={mode === 'explain' ? 'active' : ''} onClick={() => { setMode('explain'); setGuidance(null) }}>Explain</button></div>
@@ -38,5 +39,5 @@ export function GuidancePanel({ aiConfigured, onClose, saveDesign }: Props) {
     {aiConfigured && <button className="primary" disabled={busy || guidance?.status === 'queued'} onClick={() => ask(false)}>{mode === 'hint' ? 'Ask for hint' : 'Explain this design'}</button>}
     {error && <p className="finding" role="alert">Guidance unavailable: {error}</p>}
     {guidance && <div className="guidance-answer"><p className={`status ${guidance.status}`}>Guidance {guidance.status} · revision {guidance.revision_id.slice(0,12)}</p>{guidance.status === 'failed' ? <><p>AI guidance unavailable. Your draft and simulation controls remain available.</p><p>{guidance.error}</p>{guidance.validation_errors.length > 0 && <ul>{guidance.validation_errors.map((message,i) => <li key={i}>{message}</li>)}</ul>}</> : guidance.status === 'completed' ? <><h3>{guidance.mode === 'hint' ? 'A question to consider' : 'Explanation'}</h3>{guidance.question && <p>{guidance.question}</p>}{guidance.explanation && <p>{guidance.explanation}</p>}{guidance.authored_refs.length > 0 && <small>Authored sources: {guidance.authored_refs.join(', ')}</small>}{guidance.mode === 'hint' && !guidance.evidence_step && <button className="secondary" disabled={busy} onClick={() => ask(true)}>Show explanation</button>}</> : <p>Waiting for the provider. The saved draft remains available.</p>}</div>}
-  </div></div>
+  </Dialog>
 }

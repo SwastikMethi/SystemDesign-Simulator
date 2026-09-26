@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Pause, Play, Save } from 'lucide-react'
 import type { Challenge, Case, Design, Metric, Outcome, Results, Run, Snapshot, Trace } from '../api/client'
 import { api } from '../api/client'
 import { RecordedGraph } from './RecordedGraph'
-import { outcomeKey } from './evidence'
+import { evidenceTarget, outcomeKey } from './evidence'
 
 type Props = { challenge: Challenge; run: Run; results: Results | null; onError: (message: string) => void }
 const words = (value: string) => value.replaceAll('_', ' ')
@@ -30,9 +30,29 @@ export function ResultsView({ challenge, run, results, onError }: Props) {
   const snapshot = useMemo(() => [...snapshots].reverse().find(item => item.time_us <= timeUs) || snapshots[0], [snapshots, timeUs])
   const markers = useMemo(() => (trace?.events || []).slice(0, 100), [trace])
 
-  useEffect(() => { api.revision(run.design_id, run.revision_id).then(setDesign).catch(error => onError(error.message)) }, [run.design_id, run.revision_id])
-  useEffect(() => { if (!selectedCase) return; setTimeUs(0); setPlaying(false); setTraceId(''); setTrace(null); setFailureWindow(''); api.snapshots(run.run_id, selectedCase.case_id).then(page => setSnapshots(page.items)).catch(error => onError(error.message)) }, [run.run_id, selectedCase?.case_id])
-  useEffect(() => { if (!selectedCase || !traceId) { setTrace(null); return } api.trace(run.run_id, selectedCase.case_id, traceId).then(item => { setTrace(item); setTimeUs(item.events[0]?.time_us || 0) }).catch(error => onError(error.message)) }, [run.run_id, selectedCase?.case_id, traceId])
+  useEffect(() => {
+    let active = true
+    setDesign(null)
+    api.revision(run.design_id, run.revision_id).then(value => { if (active) setDesign(value) }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [run.design_id, run.revision_id])
+  useEffect(() => {
+    let active = true
+    setSnapshots([]); setTimeUs(0); setPlaying(false); setTraceId(''); setTrace(null); setFailureWindow('')
+    if (selectedCase) api.snapshots(run.run_id, selectedCase.case_id).then(page => { if (active) setSnapshots(page.items) }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [run.run_id, selectedCase?.case_id])
+  useEffect(() => {
+    if (!selectedCase || !selectedOutcome) return
+    const target = evidenceTarget(selectedCase, selectedOutcome)
+    setPlaying(false); setTraceId(target.traceId); setTimeUs(target.timeUs); setFailureWindow(target.description)
+  }, [run.run_id, selectedCase?.case_id, selectedOutcomeKey])
+  useEffect(() => {
+    let active = true
+    setTrace(null)
+    if (selectedCase && traceId) api.trace(run.run_id, selectedCase.case_id, traceId).then(item => { if (active) { setTrace(item); setTimeUs(item.events[0]?.time_us || 0) } }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [run.run_id, selectedCase?.case_id, traceId])
   useEffect(() => {
     if (!playing || !maxTime) return
     let frame = 0, last = 0
@@ -47,30 +67,16 @@ export function ResultsView({ challenge, run, results, onError }: Props) {
 
   const inspect = (outcome: Outcome) => {
     setSelectedOutcomeKey(outcomeKey(outcome))
-    const ref = outcome?.evidence_ids.find(item => selectedCase?.trace_refs.includes(item))
-    if (ref) setTraceId(ref)
+    if (!selectedCase) return
+    const target = evidenceTarget(selectedCase, outcome)
+    setPlaying(false); setTraceId(target.traceId); setTimeUs(target.timeUs); setFailureWindow(target.description)
   }
-  const firstFailure = async () => {
+  const firstFailure = () => {
     const failed = cases.flatMap(c => c.requirement_outcomes.filter(o => o.status === 'fail').map(o => ({ case: c, outcome: o }))).at(0)
     if (!failed) return
     setCaseId(failed.case.case_id)
     setSelectedOutcomeKey(outcomeKey(failed.outcome))
-    try {
-      const outcomes = await api.outcomes(run.run_id, failed.case.case_id)
-      const request = outcomes.requests.find(item => item.status !== 'success' && (!failed.outcome.operation_id || item.operation_id === failed.outcome.operation_id))
-      const job = outcomes.jobs.find(item => item.terminal_state !== 'delivered')
-      if (request) {
-        setFailureWindow(`Recorded ${request.status} request ${request.request_id}; arrival ${(request.arrival_us/1_000_000).toFixed(2)} s, terminal ${(request.terminal_us/1_000_000).toFixed(2)} s.`)
-        setTraceId(failed.case.trace_refs.find(ref => ref.endsWith(request.request_id)) || '')
-        setTimeUs(request.arrival_us)
-      } else if (job) {
-        setFailureWindow(`Recorded ${job.terminal_state} job ${job.job_id}. Inspect queue and worker state for this case.`)
-        setTimeUs(job.accepted_us || 0)
-      } else {
-        setFailureWindow('This is an aggregate failure. Inspect the scenario window and recorded queue states; one request cannot establish the cause.')
-        setTimeUs(0)
-      }
-    } catch (error) { onError((error as Error).message) }
+    if (failed.case.case_id === selectedCase?.case_id) inspect(failed.outcome)
   }
   const step = (direction: -1 | 1) => {
     setPlaying(false)

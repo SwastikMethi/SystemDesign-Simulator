@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CollectionItem, Comparison, Design, Review, Run, Snapshot } from '../api/client'
 import { api } from '../api/client'
 import { RecordedGraph } from './RecordedGraph'
+import { Dialog } from '../Dialog'
 
 type Candidate = { design_id?: string; revision_id?: string; patch?: Record<string, unknown> }
 type Props = { baseline: Run | null; comparison: Comparison | null; setComparison: (value: Comparison | null) => void; savedDesigns: CollectionItem[]; currentRevision: { designId: string; revisionId: string } | null; aiConfigured: boolean; onAdopt: (designId: string, revisionId: string) => void; onError: (message: string) => void }
@@ -26,18 +27,90 @@ export function ExperimentView({ baseline, comparison, setComparison, savedDesig
   const [candidateSnapshot, setCandidateSnapshot] = useState<Snapshot | null>(null)
   const ready = baseline?.mode === 'assessment' && baseline.execution_status === 'completed' && ['pass','fail'].includes(baseline.assessment_status)
 
-  useEffect(() => { if (!comparison || !['queued','running'].includes(comparison.status)) return; const timer = window.setInterval(() => api.comparison(comparison.comparison_id).then(setComparison).catch(error => onError(error.message)), 1000); return () => window.clearInterval(timer) }, [comparison?.comparison_id, comparison?.status])
-  useEffect(() => { Promise.all(savedDesigns.map(async item => { const meta = await api.design(item.id); return meta.revision_ids.map(revisionId => ({ designId: item.id, revisionId, title: item.title })) })).then(groups => setRevisionChoices(groups.flat())).catch(error => onError(error.message)) }, [savedDesigns])
-  useEffect(() => { if (!comparison?.candidate_run_ids.length) return; Promise.all(comparison.candidate_run_ids.map(id => api.run(id))).then(setCandidateRuns).catch(error => onError(error.message)) }, [comparison?.comparison_id, comparison?.status])
-  useEffect(() => { if (!comparison || comparison.status !== 'completed') return; Promise.all([comparison.baseline_run_id, ...comparison.candidate_run_ids].map(async id => { const result = await api.results(id); const cases = result.assessment?.case_results || result.cases; const metrics = cases.flatMap(c => Object.entries(c.operation_metrics).flatMap(([operation, values]) => Object.entries(values).map(([name, metric]) => ({ scenario: `${c.scenario_id} · seed ${c.seed}`, operation, name, value: metric.value === null ? `Unavailable${metric.unavailable_reason ? `: ${metric.unavailable_reason}` : ''}` : `${metric.value} ${metric.unit}` })))); return [id, { cases: cases.map(c => ({ id: c.case_id, scenario: `${c.scenario_id} · seed ${c.seed}` })), metrics }] as const })).then(entries => setComparisonResults(Object.fromEntries(entries))).catch(error => onError(error.message)) }, [comparison?.comparison_id, comparison?.status])
-  useEffect(() => { if (!baseline) return; api.revision(baseline.design_id, baseline.revision_id).then(setBaselineDesign).catch(error => onError(error.message)) }, [baseline?.revision_id])
-  useEffect(() => { const candidate = candidateRuns[selectedCandidate]; if (!candidate) return; api.revision(candidate.design_id, candidate.revision_id).then(setCandidateDesign).catch(error => onError(error.message)) }, [candidateRuns, selectedCandidate])
-  useEffect(() => { const candidate = candidateRuns[selectedCandidate]; const cases = candidate && comparisonResults[candidate.run_id]?.cases; const selectedCase = cases?.find(item => item.scenario === candidateScenario) || cases?.[0]; if (!candidate || !selectedCase) return; api.snapshots(candidate.run_id, selectedCase.id).then(page => setCandidateSnapshot(page.items[0] || null)).catch(error => onError(error.message)) }, [candidateRuns, selectedCandidate, candidateScenario, comparisonResults])
-  useEffect(() => { if (!review || !['queued','running'].includes(review.status) || !baseline) return; const timer = window.setInterval(() => api.review(baseline.run_id, review.review_id).then(setReview).catch(error => onError(error.message)), 1500); return () => window.clearInterval(timer) }, [review?.review_id, review?.status, baseline?.run_id])
+  const comparisonEpoch = useRef(0)
+  const reviewEpoch = useRef(0)
+  useEffect(() => () => { comparisonEpoch.current += 1; reviewEpoch.current += 1 }, [])
 
-  const start = async (candidates: Candidate[]) => { if (!baseline || !candidates.length) return; setBusy(true); try { const accepted = await api.compare({ baseline_run_id: baseline.run_id, candidates }); setComparison(await api.comparison(accepted.comparison_id)) } catch (error) { onError((error as Error).message) } finally { setBusy(false) } }
+  useEffect(() => {
+    if (!comparison || !['queued','running'].includes(comparison.status)) return
+    let active = true
+    const epoch = comparisonEpoch.current
+    const timer = window.setInterval(() => api.comparison(comparison.comparison_id).then(value => { if (active && epoch === comparisonEpoch.current) setComparison(value) }).catch(error => { if (active && epoch === comparisonEpoch.current) onError(error.message) }), 1000)
+    return () => { active = false; window.clearInterval(timer) }
+  }, [comparison?.comparison_id, comparison?.status])
+  useEffect(() => {
+    let active = true
+    setRevisionChoices([])
+    Promise.all(savedDesigns.map(async item => { const meta = await api.design(item.id); return meta.revision_ids.map(revisionId => ({ designId: item.id, revisionId, title: item.title })) })).then(groups => { if (active) setRevisionChoices(groups.flat()) }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [savedDesigns])
+  useEffect(() => {
+    let active = true
+    setCandidateRuns([]); setSelectedCandidate(0); setCandidateScenario('all')
+    if (comparison?.candidate_run_ids.length) Promise.all(comparison.candidate_run_ids.map(id => api.run(id))).then(value => { if (active) setCandidateRuns(value) }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [comparison?.comparison_id, comparison?.status])
+  useEffect(() => {
+    let active = true
+    setComparisonResults({})
+    if (comparison?.status === 'completed') Promise.all([comparison.baseline_run_id, ...comparison.candidate_run_ids].map(async id => { const result = await api.results(id); const cases = result.assessment?.case_results || result.cases; const metrics = cases.flatMap(c => Object.entries(c.operation_metrics).flatMap(([operation, values]) => Object.entries(values).map(([name, metric]) => ({ scenario: `${c.scenario_id} · seed ${c.seed}`, operation, name, value: metric.value === null ? `Unavailable${metric.unavailable_reason ? `: ${metric.unavailable_reason}` : ''}` : `${metric.value} ${metric.unit}` })))); return [id, { cases: cases.map(c => ({ id: c.case_id, scenario: `${c.scenario_id} · seed ${c.seed}` })), metrics }] as const })).then(entries => { if (active) setComparisonResults(Object.fromEntries(entries)) }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [comparison?.comparison_id, comparison?.status])
+  useEffect(() => {
+    let active = true
+    setBaselineDesign(null)
+    if (baseline) api.revision(baseline.design_id, baseline.revision_id).then(value => { if (active) setBaselineDesign(value) }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [baseline?.design_id, baseline?.revision_id])
+  useEffect(() => {
+    let active = true
+    const candidate = candidateRuns[selectedCandidate]
+    setCandidateDesign(null)
+    if (candidate) api.revision(candidate.design_id, candidate.revision_id).then(value => { if (active) setCandidateDesign(value) }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [candidateRuns, selectedCandidate])
+  useEffect(() => {
+    let active = true
+    setCandidateSnapshot(null)
+    const candidate = candidateRuns[selectedCandidate]
+    const cases = candidate && comparisonResults[candidate.run_id]?.cases
+    const selectedCase = cases?.find(item => item.scenario === candidateScenario) || cases?.[0]
+    if (candidate && selectedCase) api.snapshots(candidate.run_id, selectedCase.id).then(page => { if (active) setCandidateSnapshot(page.items[0] || null) }).catch(error => { if (active) onError(error.message) })
+    return () => { active = false }
+  }, [candidateRuns, selectedCandidate, candidateScenario, comparisonResults])
+  useEffect(() => {
+    if (!review || !['queued','running'].includes(review.status) || !baseline) return
+    let active = true
+    const epoch = reviewEpoch.current
+    const timer = window.setInterval(() => api.review(baseline.run_id, review.review_id).then(value => { if (active && epoch === reviewEpoch.current) setReview(value) }).catch(error => { if (active && epoch === reviewEpoch.current) onError(error.message) }), 1500)
+    return () => { active = false; window.clearInterval(timer) }
+  }, [review?.review_id, review?.status, baseline?.run_id])
+
+  const start = async (candidates: Candidate[]) => {
+    if (!baseline || !candidates.length) return
+    const epoch = ++comparisonEpoch.current
+    setBusy(true); setComparison(null)
+    try {
+      const accepted = await api.compare({ baseline_run_id: baseline.run_id, candidates })
+      if (epoch !== comparisonEpoch.current) return
+      const value = await api.comparison(accepted.comparison_id)
+      if (epoch === comparisonEpoch.current) setComparison(value)
+    } catch (error) { if (epoch === comparisonEpoch.current) onError((error as Error).message) }
+    finally { if (epoch === comparisonEpoch.current) setBusy(false) }
+  }
   const startSaved = async () => { await start(selected.map(key => { const [design_id, revision_id] = key.split('/'); return { design_id, revision_id } })) }
-  const startReview = async () => { if (!baseline) return; setBusy(true); try { const accepted = await api.startReview(baseline.run_id, comparison?.status === 'completed' ? comparison.comparison_id : undefined); setReview(await api.review(baseline.run_id, accepted.review_id)); setDisclosure(false) } catch (error) { onError((error as Error).message) } finally { setBusy(false) } }
+  const startReview = async () => {
+    if (!baseline) return
+    const epoch = ++reviewEpoch.current
+    setBusy(true); setReview(null)
+    try {
+      const accepted = await api.startReview(baseline.run_id, comparison?.status === 'completed' ? comparison.comparison_id : undefined)
+      if (epoch !== reviewEpoch.current) return
+      const value = await api.review(baseline.run_id, accepted.review_id)
+      if (epoch === reviewEpoch.current) { setReview(value); setDisclosure(false) }
+    } catch (error) { if (epoch === reviewEpoch.current) onError((error as Error).message) }
+    finally { if (epoch === reviewEpoch.current) setBusy(false) }
+  }
   const suggestions = (review?.suggested_experiments || []) as Suggestion[]
 
   return <div className="experiment-view"><div className="results-heading"><div><h2>Compare designs</h2><p>Test up to two alternatives against the baseline’s same scenarios and seeds. The baseline remains frozen.</p></div></div>
@@ -46,7 +119,7 @@ export function ExperimentView({ baseline, comparison, setComparison, savedDesig
       <section className="candidate-picker"><h3>Saved revision candidates</h3><p>Select one or two saved revisions. Changes in the editor must be saved first.</p><div className="candidate-list">{revisionChoices.map(item => { const key = `${item.designId}/${item.revisionId}`; return <label className="check" key={key}><input type="checkbox" checked={selected.includes(key)} disabled={item.designId === baseline.design_id && item.revisionId === baseline.revision_id || (!selected.includes(key) && selected.length >= 2)} onChange={e => setSelected(e.target.checked ? [...selected,key] : selected.filter(x => x !== key))}/>{item.title} <small>{item.revisionId.slice(0,12)}{currentRevision?.designId === item.designId && currentRevision.revisionId === item.revisionId ? ' · current revision' : ''}</small></label> })}</div><button className="primary" disabled={!selected.length || busy} onClick={startSaved}>Run comparison</button></section>
       {comparison && <section className="comparison-result"><h3>Comparison <span className={`status ${comparison.status}`}>{comparison.status}</span></h3>{comparison.error && <p className="finding">{comparison.error}</p>}{comparison.status === 'completed' && <><p>{comparison.winner_run_id ? `Best among tested alternatives: ${comparison.winner_run_id === baseline.run_id ? 'baseline' : `candidate ${comparison.candidate_run_ids.indexOf(comparison.winner_run_id) + 1}`}.` : 'No single best passing alternative was established.'} Objective: {comparison.objective}.</p><label>Scenario <select value={candidateScenario} onChange={e => setCandidateScenario(e.target.value)}><option value="all">All scenarios</option>{[...new Set(Object.values(comparisonResults).flatMap(result => result.metrics.map(m => m.scenario)))].map(s => <option key={s}>{s}</option>)}</select></label><div className="compare-grid"><div className="compare-column"><h4>Baseline</h4><span className={`status ${baseline.assessment_status}`}>{baseline.assessment_status}</span><small>{baseline.run_id.slice(0,12)}</small></div>{comparison.differences.map((raw,i) => { const diff = raw as { assessment_status?: string; cost_credits_per_hour?: number; cost_delta_credits_per_hour?: number; requirement_status_changes?: { requirement_id: string; scenario_id: string; seed: number; operation_id?: string | null; baseline?: string; candidate: string }[] }; const candidate = candidateRuns[i]; return <div className="compare-column" key={i}><h4>Candidate {i+1}</h4><span className={`status ${diff.assessment_status}`}>{diff.assessment_status}</span><p>{diff.cost_credits_per_hour} credits/hour <small>({diff.cost_delta_credits_per_hour && diff.cost_delta_credits_per_hour > 0 ? '+' : ''}{diff.cost_delta_credits_per_hour} from baseline)</small></p><h5>Requirement changes</h5>{diff.requirement_status_changes?.length ? <details><summary>Show {diff.requirement_status_changes.length} changes</summary><ul>{diff.requirement_status_changes.filter(change => candidateScenario === 'all' || candidateScenario === `${change.scenario_id} · seed ${change.seed}`).map((change,j) => <li key={j}>{change.requirement_id} · {change.scenario_id} seed {change.seed}{change.operation_id ? ` · ${change.operation_id}` : ''}: {change.baseline} → {change.candidate}</li>)}</ul></details> : <p>No requirement status changes.</p>}<button className="secondary" disabled={!candidate} onClick={() => candidate && onAdopt(candidate.design_id, candidate.revision_id)}>Adopt revision</button></div> })}{comparison.rejected_candidates.map((raw,i) => { const rejected = raw as { index?: number; validation_error?: string }; return <div className="compare-column rejected" key={`rejected-${i}`}><h4>Candidate {(rejected.index ?? i) + 1}</h4><span className="status failed">Rejected</span><p>{rejected.validation_error || 'The proposed change did not pass validation.'}</p></div> })}</div><details><summary>Measured operation differences</summary><div className="metric-comparison">{Object.entries(comparisonResults).map(([runId, result]) => <div key={runId}><h4>{runId === baseline.run_id ? 'Baseline' : `Candidate ${comparison.candidate_run_ids.indexOf(runId)+1}`}</h4>{result.metrics.filter(metric => candidateScenario === 'all' || metric.scenario === candidateScenario).map((metric,i) => <p key={i}>{metric.scenario} · {metric.operation} · {metric.name}: {metric.value}</p>)}</div>)}</div></details></>}</section>}
       {comparison?.status === 'completed' && candidateRuns.length > 0 && <section className="comparison-graph"><div className="panel-heading"><div><h3>Architecture changes</h3><p>Overlay of the frozen baseline and selected candidate. The scenario selector above controls recorded state.</p></div><label>Candidate <select value={selectedCandidate} onChange={e => setSelectedCandidate(Number(e.target.value))}>{candidateRuns.map((_,i) => <option key={i} value={i}>Candidate {i+1}</option>)}</select></label></div>{baselineDesign && candidateDesign && <RecordedGraph design={candidateDesign} baseline={baselineDesign} snapshot={candidateSnapshot || undefined} timeUs={candidateSnapshot?.time_us || 0} reducedMotion/>}</section>}
-      <section className="coach-section"><div className="panel-heading"><div><h3>AI coach</h3><p>Optional explanation after deterministic results. Its proposed changes remain hypotheses until tested.</p></div>{aiConfigured ? <button className="secondary" disabled={busy} onClick={() => setDisclosure(true)}>{review ? 'Request another review' : 'Request AI review'}</button> : <span className="status not_evaluated">Provider unavailable</span>}</div>{!aiConfigured && <p>Configure a provider on the server to request a review. Simulation and comparison remain available.</p>}{disclosure && <div className="disclosure" role="dialog" aria-label="AI review disclosure"><p>The provider receives the challenge, saved design, measured case summaries, selected evidence, and comparison if available. Your API settings stay on the server.</p><button className="primary" onClick={startReview}>Send for review</button><button onClick={() => setDisclosure(false)}>Cancel</button></div>}{review && <div className="review-content"><p className={`status ${review.status}`}>Review {review.status}</p>{review.status === 'failed' ? <><p>Simulation complete. AI explanation unavailable. {review.error}</p>{review.validation_errors.length > 0 && <ul>{review.validation_errors.map((message,i) => <li key={i}>{message}</li>)}</ul>}</> : review.status === 'completed' ? <><p>{review.summary}</p><h4>Findings</h4>{review.findings.map((finding,i) => { const item = finding as { title?: string; explanation?: string; classification?: string; evidence_refs?: string[] }; return <div className="review-finding" key={i}><strong>{item.classification === 'observed' ? 'Observed' : 'Hypothesis'}: {item.title}</strong><p>{item.explanation}</p><small>{item.evidence_refs?.join(', ')}</small></div> })}<h4>Suggested experiments</h4>{suggestions.map((proposal,i) => <SuggestedExperiment key={i} proposal={proposal} index={i} busy={busy} onTest={patch => start([{ patch }])}/>)}{review.limitations.length > 0 && <p className="muted">Limitations: {review.limitations.join('; ')}</p>}</> : <p>Review requested. The simulation result above is final while the provider responds.</p>}</div>}</section>
+      <section className="coach-section"><div className="panel-heading"><div><h3>AI coach</h3><p>Optional explanation after deterministic results. Its proposed changes remain hypotheses until tested.</p></div>{aiConfigured ? <button className="secondary" disabled={busy} onClick={() => setDisclosure(true)}>{review ? 'Request another review' : 'Request AI review'}</button> : <span className="status not_evaluated">Provider unavailable</span>}</div>{!aiConfigured && <p>Configure a provider on the server to request a review. Simulation and comparison remain available.</p>}{disclosure && <Dialog label="AI review disclosure" className="disclosure" onClose={() => setDisclosure(false)}><p>The provider receives the challenge, saved design, measured case summaries, selected evidence, and comparison if available. Your API settings stay on the server.</p><button className="primary" disabled={busy} onClick={startReview}>Send for review</button><button onClick={() => setDisclosure(false)}>Cancel</button></Dialog>}{review && <div className="review-content"><p className={`status ${review.status}`}>Review {review.status}</p>{review.status === 'failed' ? <><p>Simulation complete. AI explanation unavailable. {review.error}</p>{review.validation_errors.length > 0 && <ul>{review.validation_errors.map((message,i) => <li key={i}>{message}</li>)}</ul>}</> : review.status === 'completed' ? <><p>{review.summary}</p><h4>Findings</h4>{review.findings.map((finding,i) => { const item = finding as { title?: string; explanation?: string; classification?: string; evidence_refs?: string[] }; return <div className="review-finding" key={i}><strong>{item.classification === 'observed' ? 'Observed' : 'Hypothesis'}: {item.title}</strong><p>{item.explanation}</p><small>{item.evidence_refs?.join(', ')}</small></div> })}<h4>Suggested experiments</h4>{suggestions.map((proposal,i) => <SuggestedExperiment key={i} proposal={proposal} index={i} busy={busy} onTest={patch => start([{ patch }])}/>)}{review.limitations.length > 0 && <p className="muted">Limitations: {review.limitations.join('; ')}</p>}</> : <p>Review requested. The simulation result above is final while the provider responds.</p>}</div>}</section>
     </>}
   </div>
 }

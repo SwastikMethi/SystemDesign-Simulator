@@ -47,8 +47,9 @@ async function learnerJourney(page: Page, testInfo: TestInfo, width: number, hei
   await expect(page.locator('.revision-badge')).toContainText('result from another revision')
   await page.getByRole('tab', { name: 'Compare' }).click()
   await expect(page.locator('.baseline-strip')).toBeVisible()
-  await expect(page.locator('.candidate-list input:enabled').first()).toBeVisible()
-  await page.locator('.candidate-list input:enabled').first().check()
+  const referenceChoice = page.locator('.candidate-list label').filter({ hasText: '· current revision' }).getByRole('checkbox')
+  await expect(referenceChoice).toBeEnabled()
+  await referenceChoice.check()
   await page.getByRole('button', { name: 'Run comparison' }).click()
   await expect(page.locator('.comparison-result .status').first()).toContainText('completed', { timeout: 120_000 })
   await expect(page.locator('.comparison-graph')).toBeVisible()
@@ -79,12 +80,14 @@ test('late workspace and save replies preserve the active draft', async ({ page 
   const challenges = (await (await page.request.get('/api/v1/challenges')).json()).items
   const [first, second] = challenges
   const created: { design_id: string }[] = []
-  for (const challenge of [first, second]) {
+  // Leave an unrelated same-challenge design in history to prove ID isolation.
+  for (const [index, challenge] of [first, first, second].entries()) {
     const fixture = await (await page.request.get(`/api/v1/challenges/${challenge.challenge_id}/fixtures/initial`)).json()
     const full = await (await page.request.get(`/api/v1/challenges/${challenge.challenge_id}`)).json()
     const response = await page.request.post('/api/v1/designs', { data: { challenge_id: challenge.challenge_id, challenge_version: full.version, nodes: fixture.nodes, edges: fixture.edges } })
     expect(response.ok()).toBeTruthy()
-    created.push(await response.json())
+    const design = await response.json()
+    if (index > 0) created.push(design)
   }
   let releaseFirst!: () => void
   let firstRequested!: () => void
@@ -97,9 +100,15 @@ test('late workspace and save replies preserve the active draft', async ({ page 
     await route.fulfill({ response })
   })
   await page.goto('/')
+  const collectionResponse = page.waitForResponse(response => response.url().endsWith('/api/v1/collection'))
   await page.getByRole('button', { name: 'Saved work' }).click()
-  const firstRow = page.locator('.history-row').filter({ hasText: first.challenge_id }).filter({ hasText: 'design ·' })
-  const secondRow = page.locator('.history-row').filter({ hasText: second.challenge_id }).filter({ hasText: 'design ·' })
+  const collection: { items: { id: string; kind: string }[] } = await (await collectionResponse).json()
+  const createdRows = created.map(design => {
+    const index = collection.items.findIndex(item => item.kind === 'design' && item.id === design.design_id)
+    expect(index).toBeGreaterThanOrEqual(0)
+    return page.locator('.history-row').nth(index)
+  })
+  const [firstRow, secondRow] = createdRows
   await firstRow.getByRole('button', { name: 'Open' }).click()
   await firstSeen
   await secondRow.getByRole('button', { name: 'Open' }).click()
