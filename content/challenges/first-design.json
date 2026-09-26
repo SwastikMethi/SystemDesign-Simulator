@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "challenge_id": "first-design",
+  "version": "0.1.0",
+  "title": "Your first design",
+  "level": 1,
+  "brief": "Help a small notes service respond quickly. Run the starter, inspect its results, and make one database upgrade.",
+  "concepts": [
+    "request flow",
+    "capacity",
+    "reading results"
+  ],
+  "allowed_component_types": [
+    "client",
+    "app_service",
+    "sql_database"
+  ],
+  "operations": [
+    {
+      "id": "read_note",
+      "kind": "read_key",
+      "weight": 1,
+      "request_bytes": 1024,
+      "response_bytes": 1024,
+      "deadline_ms": 2000,
+      "retry_safe": true
+    }
+  ],
+  "initial_data": {
+    "kind": "versioned_keys",
+    "namespace": "notes",
+    "record_count": 1000,
+    "initial_version": 0
+  },
+  "workload": {
+    "warmup_seconds": 10,
+    "measurement_seconds": 30,
+    "drain_seconds": 5,
+    "assessment_seeds": [
+      101
+    ],
+    "key_distribution": {
+      "type": "uniform",
+      "key_count": 1000
+    }
+  },
+  "scenarios": [
+    {
+      "id": "steady",
+      "required": true,
+      "warmup_rps": 120,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 30,
+          "rps": 120
+        }
+      ],
+      "faults": []
+    }
+  ],
+  "requirements": [
+    {
+      "id": "R01",
+      "description": "At least 99.5% of note requests succeed.",
+      "metric": "success_rate",
+      "operation_ids": [
+        "read_note"
+      ],
+      "scenario_ids": [
+        "steady"
+      ],
+      "operator": ">=",
+      "threshold": 0.995,
+      "unit": "fraction",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R02",
+      "description": "Successful read p95 is at most 250 ms.",
+      "metric": "response_p95_ms",
+      "operation_ids": [
+        "read_note"
+      ],
+      "scenario_ids": [
+        "steady"
+      ],
+      "operator": "<=",
+      "threshold": 250,
+      "unit": "ms",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R03",
+      "description": "Stay within 50 fictional credits per hour.",
+      "metric": "cost_credits_per_hour",
+      "operation_ids": [],
+      "scenario_ids": [
+        "steady"
+      ],
+      "operator": "<=",
+      "threshold": 50,
+      "unit": "credits/hour",
+      "min_samples": 0,
+      "severity": "hard"
+    }
+  ],
+  "budget": {
+    "max_credits_per_hour": 50,
+    "profile_version": "0.1.0"
+  }
+}

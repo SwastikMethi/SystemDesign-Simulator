@@ -1,0 +1,281 @@
+{
+  "measurement": {
+    "clock": "time.perf_counter wall seconds",
+    "memory": "resource.getrusage(RUSAGE_SELF).ru_maxrss peak RSS; bytes on macOS",
+    "platform": "darwin",
+    "baseline_rss": 32849920,
+    "total_seconds": 1.613,
+    "peak_rss": 56885248,
+    "additional_peak_rss": 24035328
+  },
+  "fixtures": [
+    {
+      "challenge_id": "first-design",
+      "fixture": "initial",
+      "status": "fail",
+      "seconds": 0.365,
+      "cases": [
+        {
+          "scenario_id": "steady",
+          "seed": 101,
+          "seconds": 0.364,
+          "requests": 4690,
+          "executed_events": 47423,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_note",
+              "status": "fail",
+              "measured": {
+                "value": 0.8562839965645577,
+                "unit": "fraction",
+                "sample_count": 3493,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R01:read_note"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_note",
+              "status": "fail",
+              "measured": {
+                "value": 1070.038,
+                "unit": "ms",
+                "sample_count": 2991,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R02:read_note"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 25.0,
+                "unit": "credits/hour",
+                "sample_count": 3,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R03:design"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "challenge_id": "first-design",
+      "fixture": "reference",
+      "status": "pass",
+      "seconds": 0.38,
+      "cases": [
+        {
+          "scenario_id": "steady",
+          "seed": 101,
+          "seconds": 0.38,
+          "requests": 4690,
+          "executed_events": 51637,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_note",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 3493,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R01:read_note"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_note",
+              "status": "pass",
+              "measured": {
+                "value": 63.068,
+                "unit": "ms",
+                "sample_count": 3493,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R02:read_note"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 45.0,
+                "unit": "credits/hour",
+                "sample_count": 3,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R03:design"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "challenge_id": "first-design",
+      "fixture": "failure",
+      "status": "fail",
+      "seconds": 0.41,
+      "cases": [
+        {
+          "scenario_id": "steady",
+          "seed": 101,
+          "seconds": 0.41,
+          "requests": 4690,
+          "executed_events": 47423,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_note",
+              "status": "fail",
+              "measured": {
+                "value": 0.8562839965645577,
+                "unit": "fraction",
+                "sample_count": 3493,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R01:read_note"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_note",
+              "status": "fail",
+              "measured": {
+                "value": 1070.038,
+                "unit": "ms",
+                "sample_count": 2991,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R02:read_note"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 25.0,
+                "unit": "credits/hour",
+                "sample_count": 3,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R03:design"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "challenge_id": "first-design",
+      "fixture": "budget",
+      "status": "fail",
+      "seconds": 0.36,
+      "cases": [
+        {
+          "scenario_id": "steady",
+          "seed": 101,
+          "seconds": 0.36,
+          "requests": 4690,
+          "executed_events": 51637,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_note",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 3493,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R01:read_note"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "read_note",
+              "status": "pass",
+              "measured": {
+                "value": 63.068,
+                "unit": "ms",
+                "sample_count": 3493,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R02:read_note"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": null,
+              "status": "fail",
+              "measured": {
+                "value": 85.0,
+                "unit": "credits/hour",
+                "sample_count": 3,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R03:design"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

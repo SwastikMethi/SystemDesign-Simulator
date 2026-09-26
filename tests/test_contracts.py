@@ -9,7 +9,9 @@ from backend.contracts import PROFILES, Challenge, DesignRevision, apply_patch, 
 
 
 def test_all_content_compiles_and_costs():
-    assert len(list_challenges()) == 5
+    assert [c.challenge_id for c in list_challenges()] == [
+        "team-notes", "url-shortener", "product-catalogue", "photo-delivery", "notifications", "first-design",
+    ]
     for challenge in list_challenges():
         for name in ("initial", "reference", "failure", "budget"):
             design = load_fixture(challenge.challenge_id, name)

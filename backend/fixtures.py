@@ -9,12 +9,9 @@ import time
 from pathlib import Path
 
 from backend.assessment import assess_suite
-from backend.content import load_challenge, load_fixture
+from backend.content import CHALLENGE_IDS, load_challenge, load_fixture
 from backend.simulation import Engine
 from backend.workloads import generate_case
-
-CHALLENGES=['team-notes','url-shortener','product-catalogue','photo-delivery','notifications']
-
 
 def run_fixture(challenge_id,fixture):
     challenge=load_challenge(challenge_id); design=load_fixture(challenge_id,fixture)
@@ -38,7 +35,7 @@ def run_fixture(challenge_id,fixture):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--challenge',choices=CHALLENGES)
+    parser.add_argument('--challenge',choices=CHALLENGE_IDS)
     parser.add_argument('--fixture',choices=['initial','reference','failure','budget'])
     parser.add_argument('--output',type=Path,default=Path('.implementation/fixture-results.json'))
     args=parser.parse_args()
@@ -46,7 +43,7 @@ def main():
     report={'measurement':{'clock':'time.perf_counter wall seconds','memory':'resource.getrusage(RUSAGE_SELF).ru_maxrss peak RSS; bytes on macOS',
              'platform':sys.platform,'baseline_rss':baseline},'fixtures':[]}
     start=time.perf_counter()
-    for challenge in [args.challenge] if args.challenge else CHALLENGES:
+    for challenge in [args.challenge] if args.challenge else CHALLENGE_IDS:
         for fixture in [args.fixture] if args.fixture else ['initial','reference','failure','budget']:
             result=run_fixture(challenge,fixture); report['fixtures'].append(result)
             print(f'{challenge}/{fixture}: {result["status"]}, {result["seconds"]}s',flush=True)

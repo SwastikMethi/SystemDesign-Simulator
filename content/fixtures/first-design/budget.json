@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "design_id": "first-design-budget",
+  "revision_id": "revision-001",
+  "challenge_id": "first-design",
+  "challenge_version": "0.1.0",
+  "created_at": "2026-09-26T00:00:00Z",
+  "parent_revision_id": null,
+  "nodes": [
+    {
+      "id": "client",
+      "type": "client",
+      "label": "Client",
+      "profile_id": "client.v1",
+      "instance_count": 1,
+      "settings": {},
+      "position": {
+        "x": 0,
+        "y": 180
+      }
+    },
+    {
+      "id": "app",
+      "type": "app_service",
+      "label": "App",
+      "profile_id": "app.small.v1",
+      "instance_count": 1,
+      "settings": {
+        "dependency_timeout_ms": 2000,
+        "max_retries": 0
+      },
+      "position": {
+        "x": 320,
+        "y": 180
+      }
+    },
+    {
+      "id": "sql",
+      "type": "sql_database",
+      "label": "Database",
+      "profile_id": "sql.large.v1",
+      "instance_count": 1,
+      "settings": {},
+      "position": {
+        "x": 640,
+        "y": 180
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "client-app",
+      "source": "client",
+      "target": "app",
+      "kind": "request",
+      "operation_ids": [
+        "read_note"
+      ]
+    },
+    {
+      "id": "app-sql",
+      "source": "app",
+      "target": "sql",
+      "kind": "request",
+      "operation_ids": [
+        "read_note"
+      ]
+    }
+  ]
+}

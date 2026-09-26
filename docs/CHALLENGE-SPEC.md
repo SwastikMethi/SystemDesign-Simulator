@@ -10,7 +10,7 @@ Every released challenge needs at least one passing fixture, one failure fixture
 
 Machine-readable definitions and proposed initial/reference/failure/budget designs live in `content/challenges/` and `content/fixtures/`. Compilation and budget checks alone do not verify their numerical outcomes.
 
-All assessment cases use the warmup/measurement/drain lengths and five seeds in SIMULATION-SPEC. Fixed-rate scenarios apply through warmup and measurement. Burst scenarios use normal rate in warmup, 0–120 s and 180–300 s measurement, and peak rate from 120–180 s. Workload payloads and per-seed traces are stored for comparison reuse.
+The five curriculum challenges use the assessment warmup/measurement/drain lengths and five seeds in SIMULATION-SPEC. The introductory walkthrough below explicitly uses a shorter assessment. Fixed-rate scenarios apply through warmup and measurement. Burst scenarios use normal rate in warmup, 0–120 s and 180–300 s measurement, and peak rate from 120–180 s. Workload payloads and per-seed traces are stored for comparison reuse.
 
 ## 2. Common grading rules
 
@@ -23,6 +23,18 @@ All assessment cases use the warmup/measurement/drain lengths and five seeds in 
 - Unsupported required capabilities make a challenge unavailable, not automatically passed.
 
 ## 3. Initial challenge definitions
+
+### Walkthrough — Your first design
+
+ID: first-design; version 0.1.0; level 1 in the data contract, presented separately as a walkthrough above the five curriculum challenges. Allow 3–5 minutes to learn the editor, requirements, results and saved work through the existing Guide checklist.
+
+- Starter: Client → App → Database, using `app.small.v1` and `sql.small.v1`; only client, app service and SQL database components are available.
+- Operation: read_note 100%; 1 KiB request/response payloads; 2 s deadline; 1,000 notes at version 0 with uniform key selection.
+- Assessment: one required steady scenario at 120 rps, seed 101, 10 s warmup, 30 s measurement and 5 s drain. Preview keeps the existing 10/60/30-second protocol and cannot complete the task.
+- Targets: success ≥99.5%, successful read p95 ≤250 ms, each with at least 100 measured samples; total cost ≤50 fictional credits/hour.
+- Lesson: preview the failing starter, inspect R02 evidence, then change only Database's Profile to `sql.medium.v1` and assess again. This increases provisioned cost from 25 to 45 credits/hour while improving service capacity.
+- Initial and failure fixtures use the undersized database. The reference uses medium SQL; the budget fixture uses large SQL and costs 85 credits/hour.
+- Completion and saved evidence use the regular assessment/history mechanisms. Instructions remain available through Guide; there is no separate step-tracking state or AI dependency.
 
 ### C01 — Team notes
 

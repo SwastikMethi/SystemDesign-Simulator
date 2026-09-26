@@ -2,7 +2,7 @@
 
 A local learning lab for building an architecture, running reproducible traffic, inspecting failures, and testing changes against an unchanged baseline.
 
-Five challenges cover notes, URL shortening, product catalogues, photo delivery, and notifications. Ten component types model request routing, queues, stores, caching, workers, load balancing, and delivery. Simulation and deterministic rules produce the assessment; an optional AI coach explains saved evidence and proposes testable changes.
+A short hands-on walkthrough introduces the editor and results. Five challenges cover notes, URL shortening, product catalogues, photo delivery, and notifications. Ten component types model request routing, queues, stores, caching, workers, load balancing, and delivery. Simulation and deterministic rules produce the assessment; an optional AI coach explains saved evidence and proposes testable changes.
 
 ## Run locally
 
@@ -22,6 +22,18 @@ Open **http://127.0.0.1:8000**. If that port is occupied, choose another with `-
 For frontend development, keep the backend running and run `npm run dev` inside `frontend/`. Open http://127.0.0.1:5173; Vite proxies API requests to port 8000. Set `AISD_API_TARGET=http://127.0.0.1:8770` when starting Vite if your backend uses that alternate port. API documentation is at the backend's `/docs` address.
 
 ## First exercise
+
+Choose **Start walkthrough** above the challenge list for **Your first design**, a 3–5 minute practice task. Its Guide checklist stays available throughout:
+
+1. Inspect **Client → App → Database** and the three requirements.
+2. Choose **Preview**, then inspect the failed latency requirement **R02**.
+3. Return to **Architecture**, select **Database**, and change its **Profile** from `sql.small.v1` to `sql.medium.v1`.
+4. Choose **Assess design** and check that all three requirements pass within the 50 credits/hour budget.
+5. Open the passed assessment from **Saved work** to revisit its results.
+
+Runs save your draft automatically. Preview cannot earn completion. The walkthrough uses real simulation results and needs no AI provider.
+
+## Continue with a full challenge
 
 1. Open **Product catalogue**, inspect the requirements, and start with its initial design.
 2. Use **Preview** for a short experiment, then **Assess design** for all required scenarios and five seeds. Preview cannot earn completion.
@@ -57,7 +69,7 @@ npm run test:e2e
 
 The browser tests start a fresh backend with temporary data on port 8771. Keep that port free, or set `AISD_FRONTEND_URL` to a separately running isolated test application. Recordings and exported evidence are retained under `frontend/test-results/`.
 
-The full fixture command executes all 20 initial/reference/failure/budget designs across **240 cases**. To measure only the catalogue reference:
+The full fixture command executes all 24 initial/reference/failure/budget designs across **244 cases**, including four walkthrough cases. To measure only the catalogue reference:
 
 ```sh
 .venv/bin/python -m backend.fixtures --challenge product-catalogue --fixture reference --output .implementation/catalogue-benchmark.json
@@ -68,7 +80,7 @@ On an Apple M1 Max with 32 GiB RAM, the recorded catalogue benchmark completed 1
 ## Model and limits
 
 - Capacities, costs, traffic, and service distributions are teaching assumptions. Credits are fictional infrastructure units.
-- Each assessment evaluates every required scenario at seeds 101, 202, 303, 404, and 505, with 60 seconds of warmup, 300 seconds of measurement, and 30 seconds of drain per case.
+- The five regular challenges assess every required scenario at seeds 101, 202, 303, 404, and 505, with 60 seconds of warmup, 300 seconds of measurement, and 30 seconds of drain per case. The walkthrough uses one steady scenario at seed 101 with 10/30/5 seconds of modeled warmup/measurement/drain. Preview retains its standard 10/60/30-second case and cannot award completion.
 - Limits are 25 nodes, 60 edges, 32 instances per node, 100,000 original arrivals and 2,000,000 events per case, and two comparison candidates. Reaching the event cap makes the run incomplete.
 - One simulation process executes cases sequentially. Canceling or restarting preserves available evidence and does not resume an unfinished simulation silently.
 - Exports contain version and hash evidence. Imports preserve historical evidence as untrusted; a fresh graded rerun requires exact compatibility with the installed canonical workload. Imported historical runs are retained in quarantine and are not listed in Saved work. Open the imported design and run it again for in-app results and replay. Importing an old pass never awards completion.
@@ -84,7 +96,7 @@ The optional live-provider smoke test and five-person learning study have not be
 | `backend/simulation/`, `backend/assessment/` | Event engine and deterministic assessment |
 | `backend/api/`, `backend/storage/`, `backend/coach/` | Local API, persistence, jobs, optional provider |
 | `frontend/` | React/TypeScript workspace and playback |
-| `content/` | Five authored challenges, profiles, schemas, and fixtures |
+| `content/` | Five authored challenges plus the walkthrough, schemas, and fixtures |
 | [docs/README.md](docs/README.md) | Original specification and document authority |
 | [docs/BUILD-PLAN.md](docs/BUILD-PLAN.md) | Approved implementation plan |
 | [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md) | Verification evidence and release limits |

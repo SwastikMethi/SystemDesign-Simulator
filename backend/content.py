@@ -6,16 +6,17 @@ from pathlib import Path
 from backend.contracts import AssessmentResult, CaseResult, Challenge, DesignRevision, JobOutcome, RequestOutcome
 
 CONTENT = Path(__file__).resolve().parent.parent / "content"
+CHALLENGE_IDS = ("team-notes", "url-shortener", "product-catalogue", "photo-delivery", "notifications", "first-design")
 
 
 def load_challenge(challenge_id: str) -> Challenge:
-    if challenge_id not in {"team-notes", "url-shortener", "product-catalogue", "photo-delivery", "notifications"}:
+    if challenge_id not in CHALLENGE_IDS:
         raise ValueError("unknown challenge")
     return Challenge.model_validate_json((CONTENT / "challenges" / f"{challenge_id}.json").read_text())
 
 
 def list_challenges() -> list[Challenge]:
-    return [load_challenge(challenge_id) for challenge_id in ("team-notes", "url-shortener", "product-catalogue", "photo-delivery", "notifications")]
+    return [load_challenge(challenge_id) for challenge_id in CHALLENGE_IDS]
 
 
 def load_fixture(challenge_id: str, fixture_name: str) -> DesignRevision:
