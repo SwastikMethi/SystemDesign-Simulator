@@ -32,7 +32,7 @@ Each fixture completed its one assessment case. Preview regression checks also v
 - The first post-implementation browser run stalled on an overly strict test label locator. The accessibility snapshot showed combobox “Profile”; changing the test to that role/name resolved it without altering production behavior.
 - Inspected the wide library, narrow Guide and narrow passing result screenshots in `frontend/screenshots/walkthrough-*.png`.
 
-The final full browser suite and independent review are pending.
+The first full browser sweep passed the 11 existing tests, but both new journeys reached their 20-second assessment wait while the shared simulation worker was still processing other tests' longer exercises. Their waits now match the existing preview/assessment integration tests (60/120 seconds, with 240 seconds for the whole journey). Assertions still require completed, passing real results. The final rerun and independent review are pending.
 
 ## Execution decisions
 

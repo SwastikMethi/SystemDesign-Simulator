@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 
 for (const width of [1440, 1024]) {
   test(`walkthrough teaches a database upgrade at ${width}px`, async ({ page }) => {
+    test.setTimeout(240_000)
     const pageErrors: string[] = []
     page.on('pageerror', error => pageErrors.push(error.message))
     await page.setViewportSize({ width, height: width === 1440 ? 900 : 768 })
@@ -17,7 +18,7 @@ for (const width of [1440, 1024]) {
     await expect(page.locator('.lab-node')).toHaveCount(3)
     await expect(page.getByRole('button', { name: 'Preview', exact: true })).toBeEnabled()
     await page.getByRole('button', { name: 'Preview', exact: true }).click()
-    await expect(page.locator('.run-control')).toContainText('preview · completed')
+    await expect(page.locator('.run-control')).toContainText('preview · completed', { timeout: 60_000 })
     await expect(page.locator('.results-heading .status')).toHaveText(/incomplete/i)
     const latency = page.getByRole('table', { name: 'Requirement outcomes' }).getByRole('row').filter({ hasText: 'R02' })
     await expect(latency.locator('.status')).toHaveText(/fail/i)
@@ -35,7 +36,7 @@ for (const width of [1440, 1024]) {
     await expect(page.getByRole('button', { name: 'Assess design' })).toBeEnabled()
     await page.getByRole('button', { name: 'Assess design' }).click()
     const { run_id } = await (await accepted).json()
-    await expect(page.locator('.run-control')).toContainText('assessment · completed')
+    await expect(page.locator('.run-control')).toContainText('assessment · completed', { timeout: 120_000 })
     await expect(page.locator('.results-heading .status')).toHaveText(/pass/i)
     await expect(page.locator('.requirement-row .status.pass')).toHaveCount(3)
     await page.screenshot({ path: `screenshots/walkthrough-pass-${width}.png`, fullPage: true })
