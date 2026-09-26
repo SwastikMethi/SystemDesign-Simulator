@@ -16,7 +16,7 @@ from backend.contracts import (CaseResult, Challenge, DesignRevision, JobOutcome
 from backend.workloads import Arrival, WorkloadCase, generate_case
 
 FAULT, COMPLETE, DEADLINE, DISPATCH, SNAPSHOT = range(5)
-MAX_EVENTS = 8_000_000
+MAX_EVENTS = 2_000_000
 MAX_ARRIVALS = 100_000
 MAX_DURATION_US = 3_600_000_000
 

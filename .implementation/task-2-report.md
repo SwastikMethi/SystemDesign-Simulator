@@ -21,7 +21,7 @@ The engine includes keyed Gamma service samples, deadline-safe original outcomes
 
 Snapshots are fixed at one virtual second. At most 100 request traces are retained, prioritizing first request/correctness/freshness/job failures; each trace is bounded at 200 events. Aggregate failures cite their actual measurement window; request-level failures additionally cite a retained trace. Progress callbacks receive coarse time/snapshot dictionaries and do no network I/O.
 
-Caps: 100,000 original arrivals, 8,000,000 executed events, one-hour virtual case duration, plus contract node/edge/instance caps. Cancellation is checked every 1,024 events. Partial runs preserve explicit incomplete outcomes, including unstarted planned arrivals without negative durations, and cannot pass.
+Caps: 100,000 original arrivals, 2,000,000 executed events, one-hour virtual case duration, plus contract node/edge/instance caps. Cancellation is checked every 1,024 events. Partial runs preserve explicit incomplete outcomes, including unstarted planned arrivals without negative durations, and cannot pass.
 
 ## RED / GREEN evidence
 
@@ -57,7 +57,7 @@ Full measured case evidence: `.implementation/fixture-results-final.json`. This 
 
 ## Catalogue benchmark
 
-Latest isolated 15-case catalogue reference: **27.006 seconds** (27.093 seconds including runner reporting/GC), **174,718,976 bytes peak RSS**, **141,475,840 additional bytes** (~134.9 MiB). This meets the <=60-second and <=2-GiB additional-memory targets. All 15 cases passed.
+Latest isolated 15-case catalogue reference: **27.337 seconds** (27.414 seconds including runner reporting/GC), **167,542,784 bytes peak RSS**, **133,922,816 additional bytes** (~127.7 MiB). This meets the <=60-second and <=2-GiB additional-memory targets. All 15 cases passed under the binding 2,000,000-event cap; the largest executed case used 232,002 events.
 
 Target verified by coordinator: Apple M1 Max, 32 GiB, arm64; project Python 3.13.12. Timing uses `time.perf_counter()` wall time; memory uses `resource.getrusage(RUSAGE_SELF).ru_maxrss`, which is bytes on macOS, minus the process startup high-water baseline. AI/provider latency is excluded. Machine-readable measurement and each case are saved in `.implementation/catalogue-benchmark.json`.
 
@@ -66,3 +66,5 @@ Target verified by coordinator: Apple M1 Max, 32 GiB, arm64; project Python 3.13
 These are the specified educational models: independent links without TCP, logical atomic stores without database/consensus emulation, no queue-node crash durability, synthetic notification effects, and fictional fixed provisioning credits without usage/egress billing. Store/profile calibration against infrastructure is outside this release. Sandbox-only test hooks permit deterministic service/network values; public `run_case` uses the authored profiles and network defaults.
 
 No API/storage/coach/frontend code or authored fixture content was changed by this task. The additive shared `accepted_us` field/schema was implemented by the coordinator. Engine, assessment, fixture runner, numerical tests, this report, and measured JSON artifacts are the owned handoff for independent review.
+
+Review correction: the first implementation incorrectly chose an 8,000,000 event ceiling. `docs/BUILD-PLAN.md` specifies 2,000,000; the constant was corrected without changing numerical scheduling. The catalogue benchmark was rerun with the binding cap and now records executed event counts.
