@@ -289,6 +289,9 @@ def test_import_bounds_aggregate_expanded_workloads_before_committing(tmp_path, 
 
 
 def test_assessment_comparison_preserves_loser_and_progress(tmp_path):
+    # This verifies persisted API behavior; the separate benchmark owns the
+    # simulation speed target. Allow for worker contention in the full suite.
+    integration_timeout_s = 120
     http = client(tmp_path)
     baseline = create_design(http, "reference")
     candidate = create_design(http, "failure")
@@ -296,13 +299,13 @@ def test_assessment_comparison_preserves_loser_and_progress(tmp_path):
     response = http.post("/api/v1/runs", json=body)
     assert response.status_code == 202, response.text
     run_id = response.json()["run_id"]
-    deadline = time.monotonic() + 45
+    deadline = time.monotonic() + integration_timeout_s
     while time.monotonic() < deadline:
         run = http.get(f"/api/v1/runs/{run_id}").json()
         if run["execution_status"] in {"completed", "failed", "canceled"}:
             break
         time.sleep(.1)
-    assert run["execution_status"] == "completed", run
+    assert run["execution_status"] == "completed", {"run": run, "timeout_s": integration_timeout_s}
     assert run["assessment_status"] == "pass", run
     assert next(item for item in http.get("/api/v1/challenges").json()["items"] if item["challenge_id"] == "product-catalogue")["progress"] == "passed"
     exported = http.post("/api/v1/exports", json={"run_ids": [run_id]})
@@ -317,13 +320,13 @@ def test_assessment_comparison_preserves_loser_and_progress(tmp_path):
     comparison = http.post("/api/v1/comparisons", json={"baseline_run_id": run_id, "candidates": [{"design_id": candidate["design_id"], "revision_id": candidate["revision_id"]}]})
     assert comparison.status_code == 202, comparison.text
     comparison_id = comparison.json()["comparison_id"]
-    deadline = time.monotonic() + 45
+    deadline = time.monotonic() + integration_timeout_s
     while time.monotonic() < deadline:
         record = http.get(f"/api/v1/comparisons/{comparison_id}").json()
         if record["status"] in {"completed", "failed"}:
             break
         time.sleep(.1)
-    assert record["status"] == "completed", record
+    assert record["status"] == "completed", {"comparison": record, "timeout_s": integration_timeout_s}
     assert record["candidate_run_ids"] and record["differences"]
     assert record["winner_run_id"] == run_id
     rejected = http.post("/api/v1/comparisons", json={"baseline_run_id": run_id, "candidates": [{"patch": {"base_revision_id": baseline["revision_id"], "operations": [{"op": "set_node_setting", "node_id": "missing", "key": "ttl_seconds", "value": 10}]}}]})
