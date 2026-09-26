@@ -17,7 +17,7 @@ Shared neutral colors now cover the shell, forms, dialogs, editor and recorded d
 - The additional dialog-containment assertion reproduced overflow at 390 px: a full provider-status sentence inherited the badge's `white-space: nowrap`. Shared `p.status` styling now wraps sentences normally. The same browser inspection passed after the fix, including the 390 px coach dialog.
 - `git diff --check` — passed.
 
-A final full browser sweep after the paragraph correction and independent review are pending below.
+The final full browser sweep on `92a1a3d`, after the paragraph correction, passed **all 11 tests in 3.5 minutes**. The task ledger recorded completion. Its initial sandboxed launch could not bind the test server; the approved rerun completed successfully.
 
 ## Visual and contrast evidence
 
@@ -25,11 +25,22 @@ Inspected the actual library and editor at both desktop widths, selected-inspect
 
 WCAG luminance calculations against the brightest standard surface (#202020): primary text **14.81:1**, secondary text **6.46:1**, pass **7.43:1**, warning **7.98:1**, fail **6.42:1**, and control boundaries **3.29:1**. Structural dividers are decorative. Visible focus was checked through the browser's keyboard tests. Generated controlled-response screenshots establish layout, not numerical model accuracy.
 
+Both demo recordings were refreshed from the final passing real-server journeys: [wide demo](../frontend/screenshots/demo.webm) (**107.12 s**) and [1024 px journey](../frontend/screenshots/demo-1024.webm) (**105.32 s**). Inspected three frames sampled at ten-second intervals from a 30-second portion of the refreshed wide recording, confirming the charcoal results and comparison screens. Recordings and supplemental screenshots are generated local artifacts and remain ignored by Git.
+
 ## Execution rulings
 
 - Continue in the existing clean feature checkout, matching the preceding implementation and the running local app. Cost if wrong: move the UI commit to another branch.
 - Reuse behavioral tests and add one meaningful browser regression; do not test CSS constants or copy text. Cost if wrong: add a targeted check for a specific missed behavior.
+- Keep the completed commits on the existing feature branch; merging and publishing are outside this request.
 
 ## Final review
 
-Pending independent review of this UI change. The engine's earlier numerical verification remains applicable; no new numerical or live-provider quality claim is made.
+Independent review by `gpt-6-astra` of `2c0d7c7..92a1a3d`: **approved with one minor test-coverage gap; no Critical or Important findings**. The reviewer inspected the source, assertions and screenshots without repeating the tests.
+
+Deferred minor finding: the new narrow-results regression asserts page-width containment before expanding Operation metrics. A future regression should repeat that assertion with the table expanded and verify keyboard access to its rightmost columns. The current CSS contains table scrolling; the review found no demonstrated user-facing defect.
+
+Review limits and dispositions:
+
+- Numerical accuracy and live-provider quality were outside this UI review. The engine is unchanged; its earlier verification remains applicable, and this report makes no new numerical or live-provider quality claim. Targeted engine/provider checks would be needed for such a claim.
+- The final browser rerun and refreshed recording were pending at review time; both are now complete as recorded above.
+- Browser verification used Chromium. Other browsers and assistive-technology combinations were not certified; extend that matrix if those assurances are required.
