@@ -19,3 +19,9 @@ Implemented on 26 September 2026. Authored results remain hypotheses until Task 
 ## Authored fixtures and limits
 
 Five versioned challenges and initial/reference/failure/budget designs are installed under `content/`. Catalogue thresholds match the published example; optional `hot_key_shift` is separate from completion cases. Failure designs target rate limiting, SQL overload, stale cache, rate limiting, and worker backlog respectively. Their expected numerical failures still need engine verification. Assessment workload generation enforces the 100,000-original-arrival cap; node and edge caps are 25 and 60, and node instances cap at 32. Schema, routes, profile settings, budget formula, seed repeatability, Zipf/uniform keys, exact seed timestamps, segment boundaries, patch rejection and hash exclusions have runnable checks.
+
+## Review follow-up
+
+- RED: two new regressions failed: exported node settings had no component discriminator, and `warmup_rps=float('inf')` passed challenge validation.
+- GREEN: `DesignRevision` now exports a discriminated node union with strict, bounded settings for each component. Shared Pydantic validation rejects NaN/Infinity in all typed numeric inputs. JSON Schemas were regenerated; `.venv/bin/python -m pytest -q` → **14 passed in 1.28 s**.
+- Minor review notes left for later contract revision: Pydantic currently coerces an integer-like string for `instance_count`, and `design_hash` changes when equivalent `edge.operation_ids` are reordered. The engine must apply `max_retries` only to operations marked `retry_safe`; graded writes never retry.

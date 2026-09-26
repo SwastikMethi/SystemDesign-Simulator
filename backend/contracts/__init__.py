@@ -8,13 +8,13 @@ import math
 from collections.abc import Mapping
 from datetime import datetime
 from types import MappingProxyType
-from typing import Any, Literal
+from typing import Annotated, Any, Literal, TypedDict
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator, with_config
 
 
 class Strict(BaseModel):
-    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+    model_config = ConfigDict(extra="forbid", validate_assignment=True, allow_inf_nan=False)
 
 
 ComponentType = Literal["client", "load_balancer", "api_gateway", "app_service", "sql_database", "cache", "message_queue", "worker", "object_storage", "cdn"]
@@ -163,13 +163,50 @@ SETTINGS: dict[str, dict[str, tuple[type, float, float] | tuple[str, ...]]] = {
 }
 
 
+@with_config(ConfigDict(extra="forbid"))
+class EmptySettings(TypedDict):
+    pass
+
+
+@with_config(ConfigDict(extra="forbid"))
+class GatewaySettings(TypedDict, total=False):
+    rate_limit_rps: Annotated[int, Field(ge=1, le=100_000, strict=True)]
+    bucket_size: Annotated[int, Field(ge=1, le=100_000, strict=True)]
+
+
+@with_config(ConfigDict(extra="forbid"))
+class AppSettings(TypedDict, total=False):
+    dependency_timeout_ms: Annotated[int, Field(ge=1, le=10_000, strict=True)]
+    max_retries: Annotated[int, Field(ge=0, le=2, strict=True)]
+    invalidation: Literal["off", "synchronous"]
+
+
+@with_config(ConfigDict(extra="forbid"))
+class CacheSettings(TypedDict, total=False):
+    ttl_seconds: Annotated[int, Field(ge=1, le=120, strict=True)]
+
+
+@with_config(ConfigDict(extra="forbid"))
+class QueueSettings(TypedDict, total=False):
+    lease_seconds: Annotated[int, Field(ge=1, le=10, strict=True)]
+    max_attempts: Annotated[int, Field(ge=1, le=3, strict=True)]
+
+
+@with_config(ConfigDict(extra="forbid"))
+class WorkerSettings(TypedDict, total=False):
+    deduplicate: bool
+
+
+Settings = EmptySettings | GatewaySettings | AppSettings | CacheSettings | QueueSettings | WorkerSettings
+
+
 class Node(Strict):
     id: str
     type: ComponentType
     label: str
     profile_id: str
     instance_count: int = Field(ge=1, le=32)
-    settings: dict[str, Any]
+    settings: Settings
     position: Position
 
     @model_validator(mode="after")
@@ -188,6 +225,59 @@ class Node(Strict):
         return self
 
 
+class ClientNode(Node):
+    type: Literal["client"]
+    settings: EmptySettings
+
+
+class LoadBalancerNode(Node):
+    type: Literal["load_balancer"]
+    settings: EmptySettings
+
+
+class GatewayNode(Node):
+    type: Literal["api_gateway"]
+    settings: GatewaySettings
+
+
+class AppNode(Node):
+    type: Literal["app_service"]
+    settings: AppSettings
+
+
+class SqlNode(Node):
+    type: Literal["sql_database"]
+    settings: EmptySettings
+
+
+class CacheNode(Node):
+    type: Literal["cache"]
+    settings: CacheSettings
+
+
+class QueueNode(Node):
+    type: Literal["message_queue"]
+    settings: QueueSettings
+
+
+class WorkerNode(Node):
+    type: Literal["worker"]
+    settings: WorkerSettings
+
+
+class ObjectNode(Node):
+    type: Literal["object_storage"]
+    settings: EmptySettings
+
+
+class CdnNode(Node):
+    type: Literal["cdn"]
+    settings: CacheSettings
+
+
+DesignNode = Annotated[ClientNode | LoadBalancerNode | GatewayNode | AppNode | SqlNode | CacheNode | QueueNode | WorkerNode | ObjectNode | CdnNode, Field(discriminator="type")]
+
+
 class Edge(Strict):
     id: str
     source: str
@@ -204,7 +294,7 @@ class DesignRevision(Strict):
     challenge_version: Literal["0.1.0"]
     created_at: datetime
     parent_revision_id: str | None
-    nodes: list[Node] = Field(max_length=25)
+    nodes: list[DesignNode] = Field(max_length=25)
     edges: list[Edge] = Field(max_length=60)
 
 

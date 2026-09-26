@@ -107,3 +107,35 @@ def test_load_balancer_checks_all_targets():
     data["edges"][-1]["target"] = "client"
     with pytest.raises(ValueError):
         compile_design(DesignRevision.model_validate(data), challenge)
+
+
+def test_exported_node_schema_has_strict_settings_by_component():
+    schema = DesignRevision.model_json_schema()
+    node_items = schema["properties"]["nodes"]["items"]
+    assert node_items["discriminator"]["propertyName"] == "type"
+    mapping = node_items["discriminator"]["mapping"]
+    for component_type in ("client", "api_gateway", "app_service", "cache", "message_queue", "worker", "cdn"):
+        variant = schema["$defs"][mapping[component_type].split("/")[-1]]
+        settings_ref = variant["properties"]["settings"]["$ref"]
+        settings = schema["$defs"][settings_ref.split("/")[-1]]
+        assert settings["additionalProperties"] is False
+    app = schema["$defs"][schema["$defs"][mapping["app_service"].split("/")[-1]]["properties"]["settings"]["$ref"].split("/")[-1]]
+    assert app["properties"]["max_retries"]["maximum"] == 2
+    assert "rate_limit_rps" not in app["properties"]
+
+
+def test_nonfinite_challenge_inputs_rejected():
+    original = load_challenge("team-notes").model_dump(mode="json")
+    for field, value in (("warmup_rps", float("inf")), ("warmup_rps", float("nan"))):
+        data = copy.deepcopy(original)
+        data["scenarios"][0][field] = value
+        with pytest.raises(ValidationError):
+            Challenge.model_validate(data)
+    data = copy.deepcopy(original)
+    data["scenarios"][0]["rate_segments"][0]["rps"] = float("inf")
+    with pytest.raises(ValidationError):
+        Challenge.model_validate(data)
+    data = copy.deepcopy(original)
+    data["requirements"][0]["threshold"] = float("nan")
+    with pytest.raises(ValidationError):
+        Challenge.model_validate(data)

@@ -1,5 +1,225 @@
 {
   "$defs": {
+    "AppNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "app_service",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/AppSettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "AppNode",
+      "type": "object"
+    },
+    "AppSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency_timeout_ms": {
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Dependency Timeout Ms",
+          "type": "integer"
+        },
+        "max_retries": {
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Max Retries",
+          "type": "integer"
+        },
+        "invalidation": {
+          "enum": [
+            "off",
+            "synchronous"
+          ],
+          "title": "Invalidation",
+          "type": "string"
+        }
+      },
+      "title": "AppSettings",
+      "type": "object"
+    },
+    "CacheNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "cache",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/CacheSettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "CacheNode",
+      "type": "object"
+    },
+    "CacheSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "ttl_seconds": {
+          "maximum": 120,
+          "minimum": 1,
+          "title": "Ttl Seconds",
+          "type": "integer"
+        }
+      },
+      "title": "CacheSettings",
+      "type": "object"
+    },
+    "CdnNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "cdn",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/CacheSettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "CdnNode",
+      "type": "object"
+    },
+    "ClientNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "client",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/EmptySettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "ClientNode",
+      "type": "object"
+    },
     "Edge": {
       "additionalProperties": false,
       "properties": {
@@ -43,7 +263,13 @@
       "title": "Edge",
       "type": "object"
     },
-    "Node": {
+    "EmptySettings": {
+      "additionalProperties": false,
+      "properties": {},
+      "title": "EmptySettings",
+      "type": "object"
+    },
+    "GatewayNode": {
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -51,18 +277,7 @@
           "type": "string"
         },
         "type": {
-          "enum": [
-            "client",
-            "load_balancer",
-            "api_gateway",
-            "app_service",
-            "sql_database",
-            "cache",
-            "message_queue",
-            "worker",
-            "object_storage",
-            "cdn"
-          ],
+          "const": "api_gateway",
           "title": "Type",
           "type": "string"
         },
@@ -81,9 +296,7 @@
           "type": "integer"
         },
         "settings": {
-          "additionalProperties": true,
-          "title": "Settings",
-          "type": "object"
+          "$ref": "#/$defs/GatewaySettings"
         },
         "position": {
           "$ref": "#/$defs/Position"
@@ -98,7 +311,116 @@
         "settings",
         "position"
       ],
-      "title": "Node",
+      "title": "GatewayNode",
+      "type": "object"
+    },
+    "GatewaySettings": {
+      "additionalProperties": false,
+      "properties": {
+        "rate_limit_rps": {
+          "maximum": 100000,
+          "minimum": 1,
+          "title": "Rate Limit Rps",
+          "type": "integer"
+        },
+        "bucket_size": {
+          "maximum": 100000,
+          "minimum": 1,
+          "title": "Bucket Size",
+          "type": "integer"
+        }
+      },
+      "title": "GatewaySettings",
+      "type": "object"
+    },
+    "LoadBalancerNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "load_balancer",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/EmptySettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "LoadBalancerNode",
+      "type": "object"
+    },
+    "ObjectNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "object_storage",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/EmptySettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "ObjectNode",
       "type": "object"
     },
     "Position": {
@@ -118,6 +440,171 @@
         "y"
       ],
       "title": "Position",
+      "type": "object"
+    },
+    "QueueNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "message_queue",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/QueueSettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "QueueNode",
+      "type": "object"
+    },
+    "QueueSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "lease_seconds": {
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Lease Seconds",
+          "type": "integer"
+        },
+        "max_attempts": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        }
+      },
+      "title": "QueueSettings",
+      "type": "object"
+    },
+    "SqlNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "sql_database",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/EmptySettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "SqlNode",
+      "type": "object"
+    },
+    "WorkerNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "worker",
+          "title": "Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "instance_count": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Instance Count",
+          "type": "integer"
+        },
+        "settings": {
+          "$ref": "#/$defs/WorkerSettings"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "profile_id",
+        "instance_count",
+        "settings",
+        "position"
+      ],
+      "title": "WorkerNode",
+      "type": "object"
+    },
+    "WorkerSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "deduplicate": {
+          "title": "Deduplicate",
+          "type": "boolean"
+        }
+      },
+      "title": "WorkerSettings",
       "type": "object"
     }
   },
@@ -163,7 +650,53 @@
     },
     "nodes": {
       "items": {
-        "$ref": "#/$defs/Node"
+        "discriminator": {
+          "mapping": {
+            "api_gateway": "#/$defs/GatewayNode",
+            "app_service": "#/$defs/AppNode",
+            "cache": "#/$defs/CacheNode",
+            "cdn": "#/$defs/CdnNode",
+            "client": "#/$defs/ClientNode",
+            "load_balancer": "#/$defs/LoadBalancerNode",
+            "message_queue": "#/$defs/QueueNode",
+            "object_storage": "#/$defs/ObjectNode",
+            "sql_database": "#/$defs/SqlNode",
+            "worker": "#/$defs/WorkerNode"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/ClientNode"
+          },
+          {
+            "$ref": "#/$defs/LoadBalancerNode"
+          },
+          {
+            "$ref": "#/$defs/GatewayNode"
+          },
+          {
+            "$ref": "#/$defs/AppNode"
+          },
+          {
+            "$ref": "#/$defs/SqlNode"
+          },
+          {
+            "$ref": "#/$defs/CacheNode"
+          },
+          {
+            "$ref": "#/$defs/QueueNode"
+          },
+          {
+            "$ref": "#/$defs/WorkerNode"
+          },
+          {
+            "$ref": "#/$defs/ObjectNode"
+          },
+          {
+            "$ref": "#/$defs/CdnNode"
+          }
+        ]
       },
       "maxItems": 25,
       "title": "Nodes",
