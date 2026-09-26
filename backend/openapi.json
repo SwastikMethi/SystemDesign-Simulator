@@ -1,0 +1,4983 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AI System Design Simulator",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalogue": {
+      "get": {
+        "summary": "Catalogue",
+        "operationId": "catalogue_api_v1_catalogue_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalogue"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenges": {
+      "get": {
+        "summary": "Challenges",
+        "operationId": "challenges_api_v1_challenges_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChallengeList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenges/{challenge_id}": {
+      "get": {
+        "summary": "Challenge",
+        "operationId": "challenge_api_v1_challenges__challenge_id__get",
+        "parameters": [
+          {
+            "name": "challenge_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Challenge Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Challenge"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenges/{challenge_id}/fixtures/{name}": {
+      "get": {
+        "summary": "Fixture",
+        "operationId": "fixture_api_v1_challenges__challenge_id__fixtures__name__get",
+        "parameters": [
+          {
+            "name": "challenge_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Challenge Id"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignRevision"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/designs": {
+      "post": {
+        "summary": "Create Design",
+        "operationId": "create_design_api_v1_designs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DesignInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignCreated"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/designs/{design_id}": {
+      "get": {
+        "summary": "Design Metadata",
+        "operationId": "design_metadata_api_v1_designs__design_id__get",
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Design Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignMetadata"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Design",
+        "operationId": "delete_design_api_v1_designs__design_id__delete",
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Design Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/designs/{design_id}/revisions": {
+      "post": {
+        "summary": "Create Revision",
+        "operationId": "create_revision_api_v1_designs__design_id__revisions_post",
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Design Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignCreated"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/designs/{design_id}/revisions/{revision_id}": {
+      "get": {
+        "summary": "Get Revision",
+        "operationId": "get_revision_api_v1_designs__design_id__revisions__revision_id__get",
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Design Id"
+            }
+          },
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignRevision"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/designs/validate": {
+      "post": {
+        "summary": "Validate Design",
+        "operationId": "validate_design_api_v1_designs_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DesignInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs": {
+      "post": {
+        "summary": "Create Run",
+        "operationId": "create_run_api_v1_runs_post",
+        "parameters": [
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}": {
+      "get": {
+        "summary": "Get Run",
+        "operationId": "get_run_api_v1_runs__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunManifest"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Run",
+        "operationId": "delete_run_api_v1_runs__run_id__delete",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/cancel": {
+      "post": {
+        "summary": "Cancel Run",
+        "operationId": "cancel_run_api_v1_runs__run_id__cancel_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunManifest"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/events": {
+      "get": {
+        "summary": "Run Events",
+        "operationId": "run_events_api_v1_runs__run_id__events_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "last-event-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Last-Event-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/results": {
+      "get": {
+        "summary": "Run Results",
+        "operationId": "run_results_api_v1_runs__run_id__results_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunResults"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/cases/{case_id}/snapshots": {
+      "get": {
+        "summary": "Snapshots",
+        "operationId": "snapshots_api_v1_runs__run_id__cases__case_id__snapshots_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/cases/{case_id}/outcomes": {
+      "get": {
+        "summary": "Outcomes",
+        "operationId": "outcomes_api_v1_runs__run_id__cases__case_id__outcomes_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OutcomePage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/cases/{case_id}/traces/{trace_id}": {
+      "get": {
+        "summary": "Trace",
+        "operationId": "trace_api_v1_runs__run_id__cases__case_id__traces__trace_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "trace_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Trace Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Trace"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collection": {
+      "get": {
+        "summary": "Collection",
+        "operationId": "collection_api_v1_collection_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Collection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/comparisons/{comparison_id}": {
+      "delete": {
+        "summary": "Delete Comparison",
+        "operationId": "delete_comparison_api_v1_comparisons__comparison_id__delete",
+        "parameters": [
+          {
+            "name": "comparison_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Comparison Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Comparison",
+        "operationId": "get_comparison_api_v1_comparisons__comparison_id__get",
+        "parameters": [
+          {
+            "name": "comparison_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Comparison Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComparisonRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/snapshots": {
+      "post": {
+        "summary": "Save Snapshot",
+        "operationId": "save_snapshot_api_v1_runs__run_id__snapshots_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveSnapshotInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedSnapshot"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/snapshots": {
+      "get": {
+        "summary": "Saved Snapshots",
+        "operationId": "saved_snapshots_api_v1_snapshots_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/snapshots/{snapshot_id}": {
+      "get": {
+        "summary": "Saved Snapshot",
+        "operationId": "saved_snapshot_api_v1_snapshots__snapshot_id__get",
+        "parameters": [
+          {
+            "name": "snapshot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Snapshot Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedSnapshot"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Snapshot",
+        "operationId": "delete_snapshot_api_v1_snapshots__snapshot_id__delete",
+        "parameters": [
+          {
+            "name": "snapshot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Snapshot Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/reviews": {
+      "post": {
+        "summary": "Create Review",
+        "operationId": "create_review_api_v1_runs__run_id__reviews_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{run_id}/reviews/{review_id}": {
+      "get": {
+        "summary": "Get Review",
+        "operationId": "get_review_api_v1_runs__run_id__reviews__review_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/comparisons": {
+      "post": {
+        "summary": "Create Comparison",
+        "operationId": "create_comparison_api_v1_comparisons_post",
+        "parameters": [
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComparisonInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComparisonAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exports": {
+      "post": {
+        "summary": "Create Export",
+        "operationId": "create_export_api_v1_exports_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportToken"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exports/{token}": {
+      "get": {
+        "summary": "Download Export",
+        "operationId": "download_export_api_v1_exports__token__get",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/imports": {
+      "post": {
+        "summary": "Import Evidence",
+        "operationId": "import_evidence_api_v1_imports_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_import_evidence_api_v1_imports_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AppNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "app_service",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/AppSettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "AppNode"
+      },
+      "AppSettings": {
+        "properties": {
+          "dependency_timeout_ms": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Dependency Timeout Ms"
+          },
+          "max_retries": {
+            "type": "integer",
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Max Retries"
+          },
+          "invalidation": {
+            "type": "string",
+            "enum": [
+              "off",
+              "synchronous"
+            ],
+            "title": "Invalidation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AppSettings"
+      },
+      "AssessmentResult": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "not_evaluated",
+              "incomplete"
+            ],
+            "title": "Status"
+          },
+          "case_results": {
+            "items": {
+              "$ref": "#/components/schemas/CaseResult"
+            },
+            "type": "array",
+            "title": "Case Results"
+          },
+          "requirement_outcomes": {
+            "items": {
+              "$ref": "#/components/schemas/RequirementOutcome"
+            },
+            "type": "array",
+            "title": "Requirement Outcomes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "case_results",
+          "requirement_outcomes"
+        ],
+        "title": "AssessmentResult"
+      },
+      "Body_import_evidence_api_v1_imports_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_import_evidence_api_v1_imports_post"
+      },
+      "Budget": {
+        "properties": {
+          "max_credits_per_hour": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Max Credits Per Hour"
+          },
+          "profile_version": {
+            "type": "string",
+            "const": "0.1.0",
+            "title": "Profile Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "max_credits_per_hour",
+          "profile_version"
+        ],
+        "title": "Budget"
+      },
+      "CacheNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "cache",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/CacheSettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "CacheNode"
+      },
+      "CacheSettings": {
+        "properties": {
+          "ttl_seconds": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 1.0,
+            "title": "Ttl Seconds"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CacheSettings"
+      },
+      "CandidateInput": {
+        "properties": {
+          "revision_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision Id"
+          },
+          "design_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Design Id"
+          },
+          "patch": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Patch"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CandidateInput"
+      },
+      "CaseResult": {
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed"
+          },
+          "execution_status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "canceled",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Execution Status"
+          },
+          "operation_metrics": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/MetricValue"
+              },
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Operation Metrics"
+          },
+          "node_metrics": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/MetricValue"
+              },
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Node Metrics"
+          },
+          "requirement_outcomes": {
+            "items": {
+              "$ref": "#/components/schemas/RequirementOutcome"
+            },
+            "type": "array",
+            "title": "Requirement Outcomes"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceItem"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "trace_refs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Trace Refs"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "case_id",
+          "scenario_id",
+          "seed",
+          "execution_status",
+          "operation_metrics",
+          "node_metrics",
+          "requirement_outcomes",
+          "evidence",
+          "trace_refs"
+        ],
+        "title": "CaseResult"
+      },
+      "Catalogue": {
+        "properties": {
+          "component_types": {
+            "items": {
+              "$ref": "#/components/schemas/ComponentInfo"
+            },
+            "type": "array",
+            "title": "Component Types"
+          },
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            },
+            "type": "array",
+            "title": "Profiles"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "component_types",
+          "profiles"
+        ],
+        "title": "Catalogue"
+      },
+      "CdnNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "cdn",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/CacheSettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "CdnNode"
+      },
+      "Challenge": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "const": 1,
+            "title": "Schema Version"
+          },
+          "challenge_id": {
+            "type": "string",
+            "title": "Challenge Id"
+          },
+          "version": {
+            "type": "string",
+            "const": "0.1.0",
+            "title": "Version"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "level": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Level"
+          },
+          "brief": {
+            "type": "string",
+            "title": "Brief"
+          },
+          "concepts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Concepts"
+          },
+          "allowed_component_types": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "client",
+                "load_balancer",
+                "api_gateway",
+                "app_service",
+                "sql_database",
+                "cache",
+                "message_queue",
+                "worker",
+                "object_storage",
+                "cdn"
+              ]
+            },
+            "type": "array",
+            "title": "Allowed Component Types"
+          },
+          "operations": {
+            "items": {
+              "$ref": "#/components/schemas/Operation"
+            },
+            "type": "array",
+            "title": "Operations"
+          },
+          "initial_data": {
+            "$ref": "#/components/schemas/InitialData"
+          },
+          "workload": {
+            "$ref": "#/components/schemas/WorkloadSettings"
+          },
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/Scenario"
+            },
+            "type": "array",
+            "title": "Scenarios"
+          },
+          "requirements": {
+            "items": {
+              "$ref": "#/components/schemas/Requirement"
+            },
+            "type": "array",
+            "title": "Requirements"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/Budget"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "challenge_id",
+          "version",
+          "title",
+          "level",
+          "brief",
+          "concepts",
+          "allowed_component_types",
+          "operations",
+          "initial_data",
+          "workload",
+          "scenarios",
+          "requirements",
+          "budget"
+        ],
+        "title": "Challenge"
+      },
+      "ChallengeList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ChallengeSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "ChallengeList"
+      },
+      "ChallengeSummary": {
+        "properties": {
+          "challenge_id": {
+            "type": "string",
+            "title": "Challenge Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "level": {
+            "type": "integer",
+            "title": "Level"
+          },
+          "brief": {
+            "type": "string",
+            "title": "Brief"
+          },
+          "concepts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Concepts"
+          },
+          "support_status": {
+            "type": "string",
+            "const": "Simulated",
+            "title": "Support Status",
+            "default": "Simulated"
+          },
+          "progress": {
+            "type": "string",
+            "enum": [
+              "unstarted",
+              "in_progress",
+              "passed"
+            ],
+            "title": "Progress"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "challenge_id",
+          "version",
+          "title",
+          "level",
+          "brief",
+          "concepts",
+          "progress"
+        ],
+        "title": "ChallengeSummary"
+      },
+      "ClientNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "client",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/EmptySettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "ClientNode"
+      },
+      "Collection": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "Collection"
+      },
+      "CollectionItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "design",
+              "run",
+              "comparison"
+            ],
+            "title": "Kind"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "challenge_id": {
+            "type": "string",
+            "title": "Challenge Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "challenge_id",
+          "created_at"
+        ],
+        "title": "CollectionItem"
+      },
+      "ComparisonAccepted": {
+        "properties": {
+          "comparison_id": {
+            "type": "string",
+            "title": "Comparison Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "queued",
+            "title": "Status",
+            "default": "queued"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "comparison_id"
+        ],
+        "title": "ComparisonAccepted"
+      },
+      "ComparisonInput": {
+        "properties": {
+          "baseline_run_id": {
+            "type": "string",
+            "title": "Baseline Run Id"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/CandidateInput"
+            },
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 1,
+            "title": "Candidates"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "baseline_run_id",
+          "candidates"
+        ],
+        "title": "ComparisonInput"
+      },
+      "ComparisonRecord": {
+        "properties": {
+          "comparison_id": {
+            "type": "string",
+            "title": "Comparison Id"
+          },
+          "baseline_run_id": {
+            "type": "string",
+            "title": "Baseline Run Id"
+          },
+          "workload_bundle_id": {
+            "type": "string",
+            "title": "Workload Bundle Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              "canceled"
+            ],
+            "title": "Status"
+          },
+          "candidate_revision_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Candidate Revision Ids"
+          },
+          "candidate_run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Candidate Run Ids",
+            "default": []
+          },
+          "rejected_candidates": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Rejected Candidates",
+            "default": []
+          },
+          "objective": {
+            "type": "string",
+            "title": "Objective",
+            "default": "minimum credits/hour among passing alternatives, including baseline"
+          },
+          "differences": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Differences",
+            "default": []
+          },
+          "winner_run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Winner Run Id"
+          },
+          "tied_run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tied Run Ids",
+            "default": []
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "comparison_id",
+          "baseline_run_id",
+          "workload_bundle_id",
+          "status",
+          "candidate_revision_ids"
+        ],
+        "title": "ComparisonRecord"
+      },
+      "ComponentInfo": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "purpose": {
+            "type": "string",
+            "title": "Purpose"
+          },
+          "profiles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Profiles"
+          },
+          "settings": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Settings"
+          },
+          "support_label": {
+            "type": "string",
+            "const": "Simulated",
+            "title": "Support Label",
+            "default": "Simulated"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "label",
+          "purpose",
+          "profiles",
+          "settings"
+        ],
+        "title": "ComponentInfo"
+      },
+      "DeleteResult": {
+        "properties": {
+          "deleted": {
+            "type": "boolean",
+            "title": "Deleted"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "deleted",
+          "id"
+        ],
+        "title": "DeleteResult"
+      },
+      "DesignCreated": {
+        "properties": {
+          "design_id": {
+            "type": "string",
+            "title": "Design Id"
+          },
+          "revision_id": {
+            "type": "string",
+            "title": "Revision Id"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/DesignRevision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "design_id",
+          "revision_id",
+          "revision"
+        ],
+        "title": "DesignCreated"
+      },
+      "DesignInput": {
+        "properties": {
+          "challenge_id": {
+            "type": "string",
+            "title": "Challenge Id"
+          },
+          "challenge_version": {
+            "type": "string",
+            "title": "Challenge Version",
+            "default": "0.1.0"
+          },
+          "nodes": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClientNode"
+                },
+                {
+                  "$ref": "#/components/schemas/LoadBalancerNode"
+                },
+                {
+                  "$ref": "#/components/schemas/GatewayNode"
+                },
+                {
+                  "$ref": "#/components/schemas/AppNode"
+                },
+                {
+                  "$ref": "#/components/schemas/SqlNode"
+                },
+                {
+                  "$ref": "#/components/schemas/CacheNode"
+                },
+                {
+                  "$ref": "#/components/schemas/QueueNode"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkerNode"
+                },
+                {
+                  "$ref": "#/components/schemas/ObjectNode"
+                },
+                {
+                  "$ref": "#/components/schemas/CdnNode"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "api_gateway": "#/components/schemas/GatewayNode",
+                  "app_service": "#/components/schemas/AppNode",
+                  "cache": "#/components/schemas/CacheNode",
+                  "cdn": "#/components/schemas/CdnNode",
+                  "client": "#/components/schemas/ClientNode",
+                  "load_balancer": "#/components/schemas/LoadBalancerNode",
+                  "message_queue": "#/components/schemas/QueueNode",
+                  "object_storage": "#/components/schemas/ObjectNode",
+                  "sql_database": "#/components/schemas/SqlNode",
+                  "worker": "#/components/schemas/WorkerNode"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Nodes",
+            "default": []
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "challenge_id"
+        ],
+        "title": "DesignInput"
+      },
+      "DesignMetadata": {
+        "properties": {
+          "design_id": {
+            "type": "string",
+            "title": "Design Id"
+          },
+          "challenge_id": {
+            "type": "string",
+            "title": "Challenge Id"
+          },
+          "challenge_version": {
+            "type": "string",
+            "title": "Challenge Version"
+          },
+          "latest_revision_id": {
+            "type": "string",
+            "title": "Latest Revision Id"
+          },
+          "revision_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Revision Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "design_id",
+          "challenge_id",
+          "challenge_version",
+          "latest_revision_id",
+          "revision_ids"
+        ],
+        "title": "DesignMetadata"
+      },
+      "DesignRevision": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "const": 1,
+            "title": "Schema Version"
+          },
+          "design_id": {
+            "type": "string",
+            "title": "Design Id"
+          },
+          "revision_id": {
+            "type": "string",
+            "title": "Revision Id"
+          },
+          "challenge_id": {
+            "type": "string",
+            "title": "Challenge Id"
+          },
+          "challenge_version": {
+            "type": "string",
+            "const": "0.1.0",
+            "title": "Challenge Version"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "parent_revision_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Revision Id"
+          },
+          "nodes": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClientNode"
+                },
+                {
+                  "$ref": "#/components/schemas/LoadBalancerNode"
+                },
+                {
+                  "$ref": "#/components/schemas/GatewayNode"
+                },
+                {
+                  "$ref": "#/components/schemas/AppNode"
+                },
+                {
+                  "$ref": "#/components/schemas/SqlNode"
+                },
+                {
+                  "$ref": "#/components/schemas/CacheNode"
+                },
+                {
+                  "$ref": "#/components/schemas/QueueNode"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkerNode"
+                },
+                {
+                  "$ref": "#/components/schemas/ObjectNode"
+                },
+                {
+                  "$ref": "#/components/schemas/CdnNode"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "api_gateway": "#/components/schemas/GatewayNode",
+                  "app_service": "#/components/schemas/AppNode",
+                  "cache": "#/components/schemas/CacheNode",
+                  "cdn": "#/components/schemas/CdnNode",
+                  "client": "#/components/schemas/ClientNode",
+                  "load_balancer": "#/components/schemas/LoadBalancerNode",
+                  "message_queue": "#/components/schemas/QueueNode",
+                  "object_storage": "#/components/schemas/ObjectNode",
+                  "sql_database": "#/components/schemas/SqlNode",
+                  "worker": "#/components/schemas/WorkerNode"
+                }
+              }
+            },
+            "type": "array",
+            "maxItems": 25,
+            "title": "Nodes"
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "maxItems": 60,
+            "title": "Edges"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "design_id",
+          "revision_id",
+          "challenge_id",
+          "challenge_version",
+          "created_at",
+          "parent_revision_id",
+          "nodes",
+          "edges"
+        ],
+        "title": "DesignRevision"
+      },
+      "Edge": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "request",
+              "cache_miss",
+              "invalidate",
+              "consume"
+            ],
+            "title": "Kind"
+          },
+          "operation_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Operation Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "source",
+          "target",
+          "kind",
+          "operation_ids"
+        ],
+        "title": "Edge"
+      },
+      "EmptySettings": {
+        "properties": {},
+        "additionalProperties": false,
+        "type": "object",
+        "title": "EmptySettings"
+      },
+      "EvidenceItem": {
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope"
+          },
+          "sample_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Sample Count"
+          },
+          "artifact_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Artifact Ref"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "type",
+          "unit",
+          "value",
+          "scope",
+          "sample_count",
+          "artifact_ref"
+        ],
+        "title": "EvidenceItem"
+      },
+      "ExportInput": {
+        "properties": {
+          "design_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Design Ids",
+            "default": []
+          },
+          "run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Run Ids",
+            "default": []
+          },
+          "comparison_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Comparison Ids",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ExportInput"
+      },
+      "ExportToken": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "download_url": {
+            "type": "string",
+            "title": "Download Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "token",
+          "download_url"
+        ],
+        "title": "ExportToken"
+      },
+      "Fault": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "clear_cache",
+              "clear_cdn",
+              "app_instance_unavailable",
+              "service_multiplier"
+            ],
+            "title": "Type"
+          },
+          "at_s": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "At S"
+          },
+          "end_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End S"
+          },
+          "target_component_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "client",
+                  "load_balancer",
+                  "api_gateway",
+                  "app_service",
+                  "sql_database",
+                  "cache",
+                  "message_queue",
+                  "worker",
+                  "object_storage",
+                  "cdn"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Component Type"
+          },
+          "target_node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Node Id"
+          },
+          "target_instance_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Instance Id"
+          },
+          "multiplier": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Multiplier"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "at_s"
+        ],
+        "title": "Fault"
+      },
+      "GatewayNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "api_gateway",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/GatewaySettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "GatewayNode"
+      },
+      "GatewaySettings": {
+        "properties": {
+          "rate_limit_rps": {
+            "type": "integer",
+            "maximum": 100000.0,
+            "minimum": 1.0,
+            "title": "Rate Limit Rps"
+          },
+          "bucket_size": {
+            "type": "integer",
+            "maximum": 100000.0,
+            "minimum": 1.0,
+            "title": "Bucket Size"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "GatewaySettings"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Health": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status",
+            "default": "ok"
+          },
+          "engine_version": {
+            "type": "string",
+            "title": "Engine Version"
+          },
+          "ai_configured": {
+            "type": "boolean",
+            "title": "Ai Configured"
+          },
+          "ai_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ai Model"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "engine_version",
+          "ai_configured",
+          "ai_model"
+        ],
+        "title": "Health"
+      },
+      "ImportResult": {
+        "properties": {
+          "imported_design_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Imported Design Ids"
+          },
+          "imported_workload_bundle_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Imported Workload Bundle Ids"
+          },
+          "imported_run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Imported Run Ids"
+          },
+          "trusted": {
+            "type": "boolean",
+            "const": false,
+            "title": "Trusted",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "imported_design_ids",
+          "imported_workload_bundle_ids",
+          "imported_run_ids"
+        ],
+        "title": "ImportResult"
+      },
+      "InitialData": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "versioned_keys",
+              "immutable_objects",
+              "empty_jobs"
+            ],
+            "title": "Kind"
+          },
+          "namespace": {
+            "type": "string",
+            "title": "Namespace"
+          },
+          "record_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Record Count"
+          },
+          "initial_version": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Initial Version",
+            "default": 0
+          },
+          "object_bytes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Object Bytes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "namespace",
+          "record_count"
+        ],
+        "title": "InitialData"
+      },
+      "JobOutcome": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Attempts"
+          },
+          "accepted_us": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accepted Us"
+          },
+          "acknowledged_us": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Acknowledged Us"
+          },
+          "first_effect_us": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Effect Us"
+          },
+          "terminal_state": {
+            "type": "string",
+            "enum": [
+              "delivered",
+              "failed",
+              "expired",
+              "pending"
+            ],
+            "title": "Terminal State"
+          },
+          "duplicate_effect_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Duplicate Effect Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "job_id",
+          "request_id",
+          "attempts",
+          "terminal_state",
+          "duplicate_effect_count"
+        ],
+        "title": "JobOutcome"
+      },
+      "KeyDistribution": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "uniform",
+              "zipf"
+            ],
+            "title": "Type"
+          },
+          "key_count": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Key Count"
+          },
+          "exponent": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exponent"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "key_count"
+        ],
+        "title": "KeyDistribution"
+      },
+      "LoadBalancerNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "load_balancer",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/EmptySettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "LoadBalancerNode"
+      },
+      "MetricValue": {
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "sample_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Sample Count"
+          },
+          "unavailable_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unavailable Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "unit",
+          "sample_count"
+        ],
+        "title": "MetricValue"
+      },
+      "ObjectNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "object_storage",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/EmptySettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "ObjectNode"
+      },
+      "Operation": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "read_key",
+              "write_key",
+              "get_object",
+              "put_object",
+              "enqueue_job"
+            ],
+            "title": "Kind"
+          },
+          "weight": {
+            "type": "number",
+            "maximum": 1.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Weight"
+          },
+          "request_bytes": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Request Bytes"
+          },
+          "response_bytes": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Response Bytes"
+          },
+          "deadline_ms": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Deadline Ms"
+          },
+          "retry_safe": {
+            "type": "boolean",
+            "title": "Retry Safe"
+          },
+          "freshness_allowance_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Freshness Allowance Ms"
+          },
+          "job_deadline_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Deadline Ms"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "weight",
+          "request_bytes",
+          "response_bytes",
+          "deadline_ms",
+          "retry_safe"
+        ],
+        "title": "Operation"
+      },
+      "OutcomePage": {
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "requests": {
+            "items": {
+              "$ref": "#/components/schemas/RequestOutcome"
+            },
+            "type": "array",
+            "title": "Requests"
+          },
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/JobOutcome"
+            },
+            "type": "array",
+            "title": "Jobs"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "case_id",
+          "requests",
+          "jobs"
+        ],
+        "title": "OutcomePage"
+      },
+      "Position": {
+        "properties": {
+          "x": {
+            "type": "number",
+            "title": "X"
+          },
+          "y": {
+            "type": "number",
+            "title": "Y"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "x",
+          "y"
+        ],
+        "title": "Position"
+      },
+      "Profile": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "component_type": {
+            "type": "string",
+            "enum": [
+              "client",
+              "load_balancer",
+              "api_gateway",
+              "app_service",
+              "sql_database",
+              "cache",
+              "message_queue",
+              "worker",
+              "object_storage",
+              "cdn"
+            ],
+            "title": "Component Type"
+          },
+          "slots": {
+            "type": "integer",
+            "title": "Slots"
+          },
+          "queue_limit": {
+            "type": "integer",
+            "title": "Queue Limit"
+          },
+          "service_ms": {
+            "type": "number",
+            "title": "Service Ms"
+          },
+          "write_service_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Write Service Ms"
+          },
+          "capacity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capacity"
+          },
+          "credits_per_hour": {
+            "type": "integer",
+            "title": "Credits Per Hour"
+          },
+          "coefficient_of_variation": {
+            "type": "number",
+            "title": "Coefficient Of Variation",
+            "default": 0.25
+          },
+          "support_label": {
+            "type": "string",
+            "const": "Simulated",
+            "title": "Support Label",
+            "default": "Simulated"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "component_type",
+          "slots",
+          "queue_limit",
+          "service_ms",
+          "credits_per_hour"
+        ],
+        "title": "Profile"
+      },
+      "QueueNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "message_queue",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/QueueSettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "QueueNode"
+      },
+      "QueueSettings": {
+        "properties": {
+          "lease_seconds": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Lease Seconds"
+          },
+          "max_attempts": {
+            "type": "integer",
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Max Attempts"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "QueueSettings"
+      },
+      "RateSegment": {
+        "properties": {
+          "start_s": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Start S"
+          },
+          "end_s": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "End S"
+          },
+          "rps": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Rps"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "start_s",
+          "end_s",
+          "rps"
+        ],
+        "title": "RateSegment"
+      },
+      "RequestOutcome": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "operation_id": {
+            "type": "string",
+            "title": "Operation Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "arrival_us": {
+            "type": "integer",
+            "title": "Arrival Us"
+          },
+          "deadline_us": {
+            "type": "integer",
+            "title": "Deadline Us"
+          },
+          "terminal_us": {
+            "type": "integer",
+            "title": "Terminal Us"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "timeout",
+              "rejected",
+              "dependency_error",
+              "invalid_result",
+              "incomplete"
+            ],
+            "title": "Status"
+          },
+          "returned_payload_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Returned Payload Id"
+          },
+          "returned_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Returned Version"
+          },
+          "correct": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correct"
+          },
+          "fresh": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fresh"
+          },
+          "acknowledged_commit_us": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Acknowledged Commit Us"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "operation_id",
+          "key",
+          "arrival_us",
+          "deadline_us",
+          "terminal_us",
+          "status"
+        ],
+        "title": "RequestOutcome"
+      },
+      "Requirement": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "success_rate",
+              "response_p95_ms",
+              "response_p99_ms",
+              "invalid_read_count",
+              "freshness_violation_rate",
+              "acknowledged_write_missing_count",
+              "job_deadline_completion_rate",
+              "duplicate_effect_count",
+              "cost_credits_per_hour",
+              "object_invalid_count",
+              "object_capacity_violation_count"
+            ],
+            "title": "Metric"
+          },
+          "operation_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Operation Ids"
+          },
+          "scenario_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Scenario Ids"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              ">=",
+              "<=",
+              "=="
+            ],
+            "title": "Operator"
+          },
+          "threshold": {
+            "type": "number",
+            "title": "Threshold"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "min_samples": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Min Samples"
+          },
+          "severity": {
+            "type": "string",
+            "const": "hard",
+            "title": "Severity"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "description",
+          "metric",
+          "operation_ids",
+          "scenario_ids",
+          "operator",
+          "threshold",
+          "unit",
+          "min_samples",
+          "severity"
+        ],
+        "title": "Requirement"
+      },
+      "RequirementOutcome": {
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "title": "Requirement Id"
+          },
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed"
+          },
+          "operation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operation Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "not_evaluated",
+              "incomplete"
+            ],
+            "title": "Status"
+          },
+          "measured": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricValue"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "requirement_id",
+          "scenario_id",
+          "seed",
+          "operation_id",
+          "status",
+          "measured",
+          "evidence_ids"
+        ],
+        "title": "RequirementOutcome"
+      },
+      "ReviewAccepted": {
+        "properties": {
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "queued",
+            "title": "Status",
+            "default": "queued"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "review_id"
+        ],
+        "title": "ReviewAccepted"
+      },
+      "ReviewRecord": {
+        "properties": {
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "completed",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "prompt_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Version"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usage"
+          },
+          "cost": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "strengths": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Strengths",
+            "default": []
+          },
+          "findings": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Findings",
+            "default": []
+          },
+          "suggested_experiments": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Suggested Experiments",
+            "default": []
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations",
+            "default": []
+          },
+          "validation_errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Validation Errors",
+            "default": []
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "raw_response": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Response"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "review_id",
+          "run_id",
+          "status",
+          "created_at"
+        ],
+        "title": "ReviewRecord"
+      },
+      "ReviewRequest": {
+        "properties": {
+          "consent": {
+            "type": "boolean",
+            "const": true,
+            "title": "Consent"
+          },
+          "comparison_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparison Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "consent"
+        ],
+        "title": "ReviewRequest"
+      },
+      "RevisionInput": {
+        "properties": {
+          "parent_revision_id": {
+            "type": "string",
+            "title": "Parent Revision Id"
+          },
+          "nodes": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClientNode"
+                },
+                {
+                  "$ref": "#/components/schemas/LoadBalancerNode"
+                },
+                {
+                  "$ref": "#/components/schemas/GatewayNode"
+                },
+                {
+                  "$ref": "#/components/schemas/AppNode"
+                },
+                {
+                  "$ref": "#/components/schemas/SqlNode"
+                },
+                {
+                  "$ref": "#/components/schemas/CacheNode"
+                },
+                {
+                  "$ref": "#/components/schemas/QueueNode"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkerNode"
+                },
+                {
+                  "$ref": "#/components/schemas/ObjectNode"
+                },
+                {
+                  "$ref": "#/components/schemas/CdnNode"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "api_gateway": "#/components/schemas/GatewayNode",
+                  "app_service": "#/components/schemas/AppNode",
+                  "cache": "#/components/schemas/CacheNode",
+                  "cdn": "#/components/schemas/CdnNode",
+                  "client": "#/components/schemas/ClientNode",
+                  "load_balancer": "#/components/schemas/LoadBalancerNode",
+                  "message_queue": "#/components/schemas/QueueNode",
+                  "object_storage": "#/components/schemas/ObjectNode",
+                  "sql_database": "#/components/schemas/SqlNode",
+                  "worker": "#/components/schemas/WorkerNode"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Nodes"
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "parent_revision_id",
+          "nodes",
+          "edges"
+        ],
+        "title": "RevisionInput"
+      },
+      "RunAccepted": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "execution_status": {
+            "type": "string",
+            "const": "queued",
+            "title": "Execution Status",
+            "default": "queued"
+          },
+          "assessment_status": {
+            "type": "string",
+            "const": "not_evaluated",
+            "title": "Assessment Status",
+            "default": "not_evaluated"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id"
+        ],
+        "title": "RunAccepted"
+      },
+      "RunInput": {
+        "properties": {
+          "design_id": {
+            "type": "string",
+            "title": "Design Id"
+          },
+          "revision_id": {
+            "type": "string",
+            "title": "Revision Id"
+          },
+          "challenge_id": {
+            "type": "string",
+            "title": "Challenge Id"
+          },
+          "challenge_version": {
+            "type": "string",
+            "title": "Challenge Version",
+            "default": "0.1.0"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "preview",
+              "assessment",
+              "experiment"
+            ],
+            "title": "Mode"
+          },
+          "workload_bundle_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload Bundle Id"
+          },
+          "experiment_scenario_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experiment Scenario Id"
+          },
+          "experiment_seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experiment Seed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "design_id",
+          "revision_id",
+          "challenge_id",
+          "mode"
+        ],
+        "title": "RunInput"
+      },
+      "RunManifest": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "preview",
+              "assessment",
+              "experiment"
+            ],
+            "title": "Mode"
+          },
+          "execution_status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "canceled",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Execution Status"
+          },
+          "assessment_status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "not_evaluated",
+              "incomplete"
+            ],
+            "title": "Assessment Status"
+          },
+          "design_id": {
+            "type": "string",
+            "title": "Design Id"
+          },
+          "revision_id": {
+            "type": "string",
+            "title": "Revision Id"
+          },
+          "challenge_id": {
+            "type": "string",
+            "title": "Challenge Id"
+          },
+          "challenge_version": {
+            "type": "string",
+            "title": "Challenge Version"
+          },
+          "challenge_hash": {
+            "type": "string",
+            "title": "Challenge Hash"
+          },
+          "engine_version": {
+            "type": "string",
+            "title": "Engine Version"
+          },
+          "assessment_version": {
+            "type": "string",
+            "title": "Assessment Version"
+          },
+          "profile_version": {
+            "type": "string",
+            "title": "Profile Version"
+          },
+          "profile_hash": {
+            "type": "string",
+            "title": "Profile Hash"
+          },
+          "workload_generator_version": {
+            "type": "string",
+            "title": "Workload Generator Version"
+          },
+          "design_hash": {
+            "type": "string",
+            "title": "Design Hash"
+          },
+          "workload_hash": {
+            "type": "string",
+            "title": "Workload Hash"
+          },
+          "run_config_hash": {
+            "type": "string",
+            "title": "Run Config Hash"
+          },
+          "workload_bundle_id": {
+            "type": "string",
+            "title": "Workload Bundle Id"
+          },
+          "case_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Case Ids"
+          },
+          "completed_case_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Completed Case Ids",
+            "default": []
+          },
+          "progress": {
+            "type": "number",
+            "title": "Progress",
+            "default": 0
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "artifact_refs": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Artifact Refs",
+            "default": {}
+          },
+          "trusted_workload": {
+            "type": "boolean",
+            "title": "Trusted Workload",
+            "default": true
+          },
+          "comparison_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparison Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "mode",
+          "execution_status",
+          "assessment_status",
+          "design_id",
+          "revision_id",
+          "challenge_id",
+          "challenge_version",
+          "challenge_hash",
+          "engine_version",
+          "assessment_version",
+          "profile_version",
+          "profile_hash",
+          "workload_generator_version",
+          "design_hash",
+          "workload_hash",
+          "run_config_hash",
+          "workload_bundle_id",
+          "case_ids",
+          "created_at"
+        ],
+        "title": "RunManifest"
+      },
+      "RunResults": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AssessmentResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cases": {
+            "items": {
+              "$ref": "#/components/schemas/CaseResult"
+            },
+            "type": "array",
+            "title": "Cases"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "assessment",
+          "cases"
+        ],
+        "title": "RunResults"
+      },
+      "SaveSnapshotInput": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "time_us": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Time Us"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "case_id",
+          "time_us"
+        ],
+        "title": "SaveSnapshotInput"
+      },
+      "SavedSnapshot": {
+        "properties": {
+          "snapshot_id": {
+            "type": "string",
+            "title": "Snapshot Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "time_us": {
+            "type": "integer",
+            "title": "Time Us"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/Snapshot"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "snapshot_id",
+          "title",
+          "run_id",
+          "case_id",
+          "time_us",
+          "created_at",
+          "snapshot"
+        ],
+        "title": "SavedSnapshot"
+      },
+      "Scenario": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required"
+          },
+          "warmup_rps": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Warmup Rps"
+          },
+          "rate_segments": {
+            "items": {
+              "$ref": "#/components/schemas/RateSegment"
+            },
+            "type": "array",
+            "title": "Rate Segments"
+          },
+          "faults": {
+            "items": {
+              "$ref": "#/components/schemas/Fault"
+            },
+            "type": "array",
+            "title": "Faults"
+          },
+          "demand_shift_at_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Demand Shift At S"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "required",
+          "warmup_rps",
+          "rate_segments",
+          "faults"
+        ],
+        "title": "Scenario"
+      },
+      "Snapshot": {
+        "properties": {
+          "time_us": {
+            "type": "integer",
+            "title": "Time Us"
+          },
+          "nodes": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Nodes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "time_us",
+          "nodes"
+        ],
+        "title": "Snapshot"
+      },
+      "SnapshotList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SavedSnapshot"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "SnapshotList"
+      },
+      "SnapshotPage": {
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Snapshot"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "case_id",
+          "items"
+        ],
+        "title": "SnapshotPage"
+      },
+      "SqlNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "sql_database",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/EmptySettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "SqlNode"
+      },
+      "Trace": {
+        "properties": {
+          "trace_id": {
+            "type": "string",
+            "title": "Trace Id"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "operation_id": {
+            "type": "string",
+            "title": "Operation Id"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/TraceEvent"
+            },
+            "type": "array",
+            "title": "Events"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "trace_id",
+          "request_id",
+          "operation_id",
+          "events"
+        ],
+        "title": "Trace"
+      },
+      "TraceEvent": {
+        "properties": {
+          "time_us": {
+            "type": "integer",
+            "title": "Time Us"
+          },
+          "event": {
+            "type": "string",
+            "title": "Event"
+          },
+          "node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Node Id"
+          },
+          "edge_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edge Id"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "attempt_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attempt Id"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "time_us",
+          "event"
+        ],
+        "title": "TraceEvent"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ValidationFinding": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "node_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Node Ids",
+            "default": []
+          },
+          "edge_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Edge Ids",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ValidationFinding"
+      },
+      "ValidationResult": {
+        "properties": {
+          "valid_draft": {
+            "type": "boolean",
+            "title": "Valid Draft"
+          },
+          "runnable": {
+            "type": "boolean",
+            "title": "Runnable"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationFinding"
+            },
+            "type": "array",
+            "title": "Findings"
+          },
+          "design_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Design Hash"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "valid_draft",
+          "runnable",
+          "findings"
+        ],
+        "title": "ValidationResult"
+      },
+      "WorkerNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "worker",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "instance_count": {
+            "type": "integer",
+            "maximum": 32.0,
+            "minimum": 1.0,
+            "title": "Instance Count"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/WorkerSettings"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label",
+          "profile_id",
+          "instance_count",
+          "settings",
+          "position"
+        ],
+        "title": "WorkerNode"
+      },
+      "WorkerSettings": {
+        "properties": {
+          "deduplicate": {
+            "type": "boolean",
+            "title": "Deduplicate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "WorkerSettings"
+      },
+      "WorkloadSettings": {
+        "properties": {
+          "warmup_seconds": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Warmup Seconds"
+          },
+          "measurement_seconds": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Measurement Seconds"
+          },
+          "drain_seconds": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Drain Seconds"
+          },
+          "assessment_seeds": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Assessment Seeds"
+          },
+          "key_distribution": {
+            "$ref": "#/components/schemas/KeyDistribution"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "warmup_seconds",
+          "measurement_seconds",
+          "drain_seconds",
+          "assessment_seeds",
+          "key_distribution"
+        ],
+        "title": "WorkloadSettings"
+      }
+    }
+  }
+}
