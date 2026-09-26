@@ -42,7 +42,7 @@ test('failed starter to evidence, matched comparison, adoption and evidence ZIP'
   await page.getByRole('button', { name: 'Reveal reference approach' }).click()
   await expect(page.locator('.revision-badge')).toContainText('Unassessed changes')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
-  await expect(page.locator('.revision-badge')).toContainText('Saved')
+  await expect(page.locator('.revision-badge')).toContainText('result from another revision')
   await page.getByRole('tab', { name: 'Compare' }).click()
   await expect(page.locator('.baseline-strip')).toBeVisible()
   await expect(page.locator('.candidate-list input:enabled').first()).toBeVisible()
@@ -70,12 +70,71 @@ test('failed starter to evidence, matched comparison, adoption and evidence ZIP'
   expect(reviewRequests).toEqual([])
 })
 
+test('late workspace and save replies preserve the active draft', async ({ page }) => {
+  const challenges = (await (await page.request.get('/api/v1/challenges')).json()).items
+  const [first, second] = challenges
+  const created: { design_id: string }[] = []
+  for (const challenge of [first, second]) {
+    const fixture = await (await page.request.get(`/api/v1/challenges/${challenge.challenge_id}/fixtures/initial`)).json()
+    const full = await (await page.request.get(`/api/v1/challenges/${challenge.challenge_id}`)).json()
+    const response = await page.request.post('/api/v1/designs', { data: { challenge_id: challenge.challenge_id, challenge_version: full.version, nodes: fixture.nodes, edges: fixture.edges } })
+    expect(response.ok()).toBeTruthy()
+    created.push(await response.json())
+  }
+  let releaseFirst!: () => void
+  let firstRequested!: () => void
+  const firstGate = new Promise<void>(resolve => { releaseFirst = resolve })
+  const firstSeen = new Promise<void>(resolve => { firstRequested = resolve })
+  await page.route(`**/api/v1/designs/${created[0].design_id}`, async route => {
+    const response = await route.fetch()
+    firstRequested()
+    await firstGate
+    await route.fulfill({ response })
+  })
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Saved work' }).click()
+  const firstRow = page.locator('.history-row').filter({ hasText: first.challenge_id }).filter({ hasText: 'design ·' })
+  const secondRow = page.locator('.history-row').filter({ hasText: second.challenge_id }).filter({ hasText: 'design ·' })
+  await firstRow.getByRole('button', { name: 'Open' }).click()
+  await firstSeen
+  await secondRow.getByRole('button', { name: 'Open' }).click()
+  await expect(page.locator('.workspace-identity h1')).toHaveText(second.title)
+  releaseFirst()
+  await expect(page.locator('.workspace-identity h1')).toHaveText(second.title)
+  await page.getByRole('tab', { name: 'Results' }).click()
+  await page.getByRole('button', { name: 'Assumption test' }).click()
+  await expect(page.getByRole('dialog', { name: 'Assumption test' }).getByLabel('Scenario')).not.toHaveValue('')
+  await page.getByRole('dialog', { name: 'Assumption test' }).getByRole('button', { name: 'Close' }).click()
+  await page.getByRole('tab', { name: 'Architecture' }).click()
+  await page.locator('.palette .palette-item:enabled').nth(1).click()
+  await expect(page.locator('.revision-badge')).toContainText('Unassessed changes')
+  let releaseSave!: () => void
+  let saveRequested!: () => void
+  const saveGate = new Promise<void>(resolve => { releaseSave = resolve })
+  const saveSeen = new Promise<void>(resolve => { saveRequested = resolve })
+  await page.route('**/api/v1/designs/*/revisions', async route => {
+    const response = await route.fetch()
+    saveRequested()
+    await saveGate
+    await route.fulfill({ response })
+  })
+  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await saveSeen
+  await page.locator('.palette .palette-item:enabled').last().click()
+  releaseSave()
+  await expect(page.locator('.revision-badge')).toContainText('Unassessed changes')
+  await expect(page.getByRole('button', { name: 'Save', exact: true })).toBeEnabled()
+})
+
 test('empty workspace is editable at 1024 × 768 with live drag and undo', async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 768 })
   await page.goto('/')
   await expect(page.locator('.challenge-card')).toHaveCount(5)
   await page.locator('.challenge-card').first().getByRole('button', { name: 'Start empty' }).click()
   await page.getByRole('button', { name: 'Close' }).click()
+  await page.getByRole('button', { name: 'AI coach' }).click()
+  await expect(page.getByRole('dialog', { name: 'AI coach guidance' })).toContainText('Provider unavailable')
+  await page.getByRole('dialog', { name: 'AI coach guidance' }).getByRole('button', { name: 'Close' }).click()
   await page.getByRole('button', { name: 'Add client' }).click()
   await expect(page.locator('.lab-node')).toHaveCount(1)
   const node = page.locator('.lab-node').first()

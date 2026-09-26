@@ -21,6 +21,7 @@ export type Review = S['ReviewRecord']
 export type Comparison = S['ComparisonRecord']
 export type CollectionItem = S['CollectionItem']
 export type SavedSnapshot = S['SavedSnapshot']
+export type Guidance = S['GuidanceRecord']
 
 const base = '/api/v1'
 
@@ -68,6 +69,8 @@ export const api = {
     const form = new FormData(); form.append('file', file)
     return request<S['ImportResult']>('/imports', { method: 'POST', body: form })
   },
+  startGuidance: (designId: string, body: S['GuidanceRequest']) => request<S['GuidanceAccepted']>(`/designs/${encodeURIComponent(designId)}/guidance`, json(body)),
+  guidance: (designId: string, guidanceId: string) => request<Guidance>(`/designs/${encodeURIComponent(designId)}/guidance/${encodeURIComponent(guidanceId)}`),
 }
 
 export function subscribeRun(id: string, onEvent: (event: Record<string, unknown>) => void): EventSource {

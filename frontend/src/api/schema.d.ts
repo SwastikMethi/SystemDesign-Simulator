@@ -158,6 +158,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/designs/{design_id}/guidance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Guidance */
+        post: operations["create_guidance_api_v1_designs__design_id__guidance_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/designs/{design_id}/guidance/{guidance_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Guidance */
+        get: operations["get_guidance_api_v1_designs__design_id__guidance__guidance_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/designs/validate": {
         parameters: {
             query?: never;
@@ -1032,6 +1066,104 @@ export interface components {
             rate_limit_rps?: number;
             /** Bucket Size */
             bucket_size?: number;
+        };
+        /** GuidanceAccepted */
+        GuidanceAccepted: {
+            /** Guidance Id */
+            guidance_id: string;
+            /**
+             * Status
+             * @default queued
+             * @constant
+             */
+            status: "queued";
+        };
+        /** GuidanceRecord */
+        GuidanceRecord: {
+            /** Guidance Id */
+            guidance_id: string;
+            /** Design Id */
+            design_id: string;
+            /** Revision Id */
+            revision_id: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "hint" | "explain";
+            /** Focus */
+            focus?: string | null;
+            /**
+             * Evidence Step
+             * @default false
+             */
+            evidence_step: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "completed" | "failed";
+            /** Question */
+            question?: string | null;
+            /** Explanation */
+            explanation?: string | null;
+            /**
+             * Authored Refs
+             * @default []
+             */
+            authored_refs: string[];
+            /** Provider */
+            provider?: string | null;
+            /** Model */
+            model?: string | null;
+            /** Prompt Version */
+            prompt_version?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Finished At */
+            finished_at?: string | null;
+            /** Latency Ms */
+            latency_ms?: number | null;
+            /** Usage */
+            usage?: {
+                [key: string]: unknown;
+            } | null;
+            /** Cost */
+            cost?: number | null;
+            /** Error */
+            error?: string | null;
+            /**
+             * Validation Errors
+             * @default []
+             */
+            validation_errors: string[];
+            /** Raw Response */
+            raw_response?: string | null;
+        };
+        /** GuidanceRequest */
+        GuidanceRequest: {
+            /** Revision Id */
+            revision_id: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "hint" | "explain";
+            /** Focus */
+            focus?: string | null;
+            /**
+             * Evidence Step
+             * @default false
+             */
+            evidence_step: boolean;
+            /**
+             * Consent
+             * @constant
+             */
+            consent: true;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -2068,6 +2200,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DesignRevision"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_guidance_api_v1_designs__design_id__guidance_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                design_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuidanceRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuidanceAccepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_guidance_api_v1_designs__design_id__guidance__guidance_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                design_id: string;
+                guidance_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuidanceRecord"];
                 };
             };
             /** @description Validation Error */
