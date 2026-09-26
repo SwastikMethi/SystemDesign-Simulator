@@ -1,10 +1,12 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page, type TestInfo } from '@playwright/test'
 
-test('failed starter to evidence, matched comparison, adoption and evidence ZIP', async ({ page }, testInfo) => {
+async function learnerJourney(page: Page, testInfo: TestInfo, width: number, height: number) {
   testInfo.setTimeout(240_000)
+  const screenshot = (name: string) => `screenshots/${name}-${width}${width === 1024 ? '-journey' : ''}.png`
+  const evidenceZip = width === 1440 ? 'screenshots/evidence.zip' : `screenshots/evidence-${width}.zip`
   const reviewRequests: string[] = []
   page.on('request', request => { if (request.method() === 'POST' && /\/reviews$/.test(request.url())) reviewRequests.push(request.url()) })
-  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.setViewportSize({ width, height })
   await page.goto('/')
   await expect(page.locator('.challenge-card')).toHaveCount(5)
   await expect(page.locator('.challenge-card').nth(2)).toContainText('Level 3')
@@ -14,7 +16,7 @@ test('failed starter to evidence, matched comparison, adoption and evidence ZIP'
   await expect(page.locator('.requirements-list article').first()).toBeVisible()
   await page.getByRole('tab', { name: 'Architecture' }).click()
   await expect(page.locator('.lab-node').first()).toBeVisible()
-  await page.screenshot({ path: 'screenshots/workspace-1440.png', fullPage: true })
+  await page.screenshot({ path: screenshot('workspace'), fullPage: true })
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await expect(page.locator('.revision-badge')).toContainText('Saved')
   await expect(page.getByRole('button', { name: 'Assess design' })).toBeEnabled()
@@ -36,7 +38,7 @@ test('failed starter to evidence, matched comparison, adoption and evidence ZIP'
   await page.waitForTimeout(100)
   await page.getByRole('button', { name: 'Pause replay' }).click()
   await expect(page.locator('.recorded-legend')).toContainText('Reduced motion')
-  await page.screenshot({ path: 'screenshots/failure-1440.png', fullPage: true })
+  await page.screenshot({ path: screenshot('failure'), fullPage: true })
   await page.getByRole('tab', { name: 'Requirements' }).click()
   page.once('dialog', dialog => dialog.accept())
   await page.getByRole('button', { name: 'Reveal reference approach' }).click()
@@ -51,7 +53,7 @@ test('failed starter to evidence, matched comparison, adoption and evidence ZIP'
   await expect(page.locator('.comparison-result .status').first()).toContainText('completed', { timeout: 120_000 })
   await expect(page.locator('.comparison-graph')).toBeVisible()
   await expect(page.locator('.compare-column').nth(1)).toContainText('pass')
-  await page.screenshot({ path: 'screenshots/comparison-1440.png', fullPage: true })
+  await page.screenshot({ path: screenshot('comparison'), fullPage: true })
   await page.getByRole('button', { name: 'Adopt revision' }).first().click()
   await expect(page.getByRole('tab', { name: 'Architecture' })).toHaveAttribute('aria-selected', 'true')
   await page.getByRole('button', { name: 'Saved work' }).click()
@@ -63,12 +65,15 @@ test('failed starter to evidence, matched comparison, adoption and evidence ZIP'
   const downloadPromise = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Export selected' }).click()
   const download = await downloadPromise
-  await download.saveAs('screenshots/evidence.zip')
+  await download.saveAs(evidenceZip)
   const rowsBeforeImport = await page.locator('.history-row').count()
-  await page.locator('input[type=file]').setInputFiles('screenshots/evidence.zip')
+  await page.locator('input[type=file]').setInputFiles(evidenceZip)
   await expect.poll(() => page.locator('.history-row').count(), { timeout: 30_000 }).toBeGreaterThan(rowsBeforeImport)
   expect(reviewRequests).toEqual([])
-})
+}
+
+test('failed starter to evidence, matched comparison, adoption and evidence ZIP', async ({ page }, testInfo) => learnerJourney(page, testInfo, 1440, 900))
+test('full catalogue learner journey at 1024 × 768', async ({ page }, testInfo) => learnerJourney(page, testInfo, 1024, 768))
 
 test('late workspace and save replies preserve the active draft', async ({ page }) => {
   const challenges = (await (await page.request.get('/api/v1/challenges')).json()).items
