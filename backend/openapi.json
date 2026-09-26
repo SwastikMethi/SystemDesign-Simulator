@@ -3895,6 +3895,23 @@
             ],
             "title": "Cost"
           },
+          "assessment_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "pass",
+                  "fail",
+                  "not_evaluated",
+                  "incomplete"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment Status"
+          },
           "summary": {
             "anyOf": [
               {

@@ -185,6 +185,7 @@ class ReviewRecord(Strict):
     latency_ms: int | None = None
     usage: dict[str, Any] | None = None
     cost: float | None = None
+    assessment_status: Literal["pass", "fail", "not_evaluated", "incomplete"] | None = None
     summary: str | None = None
     strengths: list[dict[str, Any]] = []
     findings: list[dict[str, Any]] = []

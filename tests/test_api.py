@@ -1,8 +1,10 @@
+import gzip
 import io
 import json
 import time
 import zipfile
 
+import pytest
 from fastapi.testclient import TestClient
 
 from backend.api import create_app
@@ -74,13 +76,17 @@ def test_comparison_rejects_changed_required_fault_binding(tmp_path, monkeypatch
     from backend.workloads import GENERATOR_VERSION, bundle_hash, generate_case
 
     challenge = load_challenge("product-catalogue")
-    scenario = challenge.scenarios[0].model_copy(update={"faults": [Fault(type="app_instance_unavailable", at_s=30, target_component_type="app_service")]})
+    scenario = challenge.scenarios[0].model_copy(update={"faults": [Fault(type="app_instance_unavailable", at_s=30, target_component_type="app_service", target_instance_id="app-1")]})
     challenge = challenge.model_copy(update={"scenarios": [scenario, *challenge.scenarios[1:]]})
     monkeypatch.setattr(api, "load_challenge", lambda challenge_id: challenge)
-    baseline = load_fixture("product-catalogue", "reference")
+    fixture = load_fixture("product-catalogue", "reference")
+    baseline = fixture.model_copy(update={"nodes": [node.model_copy(update={"instance_count": 2}) if node.id == "app" else node for node in fixture.nodes]})
     candidate = baseline.model_copy(update={"design_id": "design-renamed", "revision_id": "revision-renamed", "nodes": [node.model_copy(update={"id": "app-renamed"}) if node.id == "app" else node for node in baseline.nodes], "edges": [edge.model_copy(update={"source": "app-renamed" if edge.source == "app" else edge.source, "target": "app-renamed" if edge.target == "app" else edge.target}) for edge in baseline.edges]})
+    missing_instance = baseline.model_copy(update={"design_id": "design-missing-instance", "revision_id": "revision-missing-instance", "nodes": [node.model_copy(update={"instance_count": 1}) if node.id == "app" else node for node in baseline.nodes]})
     case = generate_case(challenge, scenario.id, challenge.workload.assessment_seeds[0])
     assert fault_bindings(challenge, baseline, case) != fault_bindings(challenge, candidate, case)
+    with pytest.raises(ValueError, match="fault instance missing"):
+        fault_bindings(challenge, missing_instance, case)
     installed = load_challenge("product-catalogue")
     clear_scenario = next(s for s in installed.scenarios if any(f.type == "clear_cache" for f in s.faults))
     clear_case = generate_case(installed, clear_scenario.id, installed.workload.assessment_seeds[0])
@@ -88,6 +94,7 @@ def test_comparison_rejects_changed_required_fault_binding(tmp_path, monkeypatch
     store = Store(tmp_path)
     store.save_design(baseline)
     store.save_design(candidate)
+    store.save_design(missing_instance)
     bundle_id, run_id, case_id = "bundle-test", "run-baseline", f"{case.scenario_id}-{case.seed}"
     workload_digest = bundle_hash([case])
     challenge_digest = digest(challenge.model_dump(mode="json"))
@@ -97,12 +104,14 @@ def test_comparison_rejects_changed_required_fault_binding(tmp_path, monkeypatch
     store.save_run_manifest(manifest.model_dump(mode="json"))
     store.write_json(store.path("runs", run_id, "assessment").with_suffix(".json"), AssessmentResult(status="pass", case_results=[], requirement_outcomes=[]).model_dump(mode="json"))
     http = client(tmp_path)
-    response = http.post("/api/v1/comparisons", json={"baseline_run_id": run_id, "candidates": [{"design_id": candidate.design_id, "revision_id": candidate.revision_id}]})
+    response = http.post("/api/v1/comparisons", json={"baseline_run_id": run_id, "candidates": [{"design_id": candidate.design_id, "revision_id": candidate.revision_id}, {"design_id": missing_instance.design_id, "revision_id": missing_instance.revision_id}]})
     assert response.status_code == 202, response.text
     record = http.get(f"/api/v1/comparisons/{response.json()['comparison_id']}").json()
     assert record["status"] == "completed"
     assert not record["candidate_run_ids"]
+    assert len(record["rejected_candidates"]) == 2
     assert "fault" in record["rejected_candidates"][0]["validation_error"]
+    assert "fault instance missing" in record["rejected_candidates"][1]["validation_error"]
 
 
 def create_design(http, fixture="reference"):
@@ -214,6 +223,36 @@ def test_import_validates_all_entries_before_saving_design(tmp_path):
     assert Store(tmp_path).ids("workloads") == []
 
 
+def test_import_bounds_aggregate_expanded_workloads_before_committing(tmp_path, monkeypatch):
+    import backend.api as api
+    from backend.content import load_challenge
+    from backend.storage import Store
+    from backend.workloads import generate_case
+
+    http = client(tmp_path)
+    created = create_design(http)
+    exported = http.post("/api/v1/exports", json={"design_ids": [created["design_id"]]})
+    source = http.get(exported.json()["download_url"]).content
+    challenge = load_challenge("product-catalogue")
+    case = generate_case(challenge, challenge.scenarios[0].id, challenge.workload.assessment_seeds[0])
+    content = json.dumps(case.model_dump(mode="json"), sort_keys=True, separators=(",", ":")).encode() + b"\n"
+    monkeypatch.setattr(api, "MAX_EXPANDED_WORKLOAD_BYTES", len(content) + 16)
+    raw = io.BytesIO()
+    with zipfile.ZipFile(io.BytesIO(source)) as original, zipfile.ZipFile(raw, "w") as archive:
+        for name in original.namelist():
+            archive.writestr(name, original.read(name))
+        archive.writestr("workloads/bundle-test/manifest.json", json.dumps({"challenge_id": challenge.challenge_id, "challenge_version": challenge.version, "case_hashes": {"case-one": "a", "case-two": "b"}, "workload_hash": "irrelevant"}))
+        compressed = gzip.compress(content)
+        archive.writestr("workloads/bundle-test/case-one.jsonl.gz", compressed)
+        archive.writestr("workloads/bundle-test/case-two.jsonl.gz", compressed)
+    before = Store(tmp_path).ids("designs")
+    response = http.post("/api/v1/imports", files={"file": ("too-large.zip", raw.getvalue(), "application/zip")})
+    assert response.status_code == 422, response.text
+    assert "expanded workload" in response.json()["message"].lower()
+    assert Store(tmp_path).ids("designs") == before
+    assert Store(tmp_path).ids("workloads") == []
+
+
 def test_assessment_comparison_preserves_loser_and_progress(tmp_path):
     http = client(tmp_path)
     baseline = create_design(http, "reference")
@@ -320,3 +359,35 @@ def test_review_opt_in_and_rejected_model_output_is_saved(tmp_path, monkeypatch)
     assert review["status"] == "failed"
     assert review["raw_response"] == "{bad-json"
     assert review["validation_errors"]
+    def malformed_with_bad_usage(*args):
+        raise ProviderOutputError("provider returned malformed JSON", "{bad-json", [], 2)
+    monkeypatch.setattr(api, "request_review", malformed_with_bad_usage)
+    accepted = http.post(f"/api/v1/runs/{run_id}/reviews", json={"consent": True})
+    assert accepted.status_code == 202
+    review_id = accepted.json()["review_id"]
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        review = http.get(f"/api/v1/runs/{run_id}/reviews/{review_id}").json()
+        if review["status"] != "queued":
+            break
+        time.sleep(.05)
+    assert review["status"] == "failed"
+    assert review["raw_response"] == "{bad-json"
+    assert review["usage"] is None
+    def valid(*args):
+        payload = {"strengths": [], "findings": [], "suggested_experiments": [], "limitations": ["The cache may help repeated reads."]}
+        return payload, json.dumps(payload), None, 2
+    monkeypatch.setattr(api, "request_review", valid)
+    accepted = http.post(f"/api/v1/runs/{run_id}/reviews", json={"consent": True})
+    assert accepted.status_code == 202
+    review_id = accepted.json()["review_id"]
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        review = http.get(f"/api/v1/runs/{run_id}/reviews/{review_id}").json()
+        if review["status"] != "queued":
+            break
+        time.sleep(.05)
+    assert review["status"] == "completed"
+    assert review["assessment_status"] == run["assessment_status"]
+    assert review["summary"] == {"pass": "Assessment passed.", "fail": "Assessment failed.", "incomplete": "Assessment evidence is incomplete.", "not_evaluated": "This run was not assessed."}[run["assessment_status"]]
+    assert review["limitations"] == ["The cache may help repeated reads."]

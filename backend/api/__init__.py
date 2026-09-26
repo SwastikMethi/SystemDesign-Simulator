@@ -33,6 +33,7 @@ from backend.workloads import GENERATOR_VERSION, WorkloadCase, bundle_hash, gene
 
 PROFILE_VERSION = "0.1.0"
 MAX_IMPORT_BYTES = 50 * 1024 * 1024
+MAX_EXPANDED_WORKLOAD_BYTES = 100 * 1024 * 1024
 
 
 def profile_hash() -> str:
@@ -506,7 +507,8 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
                     raise problem(409, "idempotency_conflict", "Key already used with different input")
                 return ReviewAccepted(review_id=record["id"])
             review_id = new_id("review")
-            record = ReviewRecord(review_id=review_id, run_id=run_id, status="queued", provider=os.getenv("AISD_AI_BASE_URL"), model=settings.ai_model, prompt_version=PROMPT_VERSION, created_at=datetime.now(timezone.utc))
+            assessment_summary = {"pass": "Assessment passed.", "fail": "Assessment failed.", "incomplete": "Assessment evidence is incomplete.", "not_evaluated": "This run was not assessed."}[manifest.assessment_status]
+            record = ReviewRecord(review_id=review_id, run_id=run_id, status="queued", provider=os.getenv("AISD_AI_BASE_URL"), model=settings.ai_model, prompt_version=PROMPT_VERSION, created_at=datetime.now(timezone.utc), assessment_status=manifest.assessment_status, summary=assessment_summary)
             path = store().path("runs", run_id, "reviews", review_id).with_suffix(".json")
             store().write_json(path, record.model_dump(mode="json"))
             if idempotency_path:
@@ -534,7 +536,13 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
             except Exception as exc:
                 current.update(status="failed", error=str(exc)[:500], validation_errors=[str(exc)[:500]])
             current["finished_at"] = now()
-            store().write_json(path, ReviewRecord.model_validate(current).model_dump(mode="json"))
+            try:
+                saved = ReviewRecord.model_validate(current)
+            except ValidationError:
+                fallback = record.model_dump(mode="json")
+                fallback.update(status="failed", finished_at=current["finished_at"], error="Invalid provider response metadata", validation_errors=["Invalid provider response metadata"], raw_response=current.get("raw_response") if isinstance(current.get("raw_response"), str) else None)
+                saved = ReviewRecord.model_validate(fallback)
+            store().write_json(path, saved.model_dump(mode="json"))
         threading.Thread(target=work, daemon=True).start()
         return ReviewAccepted(review_id=review_id)
 
@@ -595,10 +603,17 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
                 raise problem(409, "compatibility", "Workload case is unavailable") from None
         if bundle_hash(cases) != baseline.workload_hash:
             raise problem(409, "compatibility", "Workload content hash differs")
-        baseline_bindings = [fault_bindings(challenge, base_design, case) for case in cases]
+        try:
+            baseline_bindings = [fault_bindings(challenge, base_design, case) for case in cases]
+        except ValueError as exc:
+            raise problem(409, "compatibility", f"Baseline fault target is invalid: {exc}") from None
         compatible_candidates = []
         for index, candidate in zip(candidate_indices, candidates):
-            changed = [f"{case.scenario_id}-{case.seed}" for case, binding in zip(cases, baseline_bindings) if fault_bindings(challenge, candidate, case) != binding]
+            try:
+                changed = [f"{case.scenario_id}-{case.seed}" for case, binding in zip(cases, baseline_bindings) if fault_bindings(challenge, candidate, case) != binding]
+            except ValueError as exc:
+                rejected.append({"index": index, "status": "rejected", "validation_error": str(exc)[:500], "candidate": body.candidates[index].model_dump(mode="json")})
+                continue
             if changed:
                 rejected.append({"index": index, "status": "rejected", "validation_error": f"Required fault binding changes in case {changed[0]}", "candidate": body.candidates[index].model_dump(mode="json")})
             else:
@@ -820,6 +835,7 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
             except (ValueError, ValidationError, KeyError) as exc:
                 raise problem(422, "invalid_design", str(exc)) from None
         source_bundles = {Path(name).parts[1] for name in entries if Path(name).parts[0] == "workloads" and len(Path(name).parts) > 1}
+        expanded_workload_bytes = 0
         for source_id in sorted(source_bundles):
             try:
                 valid_id(source_id)
@@ -848,11 +864,17 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
                 name = prefix + case_id + ".jsonl.gz"
                 if name not in names:
                     raise problem(422, "invalid_zip", "Workload case missing")
+                remaining = MAX_EXPANDED_WORKLOAD_BYTES - expanded_workload_bytes
+                if remaining <= 0:
+                    raise problem(422, "import_too_large", "Expanded workload contents exceed limit")
                 try:
                     with gzip.GzipFile(fileobj=io.BytesIO(entries[name])) as expanded:
-                        content = expanded.read(MAX_IMPORT_BYTES + 1)
+                        content = expanded.read(min(MAX_IMPORT_BYTES, remaining) + 1)
+                    if len(content) > remaining:
+                        raise problem(422, "import_too_large", "Expanded workload contents exceed limit")
                     if len(content) > MAX_IMPORT_BYTES:
                         raise ValueError("expanded workload case exceeds limit")
+                    expanded_workload_bytes += len(content)
                     case = WorkloadCase.model_validate(json.loads(content.splitlines()[0]))
                 except (ValueError, ValidationError, IndexError, OSError):
                     raise problem(422, "invalid_zip", "Invalid workload case") from None
