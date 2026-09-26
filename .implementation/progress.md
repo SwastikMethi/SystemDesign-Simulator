@@ -1,5 +1,13 @@
 # SDD ledger — plan: docs/BUILD-PLAN.md
 
+## Final status — complete
+
+All implementation tasks are complete. The independent scoped final re-review of `d7296cb..2b41d2b` approved the consolidated correction: all seven Important findings and both minor items are addressed, with no new Critical/Important breakage. Detailed dispositions are in [final-review.md](final-review.md).
+
+Final verification includes all 20 designs/240 cases on engine 0.1.1, 45 numerical/contract/assessment checks, 28 coach/guidance/API checks, eight frontend unit tests, the production build and all ten browser checks across the combined run plus focused rerun. Both complete learner journeys passed at 1440×900 and 1024×768. Root verified both evidence ZIPs, inspected the refreshed recordings and screenshots, checked all 37 local documentation links and left the app running at http://127.0.0.1:8770. See [final-fix-report.md](final-fix-report.md) for exact executed checks and [acceptance evidence](../docs/ACCEPTANCE.md) for limits. The live-provider smoke test and five-person study were not performed.
+
+The entries below preserve the implementation and review history.
+
 ## Preflight
 
 | Producer / consumer | Interface / check | Resolution |

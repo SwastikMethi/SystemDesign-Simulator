@@ -63,7 +63,7 @@ The full fixture command executes all 20 initial/reference/failure/budget design
 .venv/bin/python -m backend.fixtures --challenge product-catalogue --fixture reference --output .implementation/catalogue-benchmark.json
 ```
 
-On an Apple M1 Max with 32 GiB RAM, the recorded catalogue benchmark completed 15 cases in **33.22 seconds**, using approximately **124.5 MiB additional peak RSS**. This is a headless measurement of engine `0.1.1`; it excludes AI, browser rendering, and API artifact writing. See [acceptance evidence](docs/ACCEPTANCE.md) and [benchmark data](.implementation/catalogue-benchmark.json) for the exact scope and remaining validation.
+On an Apple M1 Max with 32 GiB RAM, the recorded catalogue benchmark completed 15 cases in **33.22 seconds**, using approximately **124.5 MiB additional peak RSS**. This is a headless measurement of engine `0.1.1`; it excludes AI, browser rendering, and API artifact writing. See [acceptance evidence](docs/ACCEPTANCE.md) and [benchmark data](.implementation/catalogue-benchmark.json) for the exact scope and verification limits.
 
 ## Model and limits
 

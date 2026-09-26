@@ -1,6 +1,8 @@
 # Final whole-branch review
 
-Reviewer: `/root/final_review`, gpt-6-astra. Frozen range: `1b280c8..d7296cb`. Verdict: **With fixes**. No Critical findings; seven Important findings below. The reviewer inspected contracts, numerical engine, assessment, storage, API, coach, frontend, replay and tests. Broad suites were not repeated. Focused read-only Python checks reproduced the hash/outcome defect, missing coach revision, invalid patch schema and both deferred minors. The browser attempt was blocked by the sandbox and a pending approval, then aborted; modal and asynchronous UI findings are source-supported.
+Final disposition: **Approved**. The independent scoped re-review of `d7296cb..2b41d2b` found all seven Important findings and both minor items addressed, with no new Critical/Important breakage or additional out-of-scope observations. Implementation is complete; the live-provider smoke test and five-person learning study remain unperformed and disclosed.
+
+Reviewer: `/root/final_review`, gpt-6-astra. Initial frozen range: `1b280c8..d7296cb`. Initial verdict: **With fixes**. No Critical findings; seven Important findings below. The reviewer inspected contracts, numerical engine, assessment, storage, API, coach, frontend, replay and tests. Broad suites were not repeated. Focused read-only Python checks reproduced the hash/outcome defect, missing coach revision, invalid patch schema and both deferred minors. The browser attempt was blocked by the sandbox and a pending approval, then aborted; modal and asynchronous UI findings are source-supported.
 
 ## Important findings (reviewer's complete correction list)
 
@@ -73,3 +75,21 @@ Prefer native modal `<dialog>` behavior, or implement initial focus, Tab/Shift-T
 - In-app browsing of quarantined imported historical runs: historical evidence is retained but not shown in history. TEST-PLAN §6.6 requires reimporting supported design/workload data and reproducing it. Coordinator accepts this scope: imported evidence remains untrusted, and a fresh compatible run provides in-app replay. README must state this limit explicitly. Cost if wrong: add a read-only imported-history view; existing evidence stays preserved.
 
 The coordinator accepts M1 as nonblocking and will document normalization, preserving the current JSON-friendly boundary behavior. M2 is small and shares F1's hash work, so the consolidated correction includes it.
+
+## Scoped final re-review — d7296cb..2b41d2b
+
+The same independent reviewer inspected the consolidated correction, its regression assertions and recorded verification outputs. Broad suites and browser sessions were not repeated during review.
+
+| Finding | Disposition | Verified correction |
+|---|---|---|
+| F1 | ADDRESSED | Canonical graph traversal and operation ordering; engine 0.1.1 compatibility boundary; equivalent hashes retain identical fault bindings and outcomes |
+| F2 | ADDRESSED | Closed, explicit provider patch schema with required fields and no defaults or `oneOf`; internal patch validation remains authoritative |
+| F3 | ADDRESSED | Frozen revision ID and patch grammar are included; a context-derived proposal passes a real comparison |
+| F4 | ADDRESSED | One cancellable deadline covers connection, body and retries while preserving partial diagnostics |
+| F5 | ADDRESSED | Saved evidence resolves through `artifact_ref`; aggregate windows, stale successful reads, duplicate effects and late delivery are covered |
+| F6 | ADDRESSED | Run, case, trace, candidate and comparison responses are guarded by identity and effect cleanup |
+| F7 | ADDRESSED | All six native dialogs transfer and confine focus, close on Escape and restore focus at both viewport widths |
+| M1 | ADDRESSED under documented ruling | Integer-compatible input normalization and canonical integer output are documented and tested |
+| M2 | ADDRESSED | Operation-scope IDs are sorted in the numerical hash representation |
+
+Final verdict: **Approved**, with no new Critical/Important breakage. Exact executed commands, results and test-only selector corrections are recorded in [final-fix-report.md](final-fix-report.md). Live-provider teaching quality and learning impact remain outside the verified claims.

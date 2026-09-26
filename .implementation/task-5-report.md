@@ -35,6 +35,6 @@ The implementation is on `feat/system-design-simulator`. The original specificat
 
 ## Review and release limits
 
-The task review history is in [reviews.md](reviews.md). Task reviews are approved and both full viewport journeys passed. Final whole-branch review found seven Important issues, recorded in [final-review.md](final-review.md). The consolidated correction wave has completed its backend and frontend checks; a single scoped re-review remains. This report is not a completed release claim until that result is recorded.
+The task review history is in [reviews.md](reviews.md). Task reviews are approved and both full viewport journeys passed. Final whole-branch review found seven Important issues, recorded in [final-review.md](final-review.md). The consolidated correction passed its backend and frontend checks, and the independent scoped re-review of `d7296cb..2b41d2b` returned **Approved**: all seven Important findings and both minor items are addressed, with no new Critical/Important breakage. All implementation tasks and final review are complete. Root verified all 37 local documentation links and left the verified app running at http://127.0.0.1:8770.
 
 No live-provider smoke test or five-person learning study has been performed. Controlled provider tests establish response handling, evidence validation and failure isolation; they do not establish model explanation quality or learning impact. The locked test client emits an `httpx` deprecation warning; production uses the configured `httpx` adapter.
