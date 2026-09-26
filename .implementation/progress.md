@@ -17,7 +17,7 @@
 
 Ruling: The provided folder is a new documentation-only workspace with no existing Git repository or branch. Initialize a dedicated feature branch in place; a second worktree provides no existing code isolation benefit. Cost if wrong: relocate the checkout later without changing project behavior.
 
-Task 1: pending.
+Task 1: in progress; implementer /root/contracts; BASE 1b280c8.
 Task 2: pending.
 Task 3: pending.
 Task 4: pending.
