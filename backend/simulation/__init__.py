@@ -231,7 +231,14 @@ def fault_targets(compiled, fault):
             if target not in participating: participating.append(target)
     component=fault.target_component_type or ('cdn' if fault.type=='clear_cdn' else 'cache' if fault.type=='clear_cache' else 'app_service')
     targets=[node_id for node_id in participating if (fault.target_node_id==node_id if fault.target_node_id else nodes[node_id].type==component)]
-    return targets[:1] if fault.type=='app_instance_unavailable' else targets
+    if fault.type=='app_instance_unavailable':
+        targets=targets[:1]
+        identity=fault.target_instance_id or '0'
+        raw=identity.rsplit('-',1)[-1]
+        for node_id in targets:
+            if not raw.isdigit() or not 0<=int(raw)<nodes[node_id].instance_count:
+                raise ValueError(f'fault instance missing: {node_id}/{identity}')
+    return targets
 
 
 def fault_bindings(challenge, design, workload):
@@ -648,7 +655,11 @@ class Engine:
 
     def fault(self,scheduled):
         fault=scheduled.fault
-        targets=[self.nodes[node_id] for node_id in fault_targets(self.compiled,fault)]
+        try:
+            targets=[self.nodes[node_id] for node_id in fault_targets(self.compiled,fault)]
+        except ValueError as exc:
+            self.diagnostics.append(str(exc))
+            return
         if not targets:
             if fault.type not in {'clear_cache','clear_cdn'}: self.diagnostics.append('fault target missing')
             return
@@ -663,9 +674,7 @@ class Engine:
                 state.multipliers[id(scheduled)]=fault.multiplier or 1
                 state.multiplier=math.prod(state.multipliers.values())
             else:
-                raw=(fault.target_instance_id or '0').split('-')[-1]
-                instance=int(raw) if raw.isdigit() else -1
-                if not 0<=instance<len(state.pools): self.diagnostics.append('fault instance missing'); continue
+                instance=int((fault.target_instance_id or '0').rsplit('-',1)[-1])
                 state.failures[instance]+=1
                 state.pools[instance].set_available(0)
             if fault.end_s is not None:

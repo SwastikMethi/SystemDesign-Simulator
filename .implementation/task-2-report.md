@@ -80,3 +80,13 @@ Review base: `521ca66`. All three Important findings were reproduced before edit
 GREEN: `.venv/bin/python -m pytest tests/test_simulation.py tests/test_assessment.py -q` → **31 passed in 0.54 s** (the previous 26 plus five focused regression cases). No literal-cap test or broad repository/matrix rerun was added.
 
 Targeted authored verification covers **40 cases**: all 15 catalogue reference cases, all 10 notification reference cases, all 10 notification failure cases, and seed 101 team-notes initial/burst, URL failure/burst, catalogue initial/burst, catalogue failure/cold_cache, photo reference/cold_cdn. Every intended verdict is unchanged; all unrounded measured requirement rows and sample counts match the prior matrix. Notification reference passed in 12.561s; notification failure failed in 13.752s. Catalogue benchmark above is updated for actual priority dispatch (30.472s; largest case 285,103 events, below the 2,000,000 cap). Detailed targeted results: `.implementation/task-2-review-cases.json`; catalogue cases remain in `.implementation/catalogue-benchmark.json`.
+
+## Integration review — required instance existence
+
+Test base: `3eec5ce`. A baseline with two app instances and frozen target `app-1` previously produced the same fault binding as a candidate with only one instance. The new regression failed with `DID NOT RAISE ValueError` before the fix.
+
+Required application-instance existence is now validated in the shared `fault_targets` resolver used by both execution and comparison bindings. `fault_bindings` raises `ValueError('fault instance missing: <node>/<identity>')` if the selected role lacks the requested instance. Its return shape for valid bindings is unchanged. The exception contract was communicated directly to the application owner; comparison validation must reject that candidate.
+
+Direct execution catches this resolver error, records termination evidence, returns an interrupted case with incomplete requirement outcomes, and schedules no recovery callback for the missing target. Thus reducing two instances to one cannot silently omit a frozen `app-1` outage or produce a passing partial assessment.
+
+Scoped verification: `.venv/bin/python -m pytest tests/test_simulation.py tests/test_assessment.py -q` → **32 passed in 0.60s**. The single new regression covers baseline binding, candidate rejection, direct interrupted execution, diagnostic evidence, and absence of an unsafe recovery event. Valid authored workload behavior is unchanged, so the prior fixture and benchmark evidence was not redundantly rerun.

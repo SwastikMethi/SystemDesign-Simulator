@@ -411,3 +411,23 @@ def test_appended_parallel_route_keeps_existing_fault_role():
     baseline.fault(scheduled); candidate.fault(scheduled)
     assert baseline.nodes['app'].pools[0].available==candidate.nodes['app'].pools[0].available==0
     assert candidate.nodes['aaa'].pools[0].available==4
+
+
+def test_reducing_instances_cannot_remove_frozen_outage_target():
+    import pytest
+    from backend.contracts import Fault
+    from backend.workloads import ScheduledFault
+    from backend.simulation import fault_bindings
+    c=load_challenge('team-notes'); baseline=load_fixture(c.challenge_id,'initial')
+    baseline.nodes[1].instance_count=2
+    candidate=baseline.model_copy(deep=True); candidate.nodes[1].instance_count=1
+    w=case(c,[arrival(c,0,time=200_000)])
+    w.faults=[ScheduledFault(time_us=100_000,fault=Fault(type='app_instance_unavailable',at_s=0,end_s=1,target_node_id='app',target_instance_id='app-1'))]
+    assert fault_bindings(c,baseline,w)==[(0,'app_instance_unavailable',('app',),'app-1')]
+    with pytest.raises(ValueError,match='fault instance missing'):
+        fault_bindings(c,candidate,w)
+    e=Engine(c,candidate,w,constant_service=True); artifact=e.run()
+    assert artifact.result.execution_status=='interrupted'
+    assert all(r.status=='incomplete' for r in artifact.result.requirement_outcomes)
+    assert any(item.type=='termination' and 'fault instance missing' in item.value for item in artifact.result.evidence)
+    assert not e.fault_ends # Invalid target never installs an unsafe recovery callback.
