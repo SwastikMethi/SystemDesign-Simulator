@@ -1,0 +1,602 @@
+{
+  "$defs": {
+    "Budget": {
+      "additionalProperties": false,
+      "properties": {
+        "max_credits_per_hour": {
+          "exclusiveMinimum": 0,
+          "title": "Max Credits Per Hour",
+          "type": "integer"
+        },
+        "profile_version": {
+          "const": "0.1.0",
+          "title": "Profile Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "max_credits_per_hour",
+        "profile_version"
+      ],
+      "title": "Budget",
+      "type": "object"
+    },
+    "Fault": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "clear_cache",
+            "clear_cdn",
+            "app_instance_unavailable",
+            "service_multiplier"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "at_s": {
+          "minimum": 0,
+          "title": "At S",
+          "type": "integer"
+        },
+        "end_s": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End S"
+        },
+        "target_component_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "client",
+                "load_balancer",
+                "api_gateway",
+                "app_service",
+                "sql_database",
+                "cache",
+                "message_queue",
+                "worker",
+                "object_storage",
+                "cdn"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Component Type"
+        },
+        "target_node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Node Id"
+        },
+        "target_instance_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Instance Id"
+        },
+        "multiplier": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Multiplier"
+        }
+      },
+      "required": [
+        "type",
+        "at_s"
+      ],
+      "title": "Fault",
+      "type": "object"
+    },
+    "InitialData": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "versioned_keys",
+            "immutable_objects",
+            "empty_jobs"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "type": "string"
+        },
+        "record_count": {
+          "minimum": 0,
+          "title": "Record Count",
+          "type": "integer"
+        },
+        "initial_version": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Initial Version",
+          "type": "integer"
+        },
+        "object_bytes": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Object Bytes"
+        }
+      },
+      "required": [
+        "kind",
+        "namespace",
+        "record_count"
+      ],
+      "title": "InitialData",
+      "type": "object"
+    },
+    "KeyDistribution": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "uniform",
+            "zipf"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "key_count": {
+          "exclusiveMinimum": 0,
+          "title": "Key Count",
+          "type": "integer"
+        },
+        "exponent": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exponent"
+        }
+      },
+      "required": [
+        "type",
+        "key_count"
+      ],
+      "title": "KeyDistribution",
+      "type": "object"
+    },
+    "Operation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "read_key",
+            "write_key",
+            "get_object",
+            "put_object",
+            "enqueue_job"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "weight": {
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Weight",
+          "type": "number"
+        },
+        "request_bytes": {
+          "minimum": 0,
+          "title": "Request Bytes",
+          "type": "integer"
+        },
+        "response_bytes": {
+          "minimum": 0,
+          "title": "Response Bytes",
+          "type": "integer"
+        },
+        "deadline_ms": {
+          "exclusiveMinimum": 0,
+          "title": "Deadline Ms",
+          "type": "integer"
+        },
+        "retry_safe": {
+          "title": "Retry Safe",
+          "type": "boolean"
+        },
+        "freshness_allowance_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshness Allowance Ms"
+        },
+        "job_deadline_ms": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Job Deadline Ms"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "weight",
+        "request_bytes",
+        "response_bytes",
+        "deadline_ms",
+        "retry_safe"
+      ],
+      "title": "Operation",
+      "type": "object"
+    },
+    "RateSegment": {
+      "additionalProperties": false,
+      "properties": {
+        "start_s": {
+          "minimum": 0,
+          "title": "Start S",
+          "type": "integer"
+        },
+        "end_s": {
+          "exclusiveMinimum": 0,
+          "title": "End S",
+          "type": "integer"
+        },
+        "rps": {
+          "minimum": 0,
+          "title": "Rps",
+          "type": "number"
+        }
+      },
+      "required": [
+        "start_s",
+        "end_s",
+        "rps"
+      ],
+      "title": "RateSegment",
+      "type": "object"
+    },
+    "Requirement": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "metric": {
+          "enum": [
+            "success_rate",
+            "response_p95_ms",
+            "response_p99_ms",
+            "invalid_read_count",
+            "freshness_violation_rate",
+            "acknowledged_write_missing_count",
+            "job_deadline_completion_rate",
+            "duplicate_effect_count",
+            "cost_credits_per_hour",
+            "object_invalid_count",
+            "object_capacity_violation_count"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "operation_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Operation Ids",
+          "type": "array"
+        },
+        "scenario_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Scenario Ids",
+          "type": "array"
+        },
+        "operator": {
+          "enum": [
+            ">=",
+            "<=",
+            "=="
+          ],
+          "title": "Operator",
+          "type": "string"
+        },
+        "threshold": {
+          "title": "Threshold",
+          "type": "number"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "min_samples": {
+          "minimum": 0,
+          "title": "Min Samples",
+          "type": "integer"
+        },
+        "severity": {
+          "const": "hard",
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "metric",
+        "operation_ids",
+        "scenario_ids",
+        "operator",
+        "threshold",
+        "unit",
+        "min_samples",
+        "severity"
+      ],
+      "title": "Requirement",
+      "type": "object"
+    },
+    "Scenario": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "warmup_rps": {
+          "minimum": 0,
+          "title": "Warmup Rps",
+          "type": "number"
+        },
+        "rate_segments": {
+          "items": {
+            "$ref": "#/$defs/RateSegment"
+          },
+          "title": "Rate Segments",
+          "type": "array"
+        },
+        "faults": {
+          "items": {
+            "$ref": "#/$defs/Fault"
+          },
+          "title": "Faults",
+          "type": "array"
+        },
+        "demand_shift_at_s": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Demand Shift At S"
+        }
+      },
+      "required": [
+        "id",
+        "required",
+        "warmup_rps",
+        "rate_segments",
+        "faults"
+      ],
+      "title": "Scenario",
+      "type": "object"
+    },
+    "WorkloadSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "warmup_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Warmup Seconds",
+          "type": "integer"
+        },
+        "measurement_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Measurement Seconds",
+          "type": "integer"
+        },
+        "drain_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Drain Seconds",
+          "type": "integer"
+        },
+        "assessment_seeds": {
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "title": "Assessment Seeds",
+          "type": "array"
+        },
+        "key_distribution": {
+          "$ref": "#/$defs/KeyDistribution"
+        }
+      },
+      "required": [
+        "warmup_seconds",
+        "measurement_seconds",
+        "drain_seconds",
+        "assessment_seeds",
+        "key_distribution"
+      ],
+      "title": "WorkloadSettings",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "challenge_id": {
+      "title": "Challenge Id",
+      "type": "string"
+    },
+    "version": {
+      "const": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "level": {
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Level",
+      "type": "integer"
+    },
+    "brief": {
+      "title": "Brief",
+      "type": "string"
+    },
+    "concepts": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Concepts",
+      "type": "array"
+    },
+    "allowed_component_types": {
+      "items": {
+        "enum": [
+          "client",
+          "load_balancer",
+          "api_gateway",
+          "app_service",
+          "sql_database",
+          "cache",
+          "message_queue",
+          "worker",
+          "object_storage",
+          "cdn"
+        ],
+        "type": "string"
+      },
+      "title": "Allowed Component Types",
+      "type": "array"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/Operation"
+      },
+      "title": "Operations",
+      "type": "array"
+    },
+    "initial_data": {
+      "$ref": "#/$defs/InitialData"
+    },
+    "workload": {
+      "$ref": "#/$defs/WorkloadSettings"
+    },
+    "scenarios": {
+      "items": {
+        "$ref": "#/$defs/Scenario"
+      },
+      "title": "Scenarios",
+      "type": "array"
+    },
+    "requirements": {
+      "items": {
+        "$ref": "#/$defs/Requirement"
+      },
+      "title": "Requirements",
+      "type": "array"
+    },
+    "budget": {
+      "$ref": "#/$defs/Budget"
+    }
+  },
+  "required": [
+    "schema_version",
+    "challenge_id",
+    "version",
+    "title",
+    "level",
+    "brief",
+    "concepts",
+    "allowed_component_types",
+    "operations",
+    "initial_data",
+    "workload",
+    "scenarios",
+    "requirements",
+    "budget"
+  ],
+  "title": "Challenge",
+  "type": "object"
+}

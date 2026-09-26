@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "design_id": "team-notes-failure",
+  "revision_id": "revision-001",
+  "challenge_id": "team-notes",
+  "challenge_version": "0.1.0",
+  "created_at": "2026-09-26T00:00:00Z",
+  "parent_revision_id": null,
+  "nodes": [
+    {
+      "id": "client",
+      "type": "client",
+      "label": "Client",
+      "profile_id": "client.v1",
+      "instance_count": 1,
+      "settings": {},
+      "position": {
+        "x": 0,
+        "y": 180
+      }
+    },
+    {
+      "id": "gateway",
+      "type": "api_gateway",
+      "label": "Gateway",
+      "profile_id": "gateway.small.v1",
+      "instance_count": 1,
+      "settings": {
+        "rate_limit_rps": 1,
+        "bucket_size": 1
+      },
+      "position": {
+        "x": 100,
+        "y": 180
+      }
+    },
+    {
+      "id": "app",
+      "type": "app_service",
+      "label": "App",
+      "profile_id": "app.small.v1",
+      "instance_count": 1,
+      "settings": {
+        "dependency_timeout_ms": 2000,
+        "max_retries": 0,
+        "invalidation": "off"
+      },
+      "position": {
+        "x": 250,
+        "y": 180
+      }
+    },
+    {
+      "id": "sql",
+      "type": "sql_database",
+      "label": "Sql",
+      "profile_id": "sql.medium.v1",
+      "instance_count": 1,
+      "settings": {},
+      "position": {
+        "x": 750,
+        "y": 180
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "client-gateway",
+      "source": "client",
+      "target": "gateway",
+      "kind": "request",
+      "operation_ids": [
+        "read_note",
+        "write_note"
+      ]
+    },
+    {
+      "id": "gateway-app",
+      "source": "gateway",
+      "target": "app",
+      "kind": "request",
+      "operation_ids": [
+        "read_note",
+        "write_note"
+      ]
+    },
+    {
+      "id": "app-sql",
+      "source": "app",
+      "target": "sql",
+      "kind": "request",
+      "operation_ids": [
+        "read_note",
+        "write_note"
+      ]
+    }
+  ]
+}

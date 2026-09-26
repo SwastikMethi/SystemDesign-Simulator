@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "design_id": "photo-delivery-reference",
+  "revision_id": "revision-001",
+  "challenge_id": "photo-delivery",
+  "challenge_version": "0.1.0",
+  "created_at": "2026-09-26T00:00:00Z",
+  "parent_revision_id": null,
+  "nodes": [
+    {
+      "id": "client",
+      "type": "client",
+      "label": "Client",
+      "profile_id": "client.v1",
+      "instance_count": 1,
+      "settings": {},
+      "position": {
+        "x": 0,
+        "y": 180
+      }
+    },
+    {
+      "id": "cdn",
+      "type": "cdn",
+      "label": "Cdn",
+      "profile_id": "cdn.large.v1",
+      "instance_count": 1,
+      "settings": {
+        "ttl_seconds": 60
+      },
+      "position": {
+        "x": 350,
+        "y": 180
+      }
+    },
+    {
+      "id": "object",
+      "type": "object_storage",
+      "label": "Object",
+      "profile_id": "object.small.v1",
+      "instance_count": 1,
+      "settings": {},
+      "position": {
+        "x": 700,
+        "y": 180
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "client-cdn",
+      "source": "client",
+      "target": "cdn",
+      "kind": "request",
+      "operation_ids": [
+        "get_photo"
+      ]
+    },
+    {
+      "id": "cdn-object",
+      "source": "cdn",
+      "target": "object",
+      "kind": "cache_miss",
+      "operation_ids": [
+        "get_photo"
+      ]
+    },
+    {
+      "id": "client-object",
+      "source": "client",
+      "target": "object",
+      "kind": "request",
+      "operation_ids": [
+        "put_photo"
+      ]
+    }
+  ]
+}

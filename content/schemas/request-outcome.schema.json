@@ -1,0 +1,112 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "operation_id": {
+      "title": "Operation Id",
+      "type": "string"
+    },
+    "key": {
+      "title": "Key",
+      "type": "string"
+    },
+    "arrival_us": {
+      "title": "Arrival Us",
+      "type": "integer"
+    },
+    "deadline_us": {
+      "title": "Deadline Us",
+      "type": "integer"
+    },
+    "terminal_us": {
+      "title": "Terminal Us",
+      "type": "integer"
+    },
+    "status": {
+      "enum": [
+        "success",
+        "timeout",
+        "rejected",
+        "dependency_error",
+        "invalid_result",
+        "incomplete"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "returned_payload_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Returned Payload Id"
+    },
+    "returned_version": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Returned Version"
+    },
+    "correct": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Correct"
+    },
+    "fresh": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fresh"
+    },
+    "acknowledged_commit_us": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Acknowledged Commit Us"
+    }
+  },
+  "required": [
+    "request_id",
+    "operation_id",
+    "key",
+    "arrival_us",
+    "deadline_us",
+    "terminal_us",
+    "status"
+  ],
+  "title": "RequestOutcome",
+  "type": "object"
+}

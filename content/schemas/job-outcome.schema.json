@@ -1,0 +1,66 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "job_id": {
+      "title": "Job Id",
+      "type": "string"
+    },
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "attempts": {
+      "minimum": 0,
+      "title": "Attempts",
+      "type": "integer"
+    },
+    "acknowledged_us": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Acknowledged Us"
+    },
+    "first_effect_us": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "First Effect Us"
+    },
+    "terminal_state": {
+      "enum": [
+        "delivered",
+        "failed",
+        "expired",
+        "pending"
+      ],
+      "title": "Terminal State",
+      "type": "string"
+    },
+    "duplicate_effect_count": {
+      "minimum": 0,
+      "title": "Duplicate Effect Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "job_id",
+    "request_id",
+    "attempts",
+    "terminal_state",
+    "duplicate_effect_count"
+  ],
+  "title": "JobOutcome",
+  "type": "object"
+}

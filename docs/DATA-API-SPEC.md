@@ -35,7 +35,15 @@ Canonical metric identifiers: `success_rate`, `response_p95_ms`, `response_p99_m
 
 Require known schema/profile/challenge versions, unique IDs, finite positions and parameters, valid edge references, exactly one workload-source client, supported cardinalities and complete operation routes. Validate per-type instance constraints and profile settings. Reject arbitrary fields instead of ignoring a misspelled capacity or timeout.
 
+Draft validation permits zero clients and missing routes so a learner can save an empty or partial canvas. It still rejects unknown fields, profiles, settings, duplicate IDs, broken edge references, and more than one client. Compilation for preview or assessment requires exactly one client and a complete compatible route for every operation. Each route records request, cache-miss, invalidation, and consume edges separately; responses reverse the request stack.
+
+Profile instances are capped at 32 per node; SQL, object storage, queue and client remain single-instance logical resources. Assessed settings are allowlisted and bounded. Patch `set_node_setting` can update `profile_id` or `instance_count` as well as supported policy keys. An assessment may exceed a budget and receive a failed budget requirement; budget is graded rather than rejected at compilation.
+
 Values in examples are proposed specification fixtures. Implementation must publish machine-validated Pydantic/JSON Schemas and keep the examples valid against them. Node positions are UI data and do not affect the numerical design hash. Names affect labels and prompts but not routing or physics.
+
+The numerical hash includes node IDs, types, profiles, instance counts, settings, edge IDs, endpoints, kinds, and operation scopes. It excludes labels, positions, revision IDs, and timestamps. Export JSON Schemas with `python -m backend.content content/schemas`. `content/fixtures/{challenge_id}/{initial|reference|failure|budget}.json` are authored hypotheses until executed across all required cases.
+
+The workload generator precomputes integer-microsecond original arrivals and stable payload IDs. Existing-key reads and product/note writes sample the authored uniform or Zipf distribution. `create_code` and `put_photo` receive unique new keys; this is an authored operation policy rather than a rule for all writes. Store versions advance at commit. Optional `hot_key_shift` rotates Zipf popularity by half the catalogue at measurement second 150 and cannot award completion.
 
 ## 4. Local artifact layout
 

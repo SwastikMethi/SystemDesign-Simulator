@@ -1,0 +1,293 @@
+{
+  "$defs": {
+    "CaseResult": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "scenario_id": {
+          "title": "Scenario Id",
+          "type": "string"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "execution_status": {
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "canceled",
+            "failed",
+            "interrupted"
+          ],
+          "title": "Execution Status",
+          "type": "string"
+        },
+        "operation_metrics": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "$ref": "#/$defs/MetricValue"
+            },
+            "type": "object"
+          },
+          "title": "Operation Metrics",
+          "type": "object"
+        },
+        "node_metrics": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "$ref": "#/$defs/MetricValue"
+            },
+            "type": "object"
+          },
+          "title": "Node Metrics",
+          "type": "object"
+        },
+        "requirement_outcomes": {
+          "items": {
+            "$ref": "#/$defs/RequirementOutcome"
+          },
+          "title": "Requirement Outcomes",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceItem"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "trace_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Trace Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "case_id",
+        "scenario_id",
+        "seed",
+        "execution_status",
+        "operation_metrics",
+        "node_metrics",
+        "requirement_outcomes",
+        "evidence",
+        "trace_refs"
+      ],
+      "title": "CaseResult",
+      "type": "object"
+    },
+    "EvidenceItem": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "scope": {
+          "title": "Scope",
+          "type": "string"
+        },
+        "sample_count": {
+          "minimum": 0,
+          "title": "Sample Count",
+          "type": "integer"
+        },
+        "artifact_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Artifact Ref"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "type",
+        "unit",
+        "value",
+        "scope",
+        "sample_count",
+        "artifact_ref"
+      ],
+      "title": "EvidenceItem",
+      "type": "object"
+    },
+    "MetricValue": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "sample_count": {
+          "minimum": 0,
+          "title": "Sample Count",
+          "type": "integer"
+        },
+        "unavailable_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unavailable Reason"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "sample_count"
+      ],
+      "title": "MetricValue",
+      "type": "object"
+    },
+    "RequirementOutcome": {
+      "additionalProperties": false,
+      "properties": {
+        "requirement_id": {
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "scenario_id": {
+          "title": "Scenario Id",
+          "type": "string"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Operation Id"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "not_evaluated",
+            "incomplete"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "measured": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MetricValue"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "requirement_id",
+        "scenario_id",
+        "seed",
+        "operation_id",
+        "status",
+        "measured",
+        "evidence_ids"
+      ],
+      "title": "RequirementOutcome",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "enum": [
+        "pass",
+        "fail",
+        "not_evaluated",
+        "incomplete"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "case_results": {
+      "items": {
+        "$ref": "#/$defs/CaseResult"
+      },
+      "title": "Case Results",
+      "type": "array"
+    },
+    "requirement_outcomes": {
+      "items": {
+        "$ref": "#/$defs/RequirementOutcome"
+      },
+      "title": "Requirement Outcomes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "status",
+    "case_results",
+    "requirement_outcomes"
+  ],
+  "title": "AssessmentResult",
+  "type": "object"
+}

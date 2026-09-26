@@ -8,6 +8,8 @@ Each challenge contains a stable ID/version, plain-language brief, concepts, all
 
 Every released challenge needs at least one passing fixture, one failure fixture for its main lesson, and an overprovisioned fixture that fails its budget. The fixtures must be executed by the implemented engine before being labeled verified. This package proposes content and thresholds; it does not assert that those fixtures have already passed.
 
+Machine-readable definitions and proposed initial/reference/failure/budget designs live in `content/challenges/` and `content/fixtures/`. Compilation and budget checks alone do not verify their numerical outcomes.
+
 All assessment cases use the warmup/measurement/drain lengths and five seeds in SIMULATION-SPEC. Fixed-rate scenarios apply through warmup and measurement. Burst scenarios use normal rate in warmup, 0–120 s and 180–300 s measurement, and peak rate from 120–180 s. Workload payloads and per-seed traces are stored for comparison reuse.
 
 ## 2. Common grading rules

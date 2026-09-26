@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "challenge_id": "team-notes",
+  "version": "0.1.0",
+  "title": "Team notes",
+  "level": 1,
+  "brief": "Read and update notes; store every update before acknowledging it.",
+  "concepts": [
+    "request flow",
+    "persistence"
+  ],
+  "allowed_component_types": [
+    "client",
+    "load_balancer",
+    "api_gateway",
+    "app_service",
+    "sql_database",
+    "cache",
+    "message_queue",
+    "worker",
+    "object_storage",
+    "cdn"
+  ],
+  "operations": [
+    {
+      "id": "read_note",
+      "kind": "read_key",
+      "weight": 0.8,
+      "request_bytes": 1024,
+      "response_bytes": 1024,
+      "deadline_ms": 2000,
+      "retry_safe": true
+    },
+    {
+      "id": "write_note",
+      "kind": "write_key",
+      "weight": 0.2,
+      "request_bytes": 1024,
+      "response_bytes": 1024,
+      "deadline_ms": 2000,
+      "retry_safe": false
+    }
+  ],
+  "initial_data": {
+    "kind": "versioned_keys",
+    "namespace": "notes",
+    "record_count": 1000,
+    "initial_version": 0
+  },
+  "workload": {
+    "warmup_seconds": 60,
+    "measurement_seconds": 300,
+    "drain_seconds": 30,
+    "assessment_seeds": [
+      101,
+      202,
+      303,
+      404,
+      505
+    ],
+    "key_distribution": {
+      "type": "uniform",
+      "key_count": 1000
+    }
+  },
+  "scenarios": [
+    {
+      "id": "steady",
+      "required": true,
+      "warmup_rps": 10,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 300,
+          "rps": 10
+        }
+      ],
+      "faults": []
+    },
+    {
+      "id": "burst",
+      "required": true,
+      "warmup_rps": 10,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 120,
+          "rps": 10
+        },
+        {
+          "start_s": 120,
+          "end_s": 180,
+          "rps": 40
+        },
+        {
+          "start_s": 180,
+          "end_s": 300,
+          "rps": 10
+        }
+      ],
+      "faults": []
+    }
+  ],
+  "requirements": [
+    {
+      "id": "R01",
+      "description": "success_rate >= 0.995 fraction",
+      "metric": "success_rate",
+      "operation_ids": [
+        "read_note"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": ">=",
+      "threshold": 0.995,
+      "unit": "fraction",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R02",
+      "description": "response_p95_ms <= 250 ms",
+      "metric": "response_p95_ms",
+      "operation_ids": [
+        "read_note"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "<=",
+      "threshold": 250,
+      "unit": "ms",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R03",
+      "description": "success_rate >= 0.995 fraction",
+      "metric": "success_rate",
+      "operation_ids": [
+        "write_note"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": ">=",
+      "threshold": 0.995,
+      "unit": "fraction",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R04",
+      "description": "response_p95_ms <= 400 ms",
+      "metric": "response_p95_ms",
+      "operation_ids": [
+        "write_note"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "<=",
+      "threshold": 400,
+      "unit": "ms",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R05",
+      "description": "invalid_read_count == 0 count",
+      "metric": "invalid_read_count",
+      "operation_ids": [
+        "read_note"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "==",
+      "threshold": 0,
+      "unit": "count",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R06",
+      "description": "acknowledged_write_missing_count == 0 count",
+      "metric": "acknowledged_write_missing_count",
+      "operation_ids": [
+        "write_note"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "==",
+      "threshold": 0,
+      "unit": "count",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R07",
+      "description": "cost_credits_per_hour <= 50 credits/hour",
+      "metric": "cost_credits_per_hour",
+      "operation_ids": [],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "<=",
+      "threshold": 50,
+      "unit": "credits/hour",
+      "min_samples": 0,
+      "severity": "hard"
+    }
+  ],
+  "budget": {
+    "max_credits_per_hour": 50,
+    "profile_version": "0.1.0"
+  }
+}

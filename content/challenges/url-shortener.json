@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "challenge_id": "url-shortener",
+  "version": "0.1.0",
+  "title": "URL lookup service",
+  "level": 2,
+  "brief": "Resolve existing short codes and create persistent new mappings.",
+  "concepts": [
+    "read-heavy traffic",
+    "caching"
+  ],
+  "allowed_component_types": [
+    "client",
+    "load_balancer",
+    "api_gateway",
+    "app_service",
+    "sql_database",
+    "cache",
+    "message_queue",
+    "worker",
+    "object_storage",
+    "cdn"
+  ],
+  "operations": [
+    {
+      "id": "resolve_code",
+      "kind": "read_key",
+      "weight": 0.98,
+      "request_bytes": 256,
+      "response_bytes": 512,
+      "deadline_ms": 2000,
+      "retry_safe": true
+    },
+    {
+      "id": "create_code",
+      "kind": "write_key",
+      "weight": 0.02,
+      "request_bytes": 256,
+      "response_bytes": 512,
+      "deadline_ms": 2000,
+      "retry_safe": false
+    }
+  ],
+  "initial_data": {
+    "kind": "versioned_keys",
+    "namespace": "codes",
+    "record_count": 10000,
+    "initial_version": 0
+  },
+  "workload": {
+    "warmup_seconds": 60,
+    "measurement_seconds": 300,
+    "drain_seconds": 30,
+    "assessment_seeds": [
+      101,
+      202,
+      303,
+      404,
+      505
+    ],
+    "key_distribution": {
+      "type": "zipf",
+      "key_count": 10000,
+      "exponent": 1.2
+    }
+  },
+  "scenarios": [
+    {
+      "id": "steady",
+      "required": true,
+      "warmup_rps": 50,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 300,
+          "rps": 50
+        }
+      ],
+      "faults": []
+    },
+    {
+      "id": "burst",
+      "required": true,
+      "warmup_rps": 50,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 120,
+          "rps": 50
+        },
+        {
+          "start_s": 120,
+          "end_s": 180,
+          "rps": 250
+        },
+        {
+          "start_s": 180,
+          "end_s": 300,
+          "rps": 50
+        }
+      ],
+      "faults": []
+    }
+  ],
+  "requirements": [
+    {
+      "id": "R01",
+      "description": "success_rate >= 0.995 fraction",
+      "metric": "success_rate",
+      "operation_ids": [
+        "resolve_code"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": ">=",
+      "threshold": 0.995,
+      "unit": "fraction",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R02",
+      "description": "response_p95_ms <= 150 ms",
+      "metric": "response_p95_ms",
+      "operation_ids": [
+        "resolve_code"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "<=",
+      "threshold": 150,
+      "unit": "ms",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R03",
+      "description": "success_rate >= 0.995 fraction",
+      "metric": "success_rate",
+      "operation_ids": [
+        "create_code"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": ">=",
+      "threshold": 0.995,
+      "unit": "fraction",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R04",
+      "description": "response_p95_ms <= 400 ms",
+      "metric": "response_p95_ms",
+      "operation_ids": [
+        "create_code"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "<=",
+      "threshold": 400,
+      "unit": "ms",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R05",
+      "description": "invalid_read_count == 0 count",
+      "metric": "invalid_read_count",
+      "operation_ids": [
+        "resolve_code"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "==",
+      "threshold": 0,
+      "unit": "count",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R06",
+      "description": "acknowledged_write_missing_count == 0 count",
+      "metric": "acknowledged_write_missing_count",
+      "operation_ids": [
+        "create_code"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "==",
+      "threshold": 0,
+      "unit": "count",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R07",
+      "description": "cost_credits_per_hour <= 100 credits/hour",
+      "metric": "cost_credits_per_hour",
+      "operation_ids": [],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "<=",
+      "threshold": 100,
+      "unit": "credits/hour",
+      "min_samples": 0,
+      "severity": "hard"
+    }
+  ],
+  "budget": {
+    "max_credits_per_hour": 100,
+    "profile_version": "0.1.0"
+  }
+}

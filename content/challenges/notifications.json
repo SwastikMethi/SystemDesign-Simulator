@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "challenge_id": "notifications",
+  "version": "0.1.0",
+  "title": "Notification processing",
+  "level": 5,
+  "brief": "Accept notification jobs quickly and deliver each to the synthetic sink within ten seconds.",
+  "concepts": [
+    "queues",
+    "workers",
+    "deadlines"
+  ],
+  "allowed_component_types": [
+    "client",
+    "load_balancer",
+    "api_gateway",
+    "app_service",
+    "sql_database",
+    "cache",
+    "message_queue",
+    "worker",
+    "object_storage",
+    "cdn"
+  ],
+  "operations": [
+    {
+      "id": "enqueue_notification",
+      "kind": "enqueue_job",
+      "weight": 1,
+      "request_bytes": 512,
+      "response_bytes": 256,
+      "deadline_ms": 2000,
+      "retry_safe": false,
+      "job_deadline_ms": 10000
+    }
+  ],
+  "initial_data": {
+    "kind": "empty_jobs",
+    "namespace": "notifications",
+    "record_count": 0,
+    "initial_version": 0
+  },
+  "workload": {
+    "warmup_seconds": 60,
+    "measurement_seconds": 300,
+    "drain_seconds": 30,
+    "assessment_seeds": [
+      101,
+      202,
+      303,
+      404,
+      505
+    ],
+    "key_distribution": {
+      "type": "uniform",
+      "key_count": 1
+    }
+  },
+  "scenarios": [
+    {
+      "id": "steady",
+      "required": true,
+      "warmup_rps": 20,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 300,
+          "rps": 20
+        }
+      ],
+      "faults": []
+    },
+    {
+      "id": "burst",
+      "required": true,
+      "warmup_rps": 20,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 120,
+          "rps": 20
+        },
+        {
+          "start_s": 120,
+          "end_s": 180,
+          "rps": 100
+        },
+        {
+          "start_s": 180,
+          "end_s": 300,
+          "rps": 20
+        }
+      ],
+      "faults": []
+    }
+  ],
+  "requirements": [
+    {
+      "id": "R01",
+      "description": "success_rate >= 0.995 fraction",
+      "metric": "success_rate",
+      "operation_ids": [
+        "enqueue_notification"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": ">=",
+      "threshold": 0.995,
+      "unit": "fraction",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R02",
+      "description": "response_p95_ms <= 150 ms",
+      "metric": "response_p95_ms",
+      "operation_ids": [
+        "enqueue_notification"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "<=",
+      "threshold": 150,
+      "unit": "ms",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R03",
+      "description": "job_deadline_completion_rate >= 0.99 fraction",
+      "metric": "job_deadline_completion_rate",
+      "operation_ids": [
+        "enqueue_notification"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": ">=",
+      "threshold": 0.99,
+      "unit": "fraction",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R04",
+      "description": "duplicate_effect_count == 0 count",
+      "metric": "duplicate_effect_count",
+      "operation_ids": [
+        "enqueue_notification"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "==",
+      "threshold": 0,
+      "unit": "count",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R05",
+      "description": "cost_credits_per_hour <= 80 credits/hour",
+      "metric": "cost_credits_per_hour",
+      "operation_ids": [],
+      "scenario_ids": [
+        "steady",
+        "burst"
+      ],
+      "operator": "<=",
+      "threshold": 80,
+      "unit": "credits/hour",
+      "min_samples": 0,
+      "severity": "hard"
+    }
+  ],
+  "budget": {
+    "max_credits_per_hour": 80,
+    "profile_version": "0.1.0"
+  }
+}

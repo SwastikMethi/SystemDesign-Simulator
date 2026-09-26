@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "challenge_id": "product-catalogue",
+  "version": "0.1.0",
+  "title": "Product catalogue",
+  "level": 3,
+  "brief": "Serve product details during a burst while keeping updated details no more than five seconds stale. Compare alternatives using the same workload.",
+  "concepts": [
+    "queues",
+    "read-heavy traffic",
+    "cache invalidation",
+    "freshness",
+    "cost trade-offs"
+  ],
+  "allowed_component_types": [
+    "client",
+    "load_balancer",
+    "api_gateway",
+    "app_service",
+    "sql_database",
+    "cache",
+    "message_queue",
+    "worker",
+    "object_storage",
+    "cdn"
+  ],
+  "operations": [
+    {
+      "id": "read_product",
+      "kind": "read_key",
+      "weight": 0.95,
+      "request_bytes": 512,
+      "response_bytes": 2048,
+      "deadline_ms": 2000,
+      "retry_safe": true,
+      "freshness_allowance_ms": 5000
+    },
+    {
+      "id": "write_product",
+      "kind": "write_key",
+      "weight": 0.05,
+      "request_bytes": 512,
+      "response_bytes": 256,
+      "deadline_ms": 2000,
+      "retry_safe": false
+    }
+  ],
+  "initial_data": {
+    "kind": "versioned_keys",
+    "namespace": "products",
+    "record_count": 1000,
+    "initial_version": 0
+  },
+  "workload": {
+    "warmup_seconds": 60,
+    "measurement_seconds": 300,
+    "drain_seconds": 30,
+    "assessment_seeds": [
+      101,
+      202,
+      303,
+      404,
+      505
+    ],
+    "key_distribution": {
+      "type": "zipf",
+      "key_count": 1000,
+      "exponent": 1.2
+    }
+  },
+  "scenarios": [
+    {
+      "id": "steady",
+      "required": true,
+      "warmup_rps": 40,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 300,
+          "rps": 40
+        }
+      ],
+      "faults": []
+    },
+    {
+      "id": "burst",
+      "required": true,
+      "warmup_rps": 40,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 120,
+          "rps": 40
+        },
+        {
+          "start_s": 120,
+          "end_s": 180,
+          "rps": 200
+        },
+        {
+          "start_s": 180,
+          "end_s": 300,
+          "rps": 40
+        }
+      ],
+      "faults": []
+    },
+    {
+      "id": "cold_cache",
+      "required": true,
+      "warmup_rps": 40,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 120,
+          "rps": 40
+        },
+        {
+          "start_s": 120,
+          "end_s": 180,
+          "rps": 200
+        },
+        {
+          "start_s": 180,
+          "end_s": 300,
+          "rps": 40
+        }
+      ],
+      "faults": [
+        {
+          "type": "clear_cache",
+          "at_s": 120,
+          "target_component_type": "cache"
+        }
+      ]
+    },
+    {
+      "id": "hot_key_shift",
+      "required": false,
+      "warmup_rps": 40,
+      "rate_segments": [
+        {
+          "start_s": 0,
+          "end_s": 300,
+          "rps": 40
+        }
+      ],
+      "faults": [],
+      "demand_shift_at_s": 150
+    }
+  ],
+  "requirements": [
+    {
+      "id": "R01",
+      "description": "At least 99.5% of original requests succeed, checked separately for reads and writes.",
+      "metric": "success_rate",
+      "operation_ids": [
+        "read_product",
+        "write_product"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst",
+        "cold_cache"
+      ],
+      "operator": ">=",
+      "threshold": 0.995,
+      "unit": "fraction",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R02",
+      "description": "Successful read p95 is at most 200 ms.",
+      "metric": "response_p95_ms",
+      "operation_ids": [
+        "read_product"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst",
+        "cold_cache"
+      ],
+      "operator": "<=",
+      "threshold": 200,
+      "unit": "ms",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R03",
+      "description": "Successful write p95 is at most 400 ms.",
+      "metric": "response_p95_ms",
+      "operation_ids": [
+        "write_product"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst",
+        "cold_cache"
+      ],
+      "operator": "<=",
+      "threshold": 400,
+      "unit": "ms",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R04",
+      "description": "No successful read returns an invalid key/value version.",
+      "metric": "invalid_read_count",
+      "operation_ids": [
+        "read_product"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst",
+        "cold_cache"
+      ],
+      "operator": "==",
+      "threshold": 0,
+      "unit": "count",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R05",
+      "description": "Successful reads respect the five-second freshness allowance.",
+      "metric": "freshness_violation_rate",
+      "operation_ids": [
+        "read_product"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst",
+        "cold_cache"
+      ],
+      "operator": "==",
+      "threshold": 0,
+      "unit": "fraction",
+      "min_samples": 100,
+      "severity": "hard"
+    },
+    {
+      "id": "R06",
+      "description": "Every acknowledged write has committed before acknowledgement.",
+      "metric": "acknowledged_write_missing_count",
+      "operation_ids": [
+        "write_product"
+      ],
+      "scenario_ids": [
+        "steady",
+        "burst",
+        "cold_cache"
+      ],
+      "operator": "==",
+      "threshold": 0,
+      "unit": "count",
+      "min_samples": 1,
+      "severity": "hard"
+    },
+    {
+      "id": "R07",
+      "description": "Total provisioned capacity stays within 100 fictional credits/hour.",
+      "metric": "cost_credits_per_hour",
+      "operation_ids": [],
+      "scenario_ids": [
+        "steady",
+        "burst",
+        "cold_cache"
+      ],
+      "operator": "<=",
+      "threshold": 100,
+      "unit": "credits/hour",
+      "min_samples": 0,
+      "severity": "hard"
+    }
+  ],
+  "budget": {
+    "max_credits_per_hour": 100,
+    "profile_version": "0.1.0"
+  }
+}
