@@ -120,7 +120,7 @@ export function RecordedGraph({ design, baseline, snapshot, trace, timeUs, playi
   return <section className={`recorded-graph ${playing ? 'recorded-playing' : ''}`} aria-label="Recorded architecture">
     <div className="recorded-canvas" aria-hidden="true">
       <ReactFlow key={`${design.revision_id}:${baseline?.revision_id || ''}`} nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} fitView fitViewOptions={{ padding: .16 }} minZoom={.7} maxZoom={1.5} nodesDraggable={false} nodesConnectable={false} elementsSelectable={false} zoomOnDoubleClick={false} proOptions={{ hideAttribution: true }}>
-        <Background color="#2b405b" gap={20} size={1} />
+        <Background color="var(--grid)" gap={20} size={1} />
       </ReactFlow>
     </div>
     <div className="recorded-legend" aria-label="Architecture legend">

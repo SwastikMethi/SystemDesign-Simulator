@@ -47,6 +47,28 @@ async function recordedWorkspace(page: Page) {
   return { run, cases, fixture, snapshots }
 }
 
+test('results retain complete operation measurements and usable controls at narrow widths', async ({ page }) => {
+  await recordedWorkspace(page)
+  await page.getByRole('button', { name: 'Jump to first failure' }).click()
+  for (const width of [1440, 1024, 390]) {
+    await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 })
+    await page.getByRole('button', { name: 'Jump to first failure' }).scrollIntoViewIfNeeded()
+    await expect(page.getByRole('button', { name: 'Jump to first failure' })).toBeInViewport()
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+    const metrics = page.locator('details').filter({ has: page.locator('summary', { hasText: 'Operation metrics' }) })
+    await expect(metrics.locator('summary')).toBeVisible({ timeout: 3000 })
+    await metrics.locator('summary').click()
+    const table = page.getByRole('table', { name: 'Operation measurements' })
+    await expect(table).toBeVisible()
+    const measurement = table.getByRole('row').filter({ hasText: /response p95 ms/i })
+    await expect(measurement).toContainText('read_product')
+    await expect(measurement).toContainText('222 ms')
+    await expect(measurement).toContainText('100')
+    await metrics.locator('summary').click()
+    await page.screenshot({ path: `screenshots/redesign-results-${width}.png`, fullPage: true })
+  }
+})
+
 test('saved first-violation references and within-workspace replay requests stay aligned', async ({ page }) => {
   const { cases, snapshots } = await recordedWorkspace(page)
   await page.getByRole('button', { name: 'Jump to first failure' }).click()

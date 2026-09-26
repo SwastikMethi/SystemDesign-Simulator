@@ -67,7 +67,7 @@ export function Editor({ challenge, catalogue, graph, commit, undo, redo, canUnd
       </div>
       <div className="flow-wrap" onKeyDown={e => { if ((e.key === 'Delete' || e.key === 'Backspace') && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) removeSelected() }}>
         <ReactFlow nodes={flowNodes} edges={flowEdges} nodeTypes={nodeTypes} onConnect={onConnect} onNodeClick={(_, node) => { setSelectedNode(node.id); setSelectedEdge(null); setInspectorOpen(true) }} onEdgeClick={(_, edge) => { setSelectedEdge(edge.id); setSelectedNode(null); setInspectorOpen(true) }} onPaneClick={() => { setSelectedNode(null); setSelectedEdge(null) }} onNodeDrag={(_, node) => setDragPositions(current => ({ ...current, [node.id]: node.position }))} onNodeDragStop={(_, node) => { commit(updateNode(graph, node.id, { position: node.position })); setDragPositions({}) }} fitView fitViewOptions={{ padding: .22 }} minZoom={.25} maxZoom={1.6} nodesDraggable snapToGrid snapGrid={[16,16]}>
-          <Background color="#2b405b" gap={20} size={1} /><Controls showInteractive={false}/>
+          <Background color="var(--grid)" gap={20} size={1} /><Controls showInteractive={false}/>
         </ReactFlow>
         {graph.nodes.length === 0 && <div className="canvas-empty"><strong>Start with a client</strong><p>Add components, then connect one route for every operation.</p><button className="primary" onClick={() => add('client')}>Add client</button></div>}
       </div>
