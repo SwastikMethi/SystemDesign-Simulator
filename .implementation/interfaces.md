@@ -20,6 +20,8 @@ DATA-API-SPEC owns paths and field names. API schemas/OpenAPI are authoritative.
 
 All case metrics use `MetricValue {value, unit, sample_count, unavailable_reason}`. The exact existing Pydantic schemas must be used, not independent frontend approximations. Baseline/candidate differences and ranking are computed on the server.
 
+`JobOutcome.accepted_us` records durable queue admission; null means enqueue rejection. `acknowledged_us` records consumer acknowledgment. The originating `RequestOutcome` records the user's acknowledgment latency and terminal outcome. An admitted job can remain pending with zero attempts.
+
 ## Ownership during independent work
 
 - Engine: backend/simulation/, backend/assessment/, backend/fixtures.py, numerical tests and fixture corrections with coordinator notification.

@@ -560,6 +560,7 @@ class JobOutcome(Strict):
     job_id: str
     request_id: str
     attempts: int = Field(ge=0)
+    accepted_us: int | None = None
     acknowledged_us: int | None = None
     first_effect_us: int | None = None
     terminal_state: Literal["delivered", "failed", "expired", "pending"]
