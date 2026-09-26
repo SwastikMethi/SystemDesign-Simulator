@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from backend.coach import render_review, request_review, validate_review
@@ -54,6 +56,13 @@ def test_malformed_provider_content_keeps_raw_body(monkeypatch, usage):
 
     real_client = httpx.Client
     def handler(request):
+        sent = json.loads(request.content)
+        context = json.loads(sent["messages"][1]["content"])
+        assert next(node for node in context["design"]["nodes"] if node["id"] == "app")["instance_count"] == 1
+        assert any(profile["id"] == "app.small.v1" and profile["credits_per_hour"] == 5 and profile["slots"] == 4 for profile in context["profiles"])
+        assert "app_service" in context["support_limits"]["allowed_component_types"]
+        assert context["support_limits"]["component_settings"]["app_service"]["max_retries"] == {"min": 0, "max": 2}
+        assert context["support_limits"]["model_scope"]
         return httpx.Response(200, json={"choices": [{"message": {"content": "{bad-json"}}], "usage": usage})
     monkeypatch.setattr(coach.httpx, "Client", lambda: real_client(transport=httpx.MockTransport(handler)))
     monkeypatch.setenv("AISD_AI_BASE_URL", "http://127.0.0.1:9999")

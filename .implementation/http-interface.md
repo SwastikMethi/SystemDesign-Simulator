@@ -43,3 +43,5 @@ Comparison candidate run manifests carry `comparison_id`; a passing comparison c
 | `POST /imports` | Multipart field `file` (ZIP) → `{imported_design_ids,imported_workload_bundle_ids,imported_run_ids,trusted:false}` |
 
 Review creation is the learner opt-in to a provider call; no call occurs during simulation or comparison. The review summary and assessment status come from the saved run; the provider supplies only cited observations, hypotheses and experiments. A `comparison_id` review scopes evidence IDs by run, including losing candidates. Imported bundles receive new IDs and retain `trusted:false` as evidence. An exact full canonical assessment bundle may be explicitly rerun in assessment mode against installed versions; other imports run only as experiments without a completion badge. Application data comes from `AISD_DATA_DIR` (default `.data`). Provider settings are server-side `AISD_AI_BASE_URL`, `AISD_AI_MODEL`, `AISD_AI_API_KEY`.
+
+After backend restart, abandoned queued/running reviews and comparisons become `failed` with an interruption error. Their saved evidence and candidate links remain available; a new request is required to try again.

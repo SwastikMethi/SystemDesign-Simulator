@@ -9,6 +9,7 @@ import os
 import re
 import tempfile
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -143,9 +144,33 @@ class Store:
             try:
                 manifest = self.run_manifest(run_id)
             except (OSError, ValueError):
-                continue
-            if manifest["execution_status"] in {"queued", "running"}:
+                manifest = None
+            if isinstance(manifest, dict) and manifest.get("execution_status") in {"queued", "running"}:
                 manifest["execution_status"] = "interrupted"
                 manifest["assessment_status"] = "incomplete"
                 manifest["error"] = "Backend restarted; run again to resume."
                 self.save_run_manifest(manifest)
+            reviews = self.path("runs", run_id, "reviews")
+            if reviews.exists():
+                for path in reviews.glob("*.json"):
+                    if path.is_symlink() or not SAFE_ID.fullmatch(path.stem):
+                        continue
+                    try:
+                        review = self.read_json(path)
+                    except (OSError, ValueError):
+                        continue
+                    if isinstance(review, dict) and review.get("status") in {"queued", "running"}:
+                        review.update(status="failed", error="Backend restarted; review interrupted. Request a new review.", finished_at=datetime.now(timezone.utc).isoformat())
+                        self.write_json(path, review)
+        comparisons = self.path("comparisons")
+        if comparisons.exists():
+            for path in comparisons.glob("*.json"):
+                if path.is_symlink() or not SAFE_ID.fullmatch(path.stem):
+                    continue
+                try:
+                    comparison = self.read_json(path)
+                except (OSError, ValueError):
+                    continue
+                if isinstance(comparison, dict) and comparison.get("status") in {"queued", "running"}:
+                    comparison.update(status="failed", error="Backend restarted; comparison interrupted. Start a new comparison.")
+                    self.write_json(path, comparison)

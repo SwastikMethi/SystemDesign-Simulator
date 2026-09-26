@@ -65,6 +65,41 @@ def test_deleting_credited_run_ignores_passing_comparison_candidate(tmp_path):
     assert "product-catalogue" not in store.read_json(store.path("progress").with_suffix(".json"))
 
 
+def test_restart_terminalizes_abandoned_review_and_completed_candidate_comparison(tmp_path):
+    from datetime import datetime, timezone
+    from backend.api.models import ComparisonRecord, ReviewRecord, RunManifest
+    from backend.storage import Store
+
+    store = Store(tmp_path)
+    common = dict(mode="assessment", execution_status="completed", assessment_status="pass", design_id="design-test", revision_id="revision-test", challenge_id="product-catalogue", challenge_version="0.1.0", challenge_hash="hash", engine_version="0.1.0", assessment_version="0.1.0", profile_version="0.1.0", profile_hash="hash", workload_generator_version="1", design_hash="hash", workload_hash="hash", run_config_hash="hash", workload_bundle_id="bundle-test", case_ids=["case-test"], created_at=datetime.now(timezone.utc), finished_at=datetime.now(timezone.utc))
+    store.save_run_manifest(RunManifest(run_id="run-baseline", **common).model_dump(mode="json"))
+    store.save_run_manifest(RunManifest(run_id="run-candidate", comparison_id="comparison-abandoned", **common).model_dump(mode="json"))
+    review_path = store.path("runs", "run-baseline", "reviews", "review-abandoned").with_suffix(".json")
+    review = ReviewRecord(review_id="review-abandoned", run_id="run-baseline", status="queued", assessment_status="pass", summary="Assessment passed.", raw_response="partial provider evidence", created_at=datetime.now(timezone.utc))
+    store.write_json(review_path, review.model_dump(mode="json"))
+    running_review_path = store.path("runs", "run-baseline", "reviews", "review-running").with_suffix(".json")
+    store.write_json(running_review_path, review.model_copy(update={"review_id": "review-running", "status": "running"}).model_dump(mode="json"))
+    comparison_path = store.path("comparisons", "comparison-abandoned").with_suffix(".json")
+    comparison = ComparisonRecord(comparison_id="comparison-abandoned", baseline_run_id="run-baseline", workload_bundle_id="bundle-test", status="running", candidate_revision_ids=["revision-test"], candidate_run_ids=["run-candidate"], rejected_candidates=[{"index": 1, "status": "rejected", "validation_error": "invalid patch"}])
+    store.write_json(comparison_path, comparison.model_dump(mode="json"))
+
+    restarted = client(tmp_path)
+    recovered_review = restarted.get("/api/v1/runs/run-baseline/reviews/review-abandoned").json()
+    recovered_running_review = restarted.get("/api/v1/runs/run-baseline/reviews/review-running").json()
+    recovered_comparison = restarted.get("/api/v1/comparisons/comparison-abandoned").json()
+    assert recovered_review["status"] == "failed"
+    assert "restart" in recovered_review["error"].lower()
+    assert recovered_review["finished_at"]
+    assert recovered_review["raw_response"] == "partial provider evidence"
+    assert recovered_running_review["status"] == "failed"
+    assert "restart" in recovered_running_review["error"].lower()
+    assert recovered_comparison["status"] == "failed"
+    assert "restart" in recovered_comparison["error"].lower()
+    assert recovered_comparison["candidate_run_ids"] == ["run-candidate"]
+    assert recovered_comparison["rejected_candidates"] == comparison.rejected_candidates
+    assert restarted.get("/api/v1/runs/run-candidate").json()["execution_status"] == "completed"
+
+
 def test_comparison_rejects_changed_required_fault_binding(tmp_path, monkeypatch):
     import backend.api as api
     from datetime import datetime, timezone

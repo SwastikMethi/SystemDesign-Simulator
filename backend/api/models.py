@@ -176,7 +176,7 @@ class ReviewRequest(Strict):
 class ReviewRecord(Strict):
     review_id: str
     run_id: str
-    status: Literal["queued", "completed", "failed"]
+    status: Literal["queued", "running", "completed", "failed"]
     provider: str | None = None
     model: str | None = None
     prompt_version: str | None = None

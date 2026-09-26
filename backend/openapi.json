@@ -3806,6 +3806,7 @@
             "type": "string",
             "enum": [
               "queued",
+              "running",
               "completed",
               "failed"
             ],
