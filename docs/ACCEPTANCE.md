@@ -19,16 +19,16 @@ This file maps the v0.1 PRD to implementation evidence. Pending rows are not rel
 
 ## Release measurements
 
-All 75 backend checks passed across the final sweep and one targeted integration rerun. Four frontend unit checks and six real-server browser checks passed across the documented runs. The browser checks cover the full learner journey at both 1440×900 and 1024×768, a narrow editor, delayed responses and failure recovery. Final whole-branch review is the remaining release check. Exact commands and the timing-only test correction are documented in [task-5-report.md](../.implementation/task-5-report.md).
+The initial 75 backend checks passed across the full sweep and one targeted integration rerun. Final review corrections separately passed 45 numerical/contract/assessment checks and 28 coach/guidance/API checks. Four frontend unit checks and six real-server browser checks passed before the final correction wave; they cover both 1440×900 and 1024×768 learner journeys, a narrow editor, delayed responses and failure recovery. Frontend correction checks and the scoped final re-review remain. Exact commands and the timing-only test correction are documented in [task-5-report.md](../.implementation/task-5-report.md).
 
-Final engine fixture verification: **20 designs, 240 completed cases**, with all five references passing and all ten intended/budget failures failing. Maximum case event count was **357,734**, below the 2,000,000 limit. Full matrix wall time was 322.416 seconds while other verification work was running. The exact unrounded requirement values, sample counts and verdicts are in [release-fixtures.json](../.implementation/release-fixtures.json). This rerun includes the corrected event priority, fair shared-worker dispatch, and fault applicability behavior.
+Final engine **0.1.1** fixture verification: **20 designs, 240 completed cases**, with all five references passing and all ten intended/budget failures failing. Maximum case event count was **357,734**, below the 2,000,000 limit. Full matrix wall time was **305.789 seconds** while other verification work was running. The exact unrounded requirement values, sample counts and verdicts are in [release-fixtures.json](../.implementation/release-fixtures.json). This rerun includes canonical graph traversal/fault selection, explicit event priority, fair shared-worker dispatch and fault applicability checks. All 20 fixture summaries match the prior engine artifact after excluding wall-clock measurements.
 
 Measured on 26 September 2026, Apple M1 Max / 32 GiB, arm64, Python 3.13.12 and Node 25.2.1:
 
 | Measurement | Observed | Method and scope |
 |---|---:|---|
-| Catalogue reference, all 15 cases | 30.472 s | Headless engine wall clock, excluding API persistence/browser/AI |
-| Additional peak process RSS | 119.4 MiB | macOS `ru_maxrss` high-water mark minus startup baseline |
+| Catalogue reference, all 15 cases | 33.221 s | Headless engine 0.1.1 wall clock, excluding API persistence/browser/AI |
+| Additional peak process RSS | 124.5 MiB | macOS `ru_maxrss` high-water mark minus startup baseline |
 | Maximum catalogue events per case | 285,103 | Actual scheduler event count, below the 2,000,000 cap |
 | Canvas interaction p95 | 32.8 ms | 20 pointer selections, pointerdown to second animation frame, 1440×900 headless Chromium |
 | Canvas frame interval p95 | 16.8 ms | 240 idle canvas frame intervals; no claim about 100-marker playback load |

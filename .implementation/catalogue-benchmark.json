@@ -3,22 +3,22 @@
     "clock": "time.perf_counter wall seconds",
     "memory": "resource.getrusage(RUSAGE_SELF).ru_maxrss peak RSS; bytes on macOS",
     "platform": "darwin",
-    "baseline_rss": 33505280,
-    "total_seconds": 30.564,
-    "peak_rss": 158728192,
-    "additional_peak_rss": 125222912
+    "baseline_rss": 33783808,
+    "total_seconds": 33.221,
+    "peak_rss": 164347904,
+    "additional_peak_rss": 130564096
   },
   "fixtures": [
     {
       "challenge_id": "product-catalogue",
       "fixture": "reference",
       "status": "pass",
-      "seconds": 30.472,
+      "seconds": 33.138,
       "cases": [
         {
           "scenario_id": "steady",
           "seed": 101,
-          "seconds": 1.344,
+          "seconds": 2.095,
           "requests": 14533,
           "executed_events": 172791,
           "trace_count": 100,
@@ -157,7 +157,7 @@
         {
           "scenario_id": "steady",
           "seed": 202,
-          "seconds": 1.362,
+          "seconds": 2.342,
           "requests": 14316,
           "executed_events": 170748,
           "trace_count": 100,
@@ -296,7 +296,7 @@
         {
           "scenario_id": "steady",
           "seed": 303,
-          "seconds": 1.829,
+          "seconds": 1.38,
           "requests": 14214,
           "executed_events": 169186,
           "trace_count": 100,
@@ -435,7 +435,7 @@
         {
           "scenario_id": "steady",
           "seed": 404,
-          "seconds": 1.611,
+          "seconds": 1.438,
           "requests": 14523,
           "executed_events": 173213,
           "trace_count": 100,
@@ -574,7 +574,7 @@
         {
           "scenario_id": "steady",
           "seed": 505,
-          "seconds": 1.445,
+          "seconds": 1.379,
           "requests": 14643,
           "executed_events": 174641,
           "trace_count": 100,
@@ -713,7 +713,7 @@
         {
           "scenario_id": "burst",
           "seed": 101,
-          "seconds": 2.437,
+          "seconds": 2.529,
           "requests": 24110,
           "executed_events": 284414,
           "trace_count": 100,
@@ -852,7 +852,7 @@
         {
           "scenario_id": "burst",
           "seed": 202,
-          "seconds": 2.241,
+          "seconds": 2.403,
           "requests": 24102,
           "executed_events": 284586,
           "trace_count": 100,
@@ -991,7 +991,7 @@
         {
           "scenario_id": "burst",
           "seed": 303,
-          "seconds": 2.236,
+          "seconds": 2.394,
           "requests": 23832,
           "executed_events": 281308,
           "trace_count": 100,
@@ -1130,7 +1130,7 @@
         {
           "scenario_id": "burst",
           "seed": 404,
-          "seconds": 2.219,
+          "seconds": 2.42,
           "requests": 24047,
           "executed_events": 283365,
           "trace_count": 100,
@@ -1269,7 +1269,7 @@
         {
           "scenario_id": "burst",
           "seed": 505,
-          "seconds": 2.325,
+          "seconds": 2.466,
           "requests": 23833,
           "executed_events": 281447,
           "trace_count": 100,
@@ -1408,7 +1408,7 @@
         {
           "scenario_id": "cold_cache",
           "seed": 101,
-          "seconds": 2.281,
+          "seconds": 2.423,
           "requests": 24110,
           "executed_events": 284823,
           "trace_count": 100,
@@ -1547,7 +1547,7 @@
         {
           "scenario_id": "cold_cache",
           "seed": 202,
-          "seconds": 2.319,
+          "seconds": 2.529,
           "requests": 24102,
           "executed_events": 285103,
           "trace_count": 100,
@@ -1686,7 +1686,7 @@
         {
           "scenario_id": "cold_cache",
           "seed": 303,
-          "seconds": 2.287,
+          "seconds": 2.539,
           "requests": 23832,
           "executed_events": 281805,
           "trace_count": 100,
@@ -1825,7 +1825,7 @@
         {
           "scenario_id": "cold_cache",
           "seed": 404,
-          "seconds": 2.344,
+          "seconds": 2.436,
           "requests": 24047,
           "executed_events": 283922,
           "trace_count": 100,
@@ -1964,7 +1964,7 @@
         {
           "scenario_id": "cold_cache",
           "seed": 505,
-          "seconds": 2.187,
+          "seconds": 2.359,
           "requests": 23833,
           "executed_events": 281996,
           "trace_count": 100,

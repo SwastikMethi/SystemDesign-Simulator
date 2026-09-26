@@ -4,6 +4,11 @@ The implementation is on `feat/system-design-simulator`. The original specificat
 
 ## Numerical verification
 
+- Final correction checkpoint: engine **0.1.1**, commit `ca610b6`, passed **45 numerical/contract/assessment tests** in 0.70 seconds. Array-permutation regressions compare hashes, routes, fault bindings, request/job outcomes, traces, snapshots and metrics. Historical engine 0.1.0 baselines cannot silently compare under the corrected engine.
+- Root reran `.venv/bin/python -m backend.fixtures --output .implementation/release-fixtures.json`: **20 designs / 240 completed cases**, all five references pass, all ten intended/budget failures fail, maximum **357,734 events**. Wall time **305.789 seconds**, peak RSS **185,319,424 bytes**, additional peak RSS **152,584,192 bytes**. Every fixture summary matches the prior committed artifact after excluding wall-clock fields; the authored numerical requirements and verdicts did not change.
+- Root refreshed the isolated engine 0.1.1 catalogue benchmark: **33.221 seconds**, **130,564,096 additional peak RSS bytes** (~124.5 MiB), all **15 cases pass**, maximum **285,103 events**. The full matrix had finished before this benchmark; new heavy browser simulation work was held until it completed.
+- Coach/API correction checkpoint `3742082`: **28 coach/guidance/API checks passed in 118.37 seconds**. Checks inspect the actual strict outgoing schema recursively, build a valid proposal using only captured provider context and execute its real comparison, enforce connect/body/retry-body deadlines with preserved partial-response diagnostics, and reject an old-engine baseline. The local app was restarted with this backend on port 8770.
+- Earlier checkpoints below establish the original full implementation and are retained as executed history; the two numerical artifacts linked above now contain the engine 0.1.1 reruns.
 - `.venv/bin/python -m backend.fixtures --output .implementation/release-fixtures.json` executed **20 designs and 240 cases** on the corrected engine. Every case completed. All five references passed and all ten intended/budget failures failed. No thresholds or workload seeds were changed. The largest case executed **357,734 events**, below the binding 2,000,000 cap.
 - The full matrix took **322.416 seconds** during concurrent integration work. It used 185,188,352 bytes peak RSS, 152,076,288 bytes above startup. This is not the isolated catalogue benchmark.
 - The isolated catalogue reference benchmark completed all 15 cases in **30.472 seconds**, with **125,222,912 additional peak RSS bytes** (~119.4 MiB), meeting the specified engine targets on Apple M1 Max / 32 GiB. It excludes API persistence, browser rendering and provider requests.
@@ -26,6 +31,6 @@ The implementation is on `feat/system-design-simulator`. The original specificat
 
 ## Review and release limits
 
-The task review history is in [reviews.md](reviews.md). Task reviews are approved and both full viewport journeys passed. Final whole-branch review remains in progress; this report is not a completed release claim until its result is recorded.
+The task review history is in [reviews.md](reviews.md). Task reviews are approved and both full viewport journeys passed. Final whole-branch review found seven Important issues, recorded in [final-review.md](final-review.md). The consolidated correction wave has completed backend verification; frontend checks and a single scoped re-review remain. This report is not a completed release claim until those results are recorded.
 
 No live-provider smoke test or five-person learning study has been performed. Controlled provider tests establish response handling, evidence validation and failure isolation; they do not establish model explanation quality or learning impact. The locked test client emits an `httpx` deprecation warning; production uses the configured `httpx` adapter.
