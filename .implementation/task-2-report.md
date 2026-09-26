@@ -57,7 +57,7 @@ Full measured case evidence: `.implementation/fixture-results-final.json`. This 
 
 ## Catalogue benchmark
 
-Latest isolated 15-case catalogue reference: **27.337 seconds** (27.414 seconds including runner reporting/GC), **167,542,784 bytes peak RSS**, **133,922,816 additional bytes** (~127.7 MiB). This meets the <=60-second and <=2-GiB additional-memory targets. All 15 cases passed under the binding 2,000,000-event cap; the largest executed case used 232,002 events.
+Latest isolated 15-case catalogue reference: **30.472 seconds** (30.564 seconds including runner reporting/GC), **158,728,192 bytes peak RSS**, **125,222,912 additional bytes** (~119.4 MiB). This meets the <=60-second and <=2-GiB additional-memory targets. All 15 cases passed under the binding 2,000,000-event cap; the largest executed case used 285,103 events.
 
 Target verified by coordinator: Apple M1 Max, 32 GiB, arm64; project Python 3.13.12. Timing uses `time.perf_counter()` wall time; memory uses `resource.getrusage(RUSAGE_SELF).ru_maxrss`, which is bytes on macOS, minus the process startup high-water baseline. AI/provider latency is excluded. Machine-readable measurement and each case are saved in `.implementation/catalogue-benchmark.json`.
 
@@ -68,3 +68,15 @@ These are the specified educational models: independent links without TCP, logic
 No API/storage/coach/frontend code or authored fixture content was changed by this task. The additive shared `accepted_us` field/schema was implemented by the coordinator. Engine, assessment, fixture runner, numerical tests, this report, and measured JSON artifacts are the owned handoff for independent review.
 
 Review correction: the first implementation incorrectly chose an 8,000,000 event ceiling. `docs/BUILD-PLAN.md` specifies 2,000,000; the constant was corrected without changing numerical scheduling. The catalogue benchmark was rerun with the binding cap and now records executed event counts.
+
+## Independent review fixes — round 1
+
+Review base: `521ca66`. All three Important findings were reproduced before editing: four focused tests were RED (disconnected app absorbs fault; a shared-worker queue never obtains a lease; pool promotion runs before a same-time deadline; worker lease dispatch runs before a same-time deadline).
+
+- Faults resolve through participating compiled logical roles, including invalidation-only caches. Disconnected billable components cannot absorb a required application outage; an explicit disconnected application target interrupts the case. Original role selection survives appended parallel paths. `fault_bindings(challenge, design, workload)` exposes the exact non-clear target identities used by execution so the API comparison boundary can reject a candidate that replaces/remaps a baseline fault role. Clear-cache/CDN targets intentionally follow whichever caches a design uses. Wiring the cross-design rejection belongs to the API owner; this task does not alter API files.
+- Worker availability now wakes a coalesced global dispatch arbiter. It serves one pending job per queue turn and cycles fairly through all queues, including accepted queues with no previous lease. Each worker pool reserves capacity atomically so concurrent queue turns cannot oversubscribe it.
+- Pool admission reserves the FIFO slot immediately, but actual service starts are scheduled at explicit DISPATCH priority. Completions release capacity before deadlines; deadlines finish before queued work starts. The worker arbiter also runs only at DISPATCH priority. Reservations are canceled alongside active/queued work on failure.
+
+GREEN: `.venv/bin/python -m pytest tests/test_simulation.py tests/test_assessment.py -q` → **31 passed in 0.54 s** (the previous 26 plus five focused regression cases). No literal-cap test or broad repository/matrix rerun was added.
+
+Targeted authored verification covers **40 cases**: all 15 catalogue reference cases, all 10 notification reference cases, all 10 notification failure cases, and seed 101 team-notes initial/burst, URL failure/burst, catalogue initial/burst, catalogue failure/cold_cache, photo reference/cold_cdn. Every intended verdict is unchanged; all unrounded measured requirement rows and sample counts match the prior matrix. Notification reference passed in 12.561s; notification failure failed in 13.752s. Catalogue benchmark above is updated for actual priority dispatch (30.472s; largest case 285,103 events, below the 2,000,000 cap). Detailed targeted results: `.implementation/task-2-review-cases.json`; catalogue cases remain in `.implementation/catalogue-benchmark.json`.

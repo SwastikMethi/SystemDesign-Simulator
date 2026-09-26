@@ -94,6 +94,7 @@ class Pool:
         self.waiting = deque()
         self.active = {}
         self.busy = 0
+        self.reserved = 0
         self.last_time = 0
         self.busy_integral = self.available_integral = self.queue_integral = 0
         self.wait_total = self.serviced = self.rejections = 0
@@ -112,8 +113,8 @@ class Pool:
         if not self.available:
             self.rejections += 1
             reject()
-        elif self.busy < self.available:
-            self._start(start, reject, abort, self.s.now)
+        elif self.busy+self.reserved < self.available:
+            self._reserve(start, reject, abort, self.s.now)
         elif len(self.waiting) < self.queue_limit:
             self.waiting.append((start, reject, abort, self.s.now))
             self.max_queue = max(self.max_queue,len(self.waiting))
@@ -121,22 +122,31 @@ class Pool:
             self.rejections += 1
             reject()
 
-    def _start(self, start, reject, abort, arrived):
+    def _reserve(self, start, reject, abort, arrived):
+        # Reserve admission immediately so an earlier scheduled new arrival cannot
+        # steal a FIFO slot; actual work starts only after same-time deadlines.
         self.serial += 1
         token = self.serial
-        self.busy += 1
-        self.serviced += 1
-        self.wait_total += self.s.now-arrived
-        def release():
+        self.reserved += 1
+        self.active[token] = abort or reject
+        def dispatch():
             if token not in self.active:
                 return
             self.integrate()
-            del self.active[token]
-            self.busy -= 1
-            if self.waiting and self.busy < self.available:
-                self._start(*self.waiting.popleft())
-        self.active[token] = abort or reject
-        start(release)
+            self.reserved -= 1
+            self.busy += 1
+            self.serviced += 1
+            self.wait_total += self.s.now-arrived
+            def release():
+                if token not in self.active:
+                    return
+                self.integrate()
+                del self.active[token]
+                self.busy -= 1
+                if self.waiting and self.busy+self.reserved < self.available:
+                    self._reserve(*self.waiting.popleft())
+            start(release)
+        self.s.after(0, DISPATCH, dispatch)
 
     def set_available(self, available):
         self.integrate()
@@ -145,7 +155,7 @@ class Pool:
             callbacks = list(self.active.values()) + [item[2] or item[1] for item in self.waiting]
             self.active.clear()
             self.waiting.clear()
-            self.busy = 0
+            self.busy = self.reserved = 0
             for callback in callbacks:
                 callback()
         else:
@@ -210,6 +220,27 @@ class NodeState:
         self.token_time = 0
 
 
+def fault_targets(compiled, fault):
+    """Stable participating logical roles; disconnected nodes cannot absorb a fault."""
+    nodes={node.id:node for node in compiled.design.nodes}
+    edges={edge.id:edge for edge in compiled.design.edges}
+    participating=list(dict.fromkeys(node_id for route in compiled.routes.values() for node_id in route.node_ids))
+    for route in compiled.routes.values():
+        for edge_id in route.invalidation_edge_ids:
+            target=edges[edge_id].target
+            if target not in participating: participating.append(target)
+    component=fault.target_component_type or ('cdn' if fault.type=='clear_cdn' else 'cache' if fault.type=='clear_cache' else 'app_service')
+    targets=[node_id for node_id in participating if (fault.target_node_id==node_id if fault.target_node_id else nodes[node_id].type==component)]
+    return targets[:1] if fault.type=='app_instance_unavailable' else targets
+
+
+def fault_bindings(challenge, design, workload):
+    """Comparison boundary can reject edits that remap required non-clear faults."""
+    compiled=compile_design(design,challenge)
+    return [(index,scheduled.fault.type,tuple(fault_targets(compiled,scheduled.fault)),scheduled.fault.target_instance_id or '0')
+            for index,scheduled in enumerate(workload.faults) if scheduled.fault.type not in {'clear_cache','clear_cdn'}]
+
+
 class Engine:
     def __init__(self, challenge, design, workload, *, on_progress=None, should_cancel=None,
                  constant_service=False, propagation_us=2000, bandwidth_bytes_s=100*(1<<20), max_events=MAX_EVENTS):
@@ -248,6 +279,8 @@ class Engine:
         self.health_successes = defaultdict(int)
         self.fault_ends = []
         self.diagnostics = []
+        self.job_dispatch_pending = False
+        self.queue_rr = 0
 
     def emit(self, ctx, event, node_id=None, edge_id=None, attempt=0, job_id=None, **details):
         # Each request's trace is also bounded, including attempts and late work.
@@ -348,7 +381,7 @@ class Engine:
                     else:
                         self.call_edge(ctx,edge,finish,attempt)
             self.s.after(service_us,COMPLETE,local_done)
-        if pool.busy>=pool.available:
+        if pool.busy+pool.reserved>=pool.available:
             self.emit(ctx,'queued',node_id,attempt=attempt,instance=instance)
         pool.acquire(start,reject,abort)
         state.max_queue=max(state.max_queue,sum(len(p.waiting) for p in state.pools))
@@ -474,58 +507,74 @@ class Engine:
         done(False)
 
     def dispatch_jobs(self,state):
-        if not state.pending: return
-        while state.pending:
-            if not state.pending[0].outstanding:
-                state.pending.popleft(); continue
-            edges=self.outgoing[state.node.id,state.pending[0].ctx.arrival.operation_id,'consume']
-            choices=[(edge,i,p) for edge in edges for i,p in enumerate(self.nodes[edge.target].pools)]
-            selected=None
-            for _ in choices:
-                edge,i,pool=choices[state.route_rr % len(choices)]; state.route_rr+=1
-                if pool.busy<pool.available:
-                    selected=(edge,i,pool); break
-            if selected is None: return
-            edge,i,pool=selected
-            job=state.pending.popleft()
-            worker=self.nodes[edge.target]
-            job.attempts+=1; job.active_attempts+=1; attempt=job.attempts
-            ctx=job.ctx; job_id=ctx.arrival.request_id
-            self.emit(ctx,'job_leased',state.node.id,edge.id,attempt=attempt,job_id=job_id)
-            lease=state.node.settings.get('lease_seconds',5)*1_000_000
-            max_attempts=state.node.settings.get('max_attempts',3)
-            def expired(job=job,state=state,attempt=attempt,max_attempts=max_attempts):
-                if not job.outstanding or job.attempts!=attempt: return
-                self.emit(job.ctx,'job_released',state.node.id,attempt=attempt,job_id=job.ctx.arrival.request_id)
-                if job.attempts<max_attempts:
-                    state.pending.append(job); self.dispatch_jobs(state)
-                else:
-                    job.state='failed'; job.outstanding=False; state.buffer_count-=1
-            self.s.after(lease,DEADLINE,expired)
-            def start(release,job=job,worker=worker,edge=edge,attempt=attempt,state=state):
-                def delivered():
-                    self.emit(job.ctx,'service_started',worker.node.id,attempt=attempt,job_id=job.ctx.arrival.request_id)
-                    def effect():
-                        dedup=worker.node.settings.get('deduplicate',True)
-                        if not dedup or job.effects==0:
-                            job.effects+=1
-                            if job.effects>1: self.retain_failure(job.ctx,'duplicate_effect')
-                            if job.first_effect is None: job.first_effect=self.s.now
-                            self.emit(job.ctx,'job_effect',worker.node.id,attempt=attempt,job_id=job.ctx.arrival.request_id,duplicate=job.effects>1)
-                        job.active_attempts-=1
-                        release()
-                        def ack():
-                            if job.ack is None: job.ack=self.s.now
-                            job.state='delivered'
-                            if job.outstanding: job.outstanding=False; state.buffer_count-=1
-                            self.emit(job.ctx,'job_acknowledged',state.node.id,attempt=attempt,job_id=job.ctx.arrival.request_id)
-                            self.dispatch_jobs(state)
-                            if not job.active_attempts and not job.ctx.retained: job.ctx.events.clear()
-                        self.transfer(job.ctx,edge,True,0,ack,attempt)
+        # Any release can unblock a different queue sharing this worker. Coalesce
+        # wakeups and arbitrate all connected queues at domain dispatch priority.
+        if self.job_dispatch_pending: return
+        self.job_dispatch_pending = True
+        self.s.after(0, DISPATCH, self.dispatch_waiting_jobs)
+
+    def dispatch_waiting_jobs(self):
+        self.job_dispatch_pending = False
+        queues=[state for state in self.nodes.values() if state.node.type=='message_queue']
+        idle_turns=0
+        while queues and idle_turns<len(queues):
+            state=queues[self.queue_rr % len(queues)]
+            self.queue_rr+=1
+            idle_turns=0 if self.dispatch_one_job(state) else idle_turns+1
+
+    def dispatch_one_job(self,state):
+        while state.pending and not state.pending[0].outstanding:
+            state.pending.popleft()
+        if not state.pending: return False
+        edges=self.outgoing[state.node.id,state.pending[0].ctx.arrival.operation_id,'consume']
+        choices=[(edge,i,p) for edge in edges for i,p in enumerate(self.nodes[edge.target].pools)]
+        selected=None
+        for _ in choices:
+            edge,i,pool=choices[state.route_rr % len(choices)]; state.route_rr+=1
+            if pool.busy+pool.reserved<pool.available:
+                selected=(edge,i,pool); break
+        if selected is None: return False
+        edge,i,pool=selected
+        job=state.pending.popleft()
+        worker=self.nodes[edge.target]
+        job.attempts+=1; job.active_attempts+=1; attempt=job.attempts
+        ctx=job.ctx; job_id=ctx.arrival.request_id
+        self.emit(ctx,'job_leased',state.node.id,edge.id,attempt=attempt,job_id=job_id)
+        lease=state.node.settings.get('lease_seconds',5)*1_000_000
+        max_attempts=state.node.settings.get('max_attempts',3)
+        def expired(job=job,state=state,attempt=attempt,max_attempts=max_attempts):
+            if not job.outstanding or job.attempts!=attempt: return
+            self.emit(job.ctx,'job_released',state.node.id,attempt=attempt,job_id=job.ctx.arrival.request_id)
+            if job.attempts<max_attempts:
+                state.pending.append(job); self.dispatch_jobs(state)
+            else:
+                job.state='failed'; job.outstanding=False; state.buffer_count-=1
+        self.s.after(lease,DEADLINE,expired)
+        def start(release,job=job,worker=worker,edge=edge,attempt=attempt,state=state):
+            def delivered():
+                self.emit(job.ctx,'service_started',worker.node.id,attempt=attempt,job_id=job.ctx.arrival.request_id)
+                def effect():
+                    dedup=worker.node.settings.get('deduplicate',True)
+                    if not dedup or job.effects==0:
+                        job.effects+=1
+                        if job.effects>1: self.retain_failure(job.ctx,'duplicate_effect')
+                        if job.first_effect is None: job.first_effect=self.s.now
+                        self.emit(job.ctx,'job_effect',worker.node.id,attempt=attempt,job_id=job.ctx.arrival.request_id,duplicate=job.effects>1)
+                    job.active_attempts-=1
+                    release()
+                    def ack():
+                        if job.ack is None: job.ack=self.s.now
+                        job.state='delivered'
+                        if job.outstanding: job.outstanding=False; state.buffer_count-=1
+                        self.emit(job.ctx,'job_acknowledged',state.node.id,attempt=attempt,job_id=job.ctx.arrival.request_id)
                         self.dispatch_jobs(state)
-                    self.s.after(self.duration(job.ctx,worker,attempt),COMPLETE,effect)
-                self.transfer(job.ctx,edge,False,job.ctx.arrival.request_bytes,delivered,attempt)
-            pool.acquire(start,lambda:None)
+                        if not job.active_attempts and not job.ctx.retained: job.ctx.events.clear()
+                    self.transfer(job.ctx,edge,True,0,ack,attempt)
+                    self.dispatch_jobs(state)
+                self.s.after(self.duration(job.ctx,worker,attempt),COMPLETE,effect)
+            self.transfer(job.ctx,edge,False,job.ctx.arrival.request_bytes,delivered,attempt)
+        pool.acquire(start,lambda:None)
+        return True
 
     def retain_failure(self,ctx,category):
         a=ctx.arrival
@@ -599,11 +648,10 @@ class Engine:
 
     def fault(self,scheduled):
         fault=scheduled.fault
-        targets=[state for state in self.nodes.values() if (fault.target_node_id==state.node.id if fault.target_node_id else state.node.type==(fault.target_component_type or ('cdn' if fault.type=='clear_cdn' else 'cache' if fault.type=='clear_cache' else 'app_service')))]
+        targets=[self.nodes[node_id] for node_id in fault_targets(self.compiled,fault)]
         if not targets:
             if fault.type not in {'clear_cache','clear_cdn'}: self.diagnostics.append('fault target missing')
             return
-        if fault.type=='app_instance_unavailable': targets=targets[:1]
         for state in targets:
             for ctx in self.contexts.values():
                 if ctx.terminal is None or ctx.retained:

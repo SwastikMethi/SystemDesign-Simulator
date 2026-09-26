@@ -325,3 +325,89 @@ def test_recovery_requires_three_full_windows_and_job_targets():
     assert e.run().result.node_metrics['__design__']['recovery_time_ms'].value==30_000
     e=Engine(c,d,w,constant_service=True); e.nodes['worker'].multiplier=1000
     assert e.run().result.node_metrics['__design__']['recovery_time_ms'].value is None
+
+
+def test_required_fault_stays_on_participating_role_after_topology_addition():
+    from backend.contracts import DesignRevision, Fault
+    from backend.workloads import ScheduledFault
+    c=load_challenge('team-notes'); d=load_fixture(c.challenge_id,'initial')
+    w=case(c,[arrival(c,0,time=200_000)])
+    w.faults=[ScheduledFault(time_us=100_000,fault=Fault(type='app_instance_unavailable',at_s=0,end_s=1))]
+    baseline=Engine(c,d,w,constant_service=True).run()
+    data=d.model_dump(mode='json'); data['nodes'].append(dict(data['nodes'][1],id='aaa-unused'))
+    candidate=Engine(c,DesignRevision.model_validate(data),w,constant_service=True).run()
+    assert baseline.outcomes[0].status=='dependency_error'
+    assert candidate.outcomes==baseline.outcomes
+    from backend.simulation import fault_bindings
+    assert fault_bindings(c,d,w)==fault_bindings(c,DesignRevision.model_validate(data),w)
+    w.faults[0].fault.target_node_id='aaa-unused'
+    assert Engine(c,DesignRevision.model_validate(data),w,constant_service=True).run().result.execution_status=='interrupted'
+
+
+def shared_worker_design():
+    from backend.contracts import DesignRevision
+    c=load_challenge('notifications'); data=load_fixture(c.challenge_id,'initial').model_dump(mode='json')
+    app=next(n for n in data['nodes'] if n['type']=='app_service')
+    queue=next(n for n in data['nodes'] if n['type']=='message_queue')
+    data['nodes'] += [dict(app,id='app-b'),dict(queue,id='queue-b'),dict(app,id='lb',type='load_balancer',profile_id='lb.small.v1',settings={})]
+    entry=next(e for e in data['edges'] if e['source']=='client'); entry['target']='lb'
+    op=[c.operations[0].id]
+    data['edges'] += [dict(id='lb-app',source='lb',target='app',kind='request',operation_ids=op),
+        dict(id='lb-app-b',source='lb',target='app-b',kind='request',operation_ids=op),
+        dict(id='app-b-queue-b',source='app-b',target='queue-b',kind='request',operation_ids=op),
+        dict(id='queue-b-worker',source='queue-b',target='worker',kind='consume',operation_ids=op)]
+    return c,DesignRevision.model_validate(data)
+
+
+def test_shared_worker_release_wakes_other_queue_without_previous_lease():
+    c,d=shared_worker_design()
+    # The first queue consumes both slots, before the second queue's first admission.
+    e=Engine(c,d,case(c,[arrival(c,i,time=i*1000) for i in range(4)]),constant_service=True)
+    e.nodes['queue-b'].multiplier=10
+    art=e.run()
+    assert len(art.jobs)==4 and all(j.accepted_us is not None for j in art.jobs)
+    assert all(j.attempts==1 and j.terminal_state=='delivered' for j in art.jobs)
+    assert all(j.first_effect_us<200_000 for j in art.jobs)
+
+
+def test_pool_completion_reserves_fifo_slot_but_dispatch_waits_for_deadlines():
+    from backend.simulation import COMPLETE, DEADLINE, DISPATCH
+    s=Scheduler(); p=Pool(s,1,2); order=[]
+    def work(label):
+        def start(release):
+            order.append((label,s.now))
+            s.after(10,COMPLETE,release)
+        p.acquire(start,lambda:order.append(('rejected',s.now)))
+    work('first'); work('queued')
+    s.at(10,DEADLINE,lambda:order.append(('deadline',s.now)))
+    s.at(10,DISPATCH,lambda:work('new'))
+    s.run(40)
+    assert order==[('first',0),('deadline',10),('queued',10),('new',20)]
+
+
+def test_worker_release_dispatch_runs_after_same_time_deadline():
+    from backend.simulation import DEADLINE
+    c=load_challenge('notifications'); d=load_fixture(c.challenge_id,'initial')
+    e=Engine(c,d,case(c,[arrival(c,i) for i in range(3)]),constant_service=True)
+    # First worker effects occur at 59,015us with default transfer/service times.
+    observed=[]
+    e.s.at(59_015,DEADLINE,lambda:observed.append(sum(j.attempts for j in e.jobs.values())))
+    e.run()
+    assert observed==[2] # the queued third job cannot lease until DISPATCH priority
+
+
+def test_appended_parallel_route_keeps_existing_fault_role():
+    from backend.contracts import DesignRevision, Fault
+    from backend.workloads import ScheduledFault
+    c,d=shared_worker_design()
+    # The first compiled app role is 'app'; appended 'aaa' sorts earlier by ID.
+    data=d.model_dump(mode='json')
+    app=next(n for n in data['nodes'] if n['id']=='app')
+    data['nodes'].append(dict(app,id='aaa'))
+    data['edges'] += [dict(id='new-lb-aaa',source='lb',target='aaa',kind='request',operation_ids=[c.operations[0].id]),
+        dict(id='aaa-queue',source='aaa',target='queue',kind='request',operation_ids=[c.operations[0].id])]
+    w=case(c,[]); scheduled=ScheduledFault(time_us=0,fault=Fault(type='app_instance_unavailable',at_s=0,end_s=1))
+    baseline=Engine(c,d,w); candidate=Engine(c,DesignRevision.model_validate(data),w)
+    baseline.fault(scheduled); candidate.fault(scheduled)
+    assert baseline.nodes['app'].pools[0].available==candidate.nodes['app'].pools[0].available==0
+    assert candidate.nodes['aaa'].pools[0].available==4

@@ -3,24 +3,24 @@
     "clock": "time.perf_counter wall seconds",
     "memory": "resource.getrusage(RUSAGE_SELF).ru_maxrss peak RSS; bytes on macOS",
     "platform": "darwin",
-    "baseline_rss": 33619968,
-    "total_seconds": 27.414,
-    "peak_rss": 167542784,
-    "additional_peak_rss": 133922816
+    "baseline_rss": 33505280,
+    "total_seconds": 30.564,
+    "peak_rss": 158728192,
+    "additional_peak_rss": 125222912
   },
   "fixtures": [
     {
       "challenge_id": "product-catalogue",
       "fixture": "reference",
       "status": "pass",
-      "seconds": 27.337,
+      "seconds": 30.472,
       "cases": [
         {
           "scenario_id": "steady",
           "seed": 101,
-          "seconds": 1.203,
+          "seconds": 1.344,
           "requests": 14533,
-          "executed_events": 140591,
+          "executed_events": 172791,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -157,9 +157,9 @@
         {
           "scenario_id": "steady",
           "seed": 202,
-          "seconds": 1.249,
+          "seconds": 1.362,
           "requests": 14316,
-          "executed_events": 138896,
+          "executed_events": 170748,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -296,9 +296,9 @@
         {
           "scenario_id": "steady",
           "seed": 303,
-          "seconds": 1.222,
+          "seconds": 1.829,
           "requests": 14214,
-          "executed_events": 137648,
+          "executed_events": 169186,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -435,9 +435,9 @@
         {
           "scenario_id": "steady",
           "seed": 404,
-          "seconds": 1.29,
+          "seconds": 1.611,
           "requests": 14523,
-          "executed_events": 140900,
+          "executed_events": 173213,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -574,9 +574,9 @@
         {
           "scenario_id": "steady",
           "seed": 505,
-          "seconds": 1.23,
+          "seconds": 1.445,
           "requests": 14643,
-          "executed_events": 142061,
+          "executed_events": 174641,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -713,9 +713,9 @@
         {
           "scenario_id": "burst",
           "seed": 101,
-          "seconds": 2.147,
+          "seconds": 2.437,
           "requests": 24110,
-          "executed_events": 231491,
+          "executed_events": 284414,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -852,9 +852,9 @@
         {
           "scenario_id": "burst",
           "seed": 202,
-          "seconds": 2.167,
+          "seconds": 2.241,
           "requests": 24102,
-          "executed_events": 231614,
+          "executed_events": 284586,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -991,9 +991,9 @@
         {
           "scenario_id": "burst",
           "seed": 303,
-          "seconds": 2.028,
+          "seconds": 2.236,
           "requests": 23832,
-          "executed_events": 228953,
+          "executed_events": 281308,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -1130,9 +1130,9 @@
         {
           "scenario_id": "burst",
           "seed": 404,
-          "seconds": 2.077,
+          "seconds": 2.219,
           "requests": 24047,
-          "executed_events": 230657,
+          "executed_events": 283365,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -1269,9 +1269,9 @@
         {
           "scenario_id": "burst",
           "seed": 505,
-          "seconds": 2.152,
+          "seconds": 2.325,
           "requests": 23833,
-          "executed_events": 229058,
+          "executed_events": 281447,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -1408,9 +1408,9 @@
         {
           "scenario_id": "cold_cache",
           "seed": 101,
-          "seconds": 2.056,
+          "seconds": 2.281,
           "requests": 24110,
-          "executed_events": 231798,
+          "executed_events": 284823,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -1547,9 +1547,9 @@
         {
           "scenario_id": "cold_cache",
           "seed": 202,
-          "seconds": 2.14,
+          "seconds": 2.319,
           "requests": 24102,
-          "executed_events": 232002,
+          "executed_events": 285103,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -1686,9 +1686,9 @@
         {
           "scenario_id": "cold_cache",
           "seed": 303,
-          "seconds": 2.156,
+          "seconds": 2.287,
           "requests": 23832,
-          "executed_events": 229326,
+          "executed_events": 281805,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -1825,9 +1825,9 @@
         {
           "scenario_id": "cold_cache",
           "seed": 404,
-          "seconds": 2.109,
+          "seconds": 2.344,
           "requests": 24047,
-          "executed_events": 231075,
+          "executed_events": 283922,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [
@@ -1964,9 +1964,9 @@
         {
           "scenario_id": "cold_cache",
           "seed": 505,
-          "seconds": 2.107,
+          "seconds": 2.187,
           "requests": 23833,
-          "executed_events": 229470,
+          "executed_events": 281996,
           "trace_count": 100,
           "execution_status": "completed",
           "requirements": [

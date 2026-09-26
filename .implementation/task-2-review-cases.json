@@ -1,0 +1,4755 @@
+{
+  "fixtures": [
+    {
+      "challenge_id": "notifications",
+      "fixture": "reference",
+      "status": "pass",
+      "seconds": 12.561,
+      "cases": [
+        {
+          "scenario_id": "steady",
+          "seed": 101,
+          "seconds": 0.856,
+          "requests": 7177,
+          "executed_events": 143932,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5980,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 11.986,
+                "unit": "ms",
+                "sample_count": 5980,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5980,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 5980,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 202,
+          "seconds": 0.867,
+          "requests": 6941,
+          "executed_events": 139212,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5805,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 11.993,
+                "unit": "ms",
+                "sample_count": 5805,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5805,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 5805,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 303,
+          "seconds": 0.901,
+          "requests": 7203,
+          "executed_events": 144452,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 6009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.003,
+                "unit": "ms",
+                "sample_count": 6009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 6009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 6009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 404,
+          "seconds": 0.902,
+          "requests": 7144,
+          "executed_events": 143270,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5909,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.033,
+                "unit": "ms",
+                "sample_count": 5909,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5909,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 5909,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 505,
+          "seconds": 0.949,
+          "requests": 7318,
+          "executed_events": 146752,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 6113,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.001,
+                "unit": "ms",
+                "sample_count": 6113,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 6113,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 6113,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 101,
+          "seconds": 1.618,
+          "requests": 12025,
+          "executed_events": 240890,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10828,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.023,
+                "unit": "ms",
+                "sample_count": 10828,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10828,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10828,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 202,
+          "seconds": 1.578,
+          "requests": 11731,
+          "executed_events": 235010,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10595,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.033,
+                "unit": "ms",
+                "sample_count": 10595,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10595,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10595,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 303,
+          "seconds": 1.595,
+          "requests": 11984,
+          "executed_events": 240069,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10790,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.007,
+                "unit": "ms",
+                "sample_count": 10790,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10790,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10790,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 404,
+          "seconds": 1.619,
+          "requests": 11981,
+          "executed_events": 240011,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10746,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.034,
+                "unit": "ms",
+                "sample_count": 10746,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10746,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10746,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 505,
+          "seconds": 1.654,
+          "requests": 12117,
+          "executed_events": 242725,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10912,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 11.992,
+                "unit": "ms",
+                "sample_count": 10912,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10912,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10912,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 70.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R05:design"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "challenge_id": "notifications",
+      "fixture": "failure",
+      "status": "fail",
+      "seconds": 13.752,
+      "cases": [
+        {
+          "scenario_id": "steady",
+          "seed": 101,
+          "seconds": 0.926,
+          "requests": 7177,
+          "executed_events": 143932,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5980,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 11.986,
+                "unit": "ms",
+                "sample_count": 5980,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5980,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 5980,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-101:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 202,
+          "seconds": 0.91,
+          "requests": 6941,
+          "executed_events": 139212,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5805,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 11.993,
+                "unit": "ms",
+                "sample_count": 5805,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5805,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 5805,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 202,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-202:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 303,
+          "seconds": 0.96,
+          "requests": 7203,
+          "executed_events": 144452,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 6009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.003,
+                "unit": "ms",
+                "sample_count": 6009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 6009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 6009,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 303,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-303:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 404,
+          "seconds": 0.898,
+          "requests": 7144,
+          "executed_events": 143269,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5909,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.033,
+                "unit": "ms",
+                "sample_count": 5909,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 5909,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 5909,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 404,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-404:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "steady",
+          "seed": 505,
+          "seconds": 0.968,
+          "requests": 7318,
+          "executed_events": 146752,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 6113,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.001,
+                "unit": "ms",
+                "sample_count": 6113,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 6113,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R03:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 6113,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "steady",
+              "seed": 505,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "steady-505:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 101,
+          "seconds": 1.665,
+          "requests": 12025,
+          "executed_events": 237832,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10828,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.023,
+                "unit": "ms",
+                "sample_count": 10828,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "fail",
+              "measured": {
+                "value": 0.2722571111932028,
+                "unit": "fraction",
+                "sample_count": 10828,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R03:enqueue_notification",
+                "burst-101:R03:enqueue_notification:first"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10828,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 101,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-101:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 202,
+          "seconds": 1.784,
+          "requests": 11731,
+          "executed_events": 232675,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10595,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.033,
+                "unit": "ms",
+                "sample_count": 10595,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "fail",
+              "measured": {
+                "value": 0.2684285040113261,
+                "unit": "fraction",
+                "sample_count": 10595,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R03:enqueue_notification",
+                "burst-202:R03:enqueue_notification:first"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10595,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 202,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-202:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 303,
+          "seconds": 1.786,
+          "requests": 11984,
+          "executed_events": 237425,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10790,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.007,
+                "unit": "ms",
+                "sample_count": 10790,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "fail",
+              "measured": {
+                "value": 0.27571825764596847,
+                "unit": "fraction",
+                "sample_count": 10790,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R03:enqueue_notification",
+                "burst-303:R03:enqueue_notification:first"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10790,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 303,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-303:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 404,
+          "seconds": 1.647,
+          "requests": 11981,
+          "executed_events": 238101,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10746,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 12.034,
+                "unit": "ms",
+                "sample_count": 10746,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "fail",
+              "measured": {
+                "value": 0.2833612506979341,
+                "unit": "fraction",
+                "sample_count": 10746,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R03:enqueue_notification",
+                "burst-404:R03:enqueue_notification:first"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10746,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 404,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-404:R05:design"
+              ]
+            }
+          ]
+        },
+        {
+          "scenario_id": "burst",
+          "seed": 505,
+          "seconds": 2.185,
+          "requests": 12117,
+          "executed_events": 240073,
+          "trace_count": 100,
+          "execution_status": "completed",
+          "requirements": [
+            {
+              "requirement_id": "R01",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 1.0,
+                "unit": "fraction",
+                "sample_count": 10912,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R01:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R02",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 11.992,
+                "unit": "ms",
+                "sample_count": 10912,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R02:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R03",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "fail",
+              "measured": {
+                "value": 0.28170821114369504,
+                "unit": "fraction",
+                "sample_count": 10912,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R03:enqueue_notification",
+                "burst-505:R03:enqueue_notification:first"
+              ]
+            },
+            {
+              "requirement_id": "R04",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": "enqueue_notification",
+              "status": "pass",
+              "measured": {
+                "value": 0.0,
+                "unit": "count",
+                "sample_count": 10912,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R04:enqueue_notification"
+              ]
+            },
+            {
+              "requirement_id": "R05",
+              "scenario_id": "burst",
+              "seed": 505,
+              "operation_id": null,
+              "status": "pass",
+              "measured": {
+                "value": 15.0,
+                "unit": "credits/hour",
+                "sample_count": 4,
+                "unavailable_reason": null
+              },
+              "evidence_ids": [
+                "burst-505:R05:design"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "selected_cases": [
+    {
+      "challenge_id": "team-notes",
+      "fixture": "initial",
+      "scenario_id": "burst",
+      "seed": 101,
+      "seconds": 0.64,
+      "executed_events": 58362,
+      "result": {
+        "case_id": "burst-101",
+        "scenario_id": "burst",
+        "seed": 101,
+        "execution_status": "completed",
+        "operation_metrics": {
+          "read_note": {
+            "success_rate": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.0,
+              "unit": "fraction",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 12.386666666666667,
+              "unit": "requests/second",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 30.589,
+              "unit": "ms",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 44.772,
+              "unit": "ms",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 57.707,
+              "unit": "ms",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "invalid_read_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "freshness_violation_rate": {
+              "value": null,
+              "unit": "fraction",
+              "sample_count": 0,
+              "unavailable_reason": "no eligible successful reads"
+            }
+          },
+          "write_note": {
+            "success_rate": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.0,
+              "unit": "fraction",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 3.22,
+              "unit": "requests/second",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 40.35,
+              "unit": "ms",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 57.893,
+              "unit": "ms",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 74.897,
+              "unit": "ms",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "acknowledged_write_missing_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 966,
+              "unavailable_reason": null
+            }
+          }
+        },
+        "node_metrics": {
+          "app": {
+            "busy_slot_occupancy": {
+              "value": 0.09913097628205128,
+              "unit": "fraction",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 0.19616603415559772,
+              "unit": "ms",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 4.0,
+              "unit": "count",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.00265075641025641,
+              "unit": "count",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 5.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "client": {
+            "busy_slot_occupancy": {
+              "value": null,
+              "unit": "fraction",
+              "sample_count": 0,
+              "unavailable_reason": "no available slot time"
+            },
+            "queue_wait_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no serviced work"
+            },
+            "queue_depth_max": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 0.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "sql": {
+            "busy_slot_occupancy": {
+              "value": 0.1491658205128205,
+              "unit": "fraction",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 1.2390216318785578,
+              "unit": "ms",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 2.0,
+              "unit": "count",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.016742676923076922,
+              "unit": "count",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 5270,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 20.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "__design__": {
+            "cost_credits_per_hour": {
+              "value": 25.0,
+              "unit": "credits/hour",
+              "sample_count": 3,
+              "unavailable_reason": null
+            },
+            "recovery_time_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no interval fault"
+            }
+          }
+        },
+        "requirement_outcomes": [
+          {
+            "requirement_id": "R01",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "read_note",
+            "status": "pass",
+            "measured": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R01:read_note"
+            ]
+          },
+          {
+            "requirement_id": "R02",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "read_note",
+            "status": "pass",
+            "measured": {
+              "value": 44.772,
+              "unit": "ms",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R02:read_note"
+            ]
+          },
+          {
+            "requirement_id": "R03",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "write_note",
+            "status": "pass",
+            "measured": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R03:write_note"
+            ]
+          },
+          {
+            "requirement_id": "R04",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "write_note",
+            "status": "pass",
+            "measured": {
+              "value": 57.893,
+              "unit": "ms",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R04:write_note"
+            ]
+          },
+          {
+            "requirement_id": "R05",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "read_note",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 3716,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R05:read_note"
+            ]
+          },
+          {
+            "requirement_id": "R06",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "write_note",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 966,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R06:write_note"
+            ]
+          },
+          {
+            "requirement_id": "R07",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": null,
+            "status": "pass",
+            "measured": {
+              "value": 25.0,
+              "unit": "credits/hour",
+              "sample_count": 3,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R07:design"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "evidence_id": "burst-101:R01:read_note",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 1.0,
+            "scope": "burst/seed=101/read_note/[60000000,360000000)us",
+            "sample_count": 3716,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R02:read_note",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 44.772,
+            "scope": "burst/seed=101/read_note/[60000000,360000000)us",
+            "sample_count": 3716,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R03:write_note",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 1.0,
+            "scope": "burst/seed=101/write_note/[60000000,360000000)us",
+            "sample_count": 966,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R04:write_note",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 57.893,
+            "scope": "burst/seed=101/write_note/[60000000,360000000)us",
+            "sample_count": 966,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R05:read_note",
+            "type": "invalid_read_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "burst/seed=101/read_note/[60000000,360000000)us",
+            "sample_count": 3716,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R06:write_note",
+            "type": "acknowledged_write_missing_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "burst/seed=101/write_note/[60000000,360000000)us",
+            "sample_count": 966,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R07:design",
+            "type": "cost_credits_per_hour",
+            "unit": "credits/hour",
+            "value": 25.0,
+            "scope": "burst/seed=101/design/[60000000,360000000)us",
+            "sample_count": 3,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          }
+        ],
+        "trace_refs": [
+          "trace:burst-101-588",
+          "trace:burst-101-589",
+          "trace:burst-101-590",
+          "trace:burst-101-591",
+          "trace:burst-101-592",
+          "trace:burst-101-593",
+          "trace:burst-101-594",
+          "trace:burst-101-595",
+          "trace:burst-101-596",
+          "trace:burst-101-597",
+          "trace:burst-101-598",
+          "trace:burst-101-599",
+          "trace:burst-101-600",
+          "trace:burst-101-601",
+          "trace:burst-101-602",
+          "trace:burst-101-603",
+          "trace:burst-101-604",
+          "trace:burst-101-605",
+          "trace:burst-101-606",
+          "trace:burst-101-607",
+          "trace:burst-101-608",
+          "trace:burst-101-609",
+          "trace:burst-101-610",
+          "trace:burst-101-611",
+          "trace:burst-101-612",
+          "trace:burst-101-613",
+          "trace:burst-101-614",
+          "trace:burst-101-615",
+          "trace:burst-101-616",
+          "trace:burst-101-617",
+          "trace:burst-101-618",
+          "trace:burst-101-619",
+          "trace:burst-101-620",
+          "trace:burst-101-621",
+          "trace:burst-101-622",
+          "trace:burst-101-623",
+          "trace:burst-101-624",
+          "trace:burst-101-625",
+          "trace:burst-101-626",
+          "trace:burst-101-627",
+          "trace:burst-101-628",
+          "trace:burst-101-629",
+          "trace:burst-101-630",
+          "trace:burst-101-631",
+          "trace:burst-101-632",
+          "trace:burst-101-633",
+          "trace:burst-101-634",
+          "trace:burst-101-635",
+          "trace:burst-101-636",
+          "trace:burst-101-637",
+          "trace:burst-101-638",
+          "trace:burst-101-639",
+          "trace:burst-101-640",
+          "trace:burst-101-641",
+          "trace:burst-101-642",
+          "trace:burst-101-643",
+          "trace:burst-101-644",
+          "trace:burst-101-645",
+          "trace:burst-101-646",
+          "trace:burst-101-647",
+          "trace:burst-101-648",
+          "trace:burst-101-649",
+          "trace:burst-101-650",
+          "trace:burst-101-651",
+          "trace:burst-101-652",
+          "trace:burst-101-653",
+          "trace:burst-101-654",
+          "trace:burst-101-655",
+          "trace:burst-101-656",
+          "trace:burst-101-657",
+          "trace:burst-101-658",
+          "trace:burst-101-659",
+          "trace:burst-101-660",
+          "trace:burst-101-661",
+          "trace:burst-101-662",
+          "trace:burst-101-663",
+          "trace:burst-101-664",
+          "trace:burst-101-665",
+          "trace:burst-101-666",
+          "trace:burst-101-667",
+          "trace:burst-101-669",
+          "trace:burst-101-668",
+          "trace:burst-101-670",
+          "trace:burst-101-671",
+          "trace:burst-101-672",
+          "trace:burst-101-673",
+          "trace:burst-101-674",
+          "trace:burst-101-675",
+          "trace:burst-101-676",
+          "trace:burst-101-677",
+          "trace:burst-101-678",
+          "trace:burst-101-679",
+          "trace:burst-101-680",
+          "trace:burst-101-681",
+          "trace:burst-101-682",
+          "trace:burst-101-683",
+          "trace:burst-101-684",
+          "trace:burst-101-685",
+          "trace:burst-101-686",
+          "trace:burst-101-687"
+        ]
+      }
+    },
+    {
+      "challenge_id": "url-shortener",
+      "fixture": "failure",
+      "scenario_id": "burst",
+      "seed": 101,
+      "seconds": 2.23,
+      "executed_events": 267867,
+      "result": {
+        "case_id": "burst-101",
+        "scenario_id": "burst",
+        "seed": 101,
+        "execution_status": "completed",
+        "operation_metrics": {
+          "resolve_code": {
+            "success_rate": {
+              "value": 0.6678276671462103,
+              "unit": "fraction",
+              "sample_count": 26414,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.33217233285378966,
+              "unit": "fraction",
+              "sample_count": 26414,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 58.8,
+              "unit": "requests/second",
+              "sample_count": 26414,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 26414,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 37.793,
+              "unit": "ms",
+              "sample_count": 17640,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 1073.009,
+              "unit": "ms",
+              "sample_count": 17640,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 1095.488,
+              "unit": "ms",
+              "sample_count": 17640,
+              "unavailable_reason": null
+            },
+            "invalid_read_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 26414,
+              "unavailable_reason": null
+            },
+            "freshness_violation_rate": {
+              "value": null,
+              "unit": "fraction",
+              "sample_count": 0,
+              "unavailable_reason": "no eligible successful reads"
+            }
+          },
+          "create_code": {
+            "success_rate": {
+              "value": 0.6407942238267148,
+              "unit": "fraction",
+              "sample_count": 554,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.3592057761732852,
+              "unit": "fraction",
+              "sample_count": 554,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 1.1833333333333333,
+              "unit": "requests/second",
+              "sample_count": 554,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 554,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 48.526,
+              "unit": "ms",
+              "sample_count": 355,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 1083.29,
+              "unit": "ms",
+              "sample_count": 355,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 1107.173,
+              "unit": "ms",
+              "sample_count": 355,
+              "unavailable_reason": null
+            },
+            "acknowledged_write_missing_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 355,
+              "unavailable_reason": null
+            }
+          }
+        },
+        "node_metrics": {
+          "app": {
+            "busy_slot_occupancy": {
+              "value": 0.4372666108974359,
+              "unit": "fraction",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 286.61669671780743,
+              "unit": "ms",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 100.0,
+              "unit": "count",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 15.47215722051282,
+              "unit": "count",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 5.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "client": {
+            "busy_slot_occupancy": {
+              "value": null,
+              "unit": "fraction",
+              "sample_count": 0,
+              "unavailable_reason": "no available slot time"
+            },
+            "queue_wait_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no serviced work"
+            },
+            "queue_depth_max": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 0.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "sql": {
+            "busy_slot_occupancy": {
+              "value": 0.5436867884615385,
+              "unit": "fraction",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 6.251628698997768,
+              "unit": "ms",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 2.0,
+              "unit": "count",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.33747574102564104,
+              "unit": "count",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 21053,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 20.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "__design__": {
+            "cost_credits_per_hour": {
+              "value": 25.0,
+              "unit": "credits/hour",
+              "sample_count": 3,
+              "unavailable_reason": null
+            },
+            "recovery_time_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no interval fault"
+            }
+          }
+        },
+        "requirement_outcomes": [
+          {
+            "requirement_id": "R01",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "resolve_code",
+            "status": "fail",
+            "measured": {
+              "value": 0.6678276671462103,
+              "unit": "fraction",
+              "sample_count": 26414,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R01:resolve_code"
+            ]
+          },
+          {
+            "requirement_id": "R02",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "resolve_code",
+            "status": "fail",
+            "measured": {
+              "value": 1073.009,
+              "unit": "ms",
+              "sample_count": 17640,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R02:resolve_code"
+            ]
+          },
+          {
+            "requirement_id": "R03",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "create_code",
+            "status": "fail",
+            "measured": {
+              "value": 0.6407942238267148,
+              "unit": "fraction",
+              "sample_count": 554,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R03:create_code"
+            ]
+          },
+          {
+            "requirement_id": "R04",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "create_code",
+            "status": "fail",
+            "measured": {
+              "value": 1083.29,
+              "unit": "ms",
+              "sample_count": 355,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R04:create_code"
+            ]
+          },
+          {
+            "requirement_id": "R05",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "resolve_code",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 26414,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R05:resolve_code"
+            ]
+          },
+          {
+            "requirement_id": "R06",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "create_code",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 355,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R06:create_code"
+            ]
+          },
+          {
+            "requirement_id": "R07",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": null,
+            "status": "pass",
+            "measured": {
+              "value": 25.0,
+              "unit": "credits/hour",
+              "sample_count": 3,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R07:design"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "evidence_id": "burst-101:R01:resolve_code",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 0.6678276671462103,
+            "scope": "burst/seed=101/resolve_code/[60000000,360000000)us",
+            "sample_count": 26414,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R02:resolve_code",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 1073.009,
+            "scope": "burst/seed=101/resolve_code/[60000000,360000000)us",
+            "sample_count": 17640,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R03:create_code",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 0.6407942238267148,
+            "scope": "burst/seed=101/create_code/[60000000,360000000)us",
+            "sample_count": 554,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R04:create_code",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 1083.29,
+            "scope": "burst/seed=101/create_code/[60000000,360000000)us",
+            "sample_count": 355,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R05:resolve_code",
+            "type": "invalid_read_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "burst/seed=101/resolve_code/[60000000,360000000)us",
+            "sample_count": 26414,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R06:create_code",
+            "type": "acknowledged_write_missing_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "burst/seed=101/create_code/[60000000,360000000)us",
+            "sample_count": 355,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R07:design",
+            "type": "cost_credits_per_hour",
+            "unit": "credits/hour",
+            "value": 25.0,
+            "scope": "burst/seed=101/design/[60000000,360000000)us",
+            "sample_count": 3,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          }
+        ],
+        "trace_refs": [
+          "trace:burst-101-3058",
+          "trace:burst-101-3060",
+          "trace:burst-101-3059",
+          "trace:burst-101-3061",
+          "trace:burst-101-3062",
+          "trace:burst-101-3064",
+          "trace:burst-101-3063",
+          "trace:burst-101-3065",
+          "trace:burst-101-3066",
+          "trace:burst-101-3067",
+          "trace:burst-101-3069",
+          "trace:burst-101-3068",
+          "trace:burst-101-3070",
+          "trace:burst-101-3072",
+          "trace:burst-101-3071",
+          "trace:burst-101-3073",
+          "trace:burst-101-3074",
+          "trace:burst-101-3075",
+          "trace:burst-101-3076",
+          "trace:burst-101-3077",
+          "trace:burst-101-3078",
+          "trace:burst-101-3079",
+          "trace:burst-101-3080",
+          "trace:burst-101-3081",
+          "trace:burst-101-3082",
+          "trace:burst-101-3083",
+          "trace:burst-101-3085",
+          "trace:burst-101-3084",
+          "trace:burst-101-3086",
+          "trace:burst-101-3087",
+          "trace:burst-101-3088",
+          "trace:burst-101-3089",
+          "trace:burst-101-3090",
+          "trace:burst-101-3091",
+          "trace:burst-101-3092",
+          "trace:burst-101-3093",
+          "trace:burst-101-3094",
+          "trace:burst-101-3095",
+          "trace:burst-101-3096",
+          "trace:burst-101-3097",
+          "trace:burst-101-3098",
+          "trace:burst-101-3100",
+          "trace:burst-101-3099",
+          "trace:burst-101-3102",
+          "trace:burst-101-3101",
+          "trace:burst-101-3103",
+          "trace:burst-101-3104",
+          "trace:burst-101-3105",
+          "trace:burst-101-3106",
+          "trace:burst-101-3107",
+          "trace:burst-101-3109",
+          "trace:burst-101-3108",
+          "trace:burst-101-3111",
+          "trace:burst-101-3110",
+          "trace:burst-101-3112",
+          "trace:burst-101-3113",
+          "trace:burst-101-3114",
+          "trace:burst-101-3116",
+          "trace:burst-101-3115",
+          "trace:burst-101-3117",
+          "trace:burst-101-3118",
+          "trace:burst-101-3119",
+          "trace:burst-101-3120",
+          "trace:burst-101-3121",
+          "trace:burst-101-3123",
+          "trace:burst-101-3122",
+          "trace:burst-101-3125",
+          "trace:burst-101-3124",
+          "trace:burst-101-3126",
+          "trace:burst-101-3127",
+          "trace:burst-101-3128",
+          "trace:burst-101-3129",
+          "trace:burst-101-3131",
+          "trace:burst-101-3130",
+          "trace:burst-101-3132",
+          "trace:burst-101-3133",
+          "trace:burst-101-3135",
+          "trace:burst-101-3134",
+          "trace:burst-101-3136",
+          "trace:burst-101-3137",
+          "trace:burst-101-3138",
+          "trace:burst-101-3139",
+          "trace:burst-101-3141",
+          "trace:burst-101-3140",
+          "trace:burst-101-3142",
+          "trace:burst-101-3143",
+          "trace:burst-101-3144",
+          "trace:burst-101-3145",
+          "trace:burst-101-3146",
+          "trace:burst-101-3147",
+          "trace:burst-101-3148",
+          "trace:burst-101-3149",
+          "trace:burst-101-3150",
+          "trace:burst-101-3151",
+          "trace:burst-101-3152",
+          "trace:burst-101-3153",
+          "trace:burst-101-3154",
+          "trace:burst-101-3156",
+          "trace:burst-101-9236",
+          "trace:burst-101-9243"
+        ]
+      }
+    },
+    {
+      "challenge_id": "product-catalogue",
+      "fixture": "initial",
+      "scenario_id": "burst",
+      "seed": 101,
+      "seconds": 1.761,
+      "executed_events": 222111,
+      "result": {
+        "case_id": "burst-101",
+        "scenario_id": "burst",
+        "seed": 101,
+        "execution_status": "completed",
+        "operation_metrics": {
+          "read_product": {
+            "success_rate": {
+              "value": 0.7132042509826758,
+              "unit": "fraction",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.2867957490173242,
+              "unit": "fraction",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 48.99,
+              "unit": "requests/second",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 37.57,
+              "unit": "ms",
+              "sample_count": 14697,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 1103.871,
+              "unit": "ms",
+              "sample_count": 14697,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 1126.026,
+              "unit": "ms",
+              "sample_count": 14697,
+              "unavailable_reason": null
+            },
+            "invalid_read_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "freshness_violation_rate": {
+              "value": 0.0,
+              "unit": "fraction",
+              "sample_count": 14697,
+              "unavailable_reason": null
+            }
+          },
+          "write_product": {
+            "success_rate": {
+              "value": 0.7191844300278035,
+              "unit": "fraction",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.2808155699721965,
+              "unit": "fraction",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 2.5866666666666664,
+              "unit": "requests/second",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 49.9,
+              "unit": "ms",
+              "sample_count": 776,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 1114.145,
+              "unit": "ms",
+              "sample_count": 776,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 1135.797,
+              "unit": "ms",
+              "sample_count": 776,
+              "unavailable_reason": null
+            },
+            "acknowledged_write_missing_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 776,
+              "unavailable_reason": null
+            }
+          }
+        },
+        "node_metrics": {
+          "app": {
+            "busy_slot_occupancy": {
+              "value": 0.3760864269230769,
+              "unit": "fraction",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 336.1958735542269,
+              "unit": "ms",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 100.0,
+              "unit": "count",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 15.427942433333333,
+              "unit": "count",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 5.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "client": {
+            "busy_slot_occupancy": {
+              "value": null,
+              "unit": "fraction",
+              "sample_count": 0,
+              "unavailable_reason": "no available slot time"
+            },
+            "queue_wait_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no serviced work"
+            },
+            "queue_depth_max": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 0.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "sql": {
+            "busy_slot_occupancy": {
+              "value": 0.4701783769230769,
+              "unit": "fraction",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 6.267552550706823,
+              "unit": "ms",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 2.0,
+              "unit": "count",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.2876163794871795,
+              "unit": "count",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 17897,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 20.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "__design__": {
+            "cost_credits_per_hour": {
+              "value": 25.0,
+              "unit": "credits/hour",
+              "sample_count": 3,
+              "unavailable_reason": null
+            },
+            "recovery_time_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no interval fault"
+            }
+          }
+        },
+        "requirement_outcomes": [
+          {
+            "requirement_id": "R01",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "read_product",
+            "status": "fail",
+            "measured": {
+              "value": 0.7132042509826758,
+              "unit": "fraction",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R01:read_product"
+            ]
+          },
+          {
+            "requirement_id": "R01",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "write_product",
+            "status": "fail",
+            "measured": {
+              "value": 0.7191844300278035,
+              "unit": "fraction",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R01:write_product"
+            ]
+          },
+          {
+            "requirement_id": "R02",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "read_product",
+            "status": "fail",
+            "measured": {
+              "value": 1103.871,
+              "unit": "ms",
+              "sample_count": 14697,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R02:read_product"
+            ]
+          },
+          {
+            "requirement_id": "R03",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "write_product",
+            "status": "fail",
+            "measured": {
+              "value": 1114.145,
+              "unit": "ms",
+              "sample_count": 776,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R03:write_product"
+            ]
+          },
+          {
+            "requirement_id": "R04",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "read_product",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R04:read_product"
+            ]
+          },
+          {
+            "requirement_id": "R05",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "read_product",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "fraction",
+              "sample_count": 14697,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R05:read_product"
+            ]
+          },
+          {
+            "requirement_id": "R06",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": "write_product",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 776,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R06:write_product"
+            ]
+          },
+          {
+            "requirement_id": "R07",
+            "scenario_id": "burst",
+            "seed": 101,
+            "operation_id": null,
+            "status": "pass",
+            "measured": {
+              "value": 25.0,
+              "unit": "credits/hour",
+              "sample_count": 3,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "burst-101:R07:design"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "evidence_id": "burst-101:R01:read_product",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 0.7132042509826758,
+            "scope": "burst/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 20607,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R01:write_product",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 0.7191844300278035,
+            "scope": "burst/seed=101/write_product/[60000000,360000000)us",
+            "sample_count": 1079,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R02:read_product",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 1103.871,
+            "scope": "burst/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 14697,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R03:write_product",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 1114.145,
+            "scope": "burst/seed=101/write_product/[60000000,360000000)us",
+            "sample_count": 776,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R04:read_product",
+            "type": "invalid_read_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "burst/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 20607,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R05:read_product",
+            "type": "freshness_violation_rate",
+            "unit": "fraction",
+            "value": 0.0,
+            "scope": "burst/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 14697,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R06:write_product",
+            "type": "acknowledged_write_missing_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "burst/seed=101/write_product/[60000000,360000000)us",
+            "sample_count": 776,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "burst-101:R07:design",
+            "type": "cost_credits_per_hour",
+            "unit": "credits/hour",
+            "value": 25.0,
+            "scope": "burst/seed=101/design/[60000000,360000000)us",
+            "sample_count": 3,
+            "artifact_ref": "case:burst-101:window:60000000:360000000"
+          }
+        ],
+        "trace_refs": [
+          "trace:burst-101-2424",
+          "trace:burst-101-2426",
+          "trace:burst-101-2425",
+          "trace:burst-101-2427",
+          "trace:burst-101-2428",
+          "trace:burst-101-2429",
+          "trace:burst-101-2430",
+          "trace:burst-101-2431",
+          "trace:burst-101-2432",
+          "trace:burst-101-2433",
+          "trace:burst-101-2434",
+          "trace:burst-101-2435",
+          "trace:burst-101-2436",
+          "trace:burst-101-2437",
+          "trace:burst-101-2438",
+          "trace:burst-101-2439",
+          "trace:burst-101-2440",
+          "trace:burst-101-2441",
+          "trace:burst-101-2442",
+          "trace:burst-101-2443",
+          "trace:burst-101-2444",
+          "trace:burst-101-2445",
+          "trace:burst-101-2446",
+          "trace:burst-101-2447",
+          "trace:burst-101-2448",
+          "trace:burst-101-2449",
+          "trace:burst-101-2450",
+          "trace:burst-101-2451",
+          "trace:burst-101-2452",
+          "trace:burst-101-2453",
+          "trace:burst-101-2454",
+          "trace:burst-101-2455",
+          "trace:burst-101-2456",
+          "trace:burst-101-2457",
+          "trace:burst-101-2458",
+          "trace:burst-101-2459",
+          "trace:burst-101-2460",
+          "trace:burst-101-2461",
+          "trace:burst-101-2462",
+          "trace:burst-101-2463",
+          "trace:burst-101-2464",
+          "trace:burst-101-2465",
+          "trace:burst-101-2467",
+          "trace:burst-101-2466",
+          "trace:burst-101-2469",
+          "trace:burst-101-2468",
+          "trace:burst-101-2470",
+          "trace:burst-101-2471",
+          "trace:burst-101-2472",
+          "trace:burst-101-2473",
+          "trace:burst-101-2474",
+          "trace:burst-101-2475",
+          "trace:burst-101-2476",
+          "trace:burst-101-2477",
+          "trace:burst-101-2479",
+          "trace:burst-101-2478",
+          "trace:burst-101-2480",
+          "trace:burst-101-2481",
+          "trace:burst-101-2482",
+          "trace:burst-101-2483",
+          "trace:burst-101-2484",
+          "trace:burst-101-2485",
+          "trace:burst-101-2486",
+          "trace:burst-101-2488",
+          "trace:burst-101-2487",
+          "trace:burst-101-2489",
+          "trace:burst-101-2490",
+          "trace:burst-101-2491",
+          "trace:burst-101-2492",
+          "trace:burst-101-2493",
+          "trace:burst-101-2495",
+          "trace:burst-101-2494",
+          "trace:burst-101-2496",
+          "trace:burst-101-2497",
+          "trace:burst-101-2498",
+          "trace:burst-101-2499",
+          "trace:burst-101-2500",
+          "trace:burst-101-2501",
+          "trace:burst-101-2502",
+          "trace:burst-101-2503",
+          "trace:burst-101-2504",
+          "trace:burst-101-2505",
+          "trace:burst-101-2506",
+          "trace:burst-101-2507",
+          "trace:burst-101-2508",
+          "trace:burst-101-2509",
+          "trace:burst-101-2510",
+          "trace:burst-101-2511",
+          "trace:burst-101-2512",
+          "trace:burst-101-2513",
+          "trace:burst-101-2514",
+          "trace:burst-101-2515",
+          "trace:burst-101-2516",
+          "trace:burst-101-2517",
+          "trace:burst-101-2518",
+          "trace:burst-101-2519",
+          "trace:burst-101-2521",
+          "trace:burst-101-2520",
+          "trace:burst-101-7401",
+          "trace:burst-101-7429"
+        ]
+      }
+    },
+    {
+      "challenge_id": "product-catalogue",
+      "fixture": "failure",
+      "scenario_id": "cold_cache",
+      "seed": 101,
+      "seconds": 2.285,
+      "executed_events": 276035,
+      "result": {
+        "case_id": "cold_cache-101",
+        "scenario_id": "cold_cache",
+        "seed": 101,
+        "execution_status": "completed",
+        "operation_metrics": {
+          "read_product": {
+            "success_rate": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.0,
+              "unit": "fraction",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 68.69,
+              "unit": "requests/second",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 11.09,
+              "unit": "ms",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 35.159,
+              "unit": "ms",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 42.129,
+              "unit": "ms",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "invalid_read_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "freshness_violation_rate": {
+              "value": 0.5813558499538991,
+              "unit": "fraction",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            }
+          },
+          "write_product": {
+            "success_rate": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.0,
+              "unit": "fraction",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 3.5966666666666667,
+              "unit": "requests/second",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 39.757,
+              "unit": "ms",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 52.647,
+              "unit": "ms",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 59.882,
+              "unit": "ms",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "acknowledged_write_missing_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            }
+          }
+        },
+        "node_metrics": {
+          "app": {
+            "busy_slot_occupancy": {
+              "value": 0.08553020929487179,
+              "unit": "fraction",
+              "sample_count": 24110,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 0.0019857735379510575,
+              "unit": "ms",
+              "sample_count": 24110,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 3.0,
+              "unit": "count",
+              "sample_count": 24110,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.00012276153846153847,
+              "unit": "count",
+              "sample_count": 24110,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 24110,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 10.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "cache": {
+            "busy_slot_occupancy": {
+              "value": 0.0009181763621794872,
+              "unit": "fraction",
+              "sample_count": 22918,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 0.0,
+              "unit": "ms",
+              "sample_count": 22918,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 22918,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 22918,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 22918,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 32.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cache_hit_rate": {
+              "value": 0.886202984553626,
+              "unit": "fraction",
+              "sample_count": 22918,
+              "unavailable_reason": null
+            }
+          },
+          "client": {
+            "busy_slot_occupancy": {
+              "value": null,
+              "unit": "fraction",
+              "sample_count": 0,
+              "unavailable_reason": "no available slot time"
+            },
+            "queue_wait_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no serviced work"
+            },
+            "queue_depth_max": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 0.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "sql": {
+            "busy_slot_occupancy": {
+              "value": 0.05653809230769231,
+              "unit": "fraction",
+              "sample_count": 3800,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 0.02031078947368421,
+              "unit": "ms",
+              "sample_count": 3800,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 2.0,
+              "unit": "count",
+              "sample_count": 3800,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0001979,
+              "unit": "count",
+              "sample_count": 3800,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 3800,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 40.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "__design__": {
+            "cost_credits_per_hour": {
+              "value": 82.0,
+              "unit": "credits/hour",
+              "sample_count": 4,
+              "unavailable_reason": null
+            },
+            "recovery_time_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no interval fault"
+            }
+          }
+        },
+        "requirement_outcomes": [
+          {
+            "requirement_id": "R01",
+            "scenario_id": "cold_cache",
+            "seed": 101,
+            "operation_id": "read_product",
+            "status": "pass",
+            "measured": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cache-101:R01:read_product"
+            ]
+          },
+          {
+            "requirement_id": "R01",
+            "scenario_id": "cold_cache",
+            "seed": 101,
+            "operation_id": "write_product",
+            "status": "pass",
+            "measured": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cache-101:R01:write_product"
+            ]
+          },
+          {
+            "requirement_id": "R02",
+            "scenario_id": "cold_cache",
+            "seed": 101,
+            "operation_id": "read_product",
+            "status": "pass",
+            "measured": {
+              "value": 35.159,
+              "unit": "ms",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cache-101:R02:read_product"
+            ]
+          },
+          {
+            "requirement_id": "R03",
+            "scenario_id": "cold_cache",
+            "seed": 101,
+            "operation_id": "write_product",
+            "status": "pass",
+            "measured": {
+              "value": 52.647,
+              "unit": "ms",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cache-101:R03:write_product"
+            ]
+          },
+          {
+            "requirement_id": "R04",
+            "scenario_id": "cold_cache",
+            "seed": 101,
+            "operation_id": "read_product",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cache-101:R04:read_product"
+            ]
+          },
+          {
+            "requirement_id": "R05",
+            "scenario_id": "cold_cache",
+            "seed": 101,
+            "operation_id": "read_product",
+            "status": "fail",
+            "measured": {
+              "value": 0.5813558499538991,
+              "unit": "fraction",
+              "sample_count": 20607,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cache-101:R05:read_product",
+              "cold_cache-101:R05:read_product:first"
+            ]
+          },
+          {
+            "requirement_id": "R06",
+            "scenario_id": "cold_cache",
+            "seed": 101,
+            "operation_id": "write_product",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 1079,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cache-101:R06:write_product"
+            ]
+          },
+          {
+            "requirement_id": "R07",
+            "scenario_id": "cold_cache",
+            "seed": 101,
+            "operation_id": null,
+            "status": "pass",
+            "measured": {
+              "value": 82.0,
+              "unit": "credits/hour",
+              "sample_count": 4,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cache-101:R07:design"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "evidence_id": "cold_cache-101:R01:read_product",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 1.0,
+            "scope": "cold_cache/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 20607,
+            "artifact_ref": "case:cold_cache-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cache-101:R01:write_product",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 1.0,
+            "scope": "cold_cache/seed=101/write_product/[60000000,360000000)us",
+            "sample_count": 1079,
+            "artifact_ref": "case:cold_cache-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cache-101:R02:read_product",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 35.159,
+            "scope": "cold_cache/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 20607,
+            "artifact_ref": "case:cold_cache-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cache-101:R03:write_product",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 52.647,
+            "scope": "cold_cache/seed=101/write_product/[60000000,360000000)us",
+            "sample_count": 1079,
+            "artifact_ref": "case:cold_cache-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cache-101:R04:read_product",
+            "type": "invalid_read_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "cold_cache/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 20607,
+            "artifact_ref": "case:cold_cache-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cache-101:R05:read_product",
+            "type": "freshness_violation_rate",
+            "unit": "fraction",
+            "value": 0.5813558499538991,
+            "scope": "cold_cache/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 20607,
+            "artifact_ref": "case:cold_cache-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cache-101:R05:read_product:first",
+            "type": "first_violation",
+            "unit": "request",
+            "value": "cold_cache-101-2424",
+            "scope": "cold_cache/seed=101/read_product/[60000000,360000000)us",
+            "sample_count": 1,
+            "artifact_ref": "trace:cold_cache-101-2424"
+          },
+          {
+            "evidence_id": "cold_cache-101:R06:write_product",
+            "type": "acknowledged_write_missing_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "cold_cache/seed=101/write_product/[60000000,360000000)us",
+            "sample_count": 1079,
+            "artifact_ref": "case:cold_cache-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cache-101:R07:design",
+            "type": "cost_credits_per_hour",
+            "unit": "credits/hour",
+            "value": 82.0,
+            "scope": "cold_cache/seed=101/design/[60000000,360000000)us",
+            "sample_count": 4,
+            "artifact_ref": "case:cold_cache-101:window:60000000:360000000"
+          }
+        ],
+        "trace_refs": [
+          "trace:cold_cache-101-2424",
+          "trace:cold_cache-101-2425",
+          "trace:cold_cache-101-2426",
+          "trace:cold_cache-101-2427",
+          "trace:cold_cache-101-2428",
+          "trace:cold_cache-101-2430",
+          "trace:cold_cache-101-2429",
+          "trace:cold_cache-101-2431",
+          "trace:cold_cache-101-2432",
+          "trace:cold_cache-101-2435",
+          "trace:cold_cache-101-2433",
+          "trace:cold_cache-101-2434",
+          "trace:cold_cache-101-2436",
+          "trace:cold_cache-101-2437",
+          "trace:cold_cache-101-2438",
+          "trace:cold_cache-101-2439",
+          "trace:cold_cache-101-2440",
+          "trace:cold_cache-101-2441",
+          "trace:cold_cache-101-2443",
+          "trace:cold_cache-101-2442",
+          "trace:cold_cache-101-2444",
+          "trace:cold_cache-101-2446",
+          "trace:cold_cache-101-2447",
+          "trace:cold_cache-101-2448",
+          "trace:cold_cache-101-2445",
+          "trace:cold_cache-101-2449",
+          "trace:cold_cache-101-2450",
+          "trace:cold_cache-101-2452",
+          "trace:cold_cache-101-2453",
+          "trace:cold_cache-101-2454",
+          "trace:cold_cache-101-2451",
+          "trace:cold_cache-101-2455",
+          "trace:cold_cache-101-2456",
+          "trace:cold_cache-101-2457",
+          "trace:cold_cache-101-2458",
+          "trace:cold_cache-101-2460",
+          "trace:cold_cache-101-2461",
+          "trace:cold_cache-101-2459",
+          "trace:cold_cache-101-2462",
+          "trace:cold_cache-101-2463",
+          "trace:cold_cache-101-2464",
+          "trace:cold_cache-101-2465",
+          "trace:cold_cache-101-2466",
+          "trace:cold_cache-101-2467",
+          "trace:cold_cache-101-2469",
+          "trace:cold_cache-101-2468",
+          "trace:cold_cache-101-2472",
+          "trace:cold_cache-101-2473",
+          "trace:cold_cache-101-2470",
+          "trace:cold_cache-101-2471",
+          "trace:cold_cache-101-2474",
+          "trace:cold_cache-101-2475",
+          "trace:cold_cache-101-2476",
+          "trace:cold_cache-101-2477",
+          "trace:cold_cache-101-2478",
+          "trace:cold_cache-101-2479",
+          "trace:cold_cache-101-2480",
+          "trace:cold_cache-101-2481",
+          "trace:cold_cache-101-2482",
+          "trace:cold_cache-101-2483",
+          "trace:cold_cache-101-2484",
+          "trace:cold_cache-101-2485",
+          "trace:cold_cache-101-2486",
+          "trace:cold_cache-101-2487",
+          "trace:cold_cache-101-2488",
+          "trace:cold_cache-101-2489",
+          "trace:cold_cache-101-2490",
+          "trace:cold_cache-101-2491",
+          "trace:cold_cache-101-2492",
+          "trace:cold_cache-101-2493",
+          "trace:cold_cache-101-2494",
+          "trace:cold_cache-101-2495",
+          "trace:cold_cache-101-2496",
+          "trace:cold_cache-101-2497",
+          "trace:cold_cache-101-2498",
+          "trace:cold_cache-101-2499",
+          "trace:cold_cache-101-2500",
+          "trace:cold_cache-101-2501",
+          "trace:cold_cache-101-2502",
+          "trace:cold_cache-101-2503",
+          "trace:cold_cache-101-2504",
+          "trace:cold_cache-101-2506",
+          "trace:cold_cache-101-2505",
+          "trace:cold_cache-101-2507",
+          "trace:cold_cache-101-2508",
+          "trace:cold_cache-101-2509",
+          "trace:cold_cache-101-2510",
+          "trace:cold_cache-101-2511",
+          "trace:cold_cache-101-2512",
+          "trace:cold_cache-101-2513",
+          "trace:cold_cache-101-2514",
+          "trace:cold_cache-101-2516",
+          "trace:cold_cache-101-2517",
+          "trace:cold_cache-101-2515",
+          "trace:cold_cache-101-2518",
+          "trace:cold_cache-101-2519",
+          "trace:cold_cache-101-2520",
+          "trace:cold_cache-101-2521",
+          "trace:cold_cache-101-2522",
+          "trace:cold_cache-101-2523"
+        ]
+      }
+    },
+    {
+      "challenge_id": "photo-delivery",
+      "fixture": "reference",
+      "scenario_id": "cold_cdn",
+      "seed": 101,
+      "seconds": 0.552,
+      "executed_events": 67187,
+      "result": {
+        "case_id": "cold_cdn-101",
+        "scenario_id": "cold_cdn",
+        "seed": 101,
+        "execution_status": "completed",
+        "operation_metrics": {
+          "get_photo": {
+            "success_rate": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.0,
+              "unit": "fraction",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 30.326666666666668,
+              "unit": "requests/second",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 15.566,
+              "unit": "ms",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 52.138,
+              "unit": "ms",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 87.507,
+              "unit": "ms",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "object_invalid_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            }
+          },
+          "put_photo": {
+            "success_rate": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "failure_rate": {
+              "value": 0.0,
+              "unit": "fraction",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "goodput_rps": {
+              "value": 1.62,
+              "unit": "requests/second",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "retry_amplification": {
+              "value": 1.0,
+              "unit": "ratio",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "response_p50_ms": {
+              "value": 18.759,
+              "unit": "ms",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "response_p95_ms": {
+              "value": 21.328,
+              "unit": "ms",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "response_p99_ms": {
+              "value": 23.831,
+              "unit": "ms",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "acknowledged_write_missing_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "object_capacity_violation_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 486,
+              "unavailable_reason": null
+            }
+          }
+        },
+        "node_metrics": {
+          "cdn": {
+            "busy_slot_occupancy": {
+              "value": 0.00020500769230769232,
+              "unit": "fraction",
+              "sample_count": 10249,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 0.0,
+              "unit": "ms",
+              "sample_count": 10249,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 10249,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 10249,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 10249,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 32.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cache_hit_rate": {
+              "value": 0.9494584837545126,
+              "unit": "fraction",
+              "sample_count": 10249,
+              "unavailable_reason": null
+            }
+          },
+          "client": {
+            "busy_slot_occupancy": {
+              "value": null,
+              "unit": "fraction",
+              "sample_count": 0,
+              "unavailable_reason": "no available slot time"
+            },
+            "queue_wait_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no serviced work"
+            },
+            "queue_depth_max": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 0,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 0.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            }
+          },
+          "object": {
+            "busy_slot_occupancy": {
+              "value": 0.0008430950320512821,
+              "unit": "fraction",
+              "sample_count": 1056,
+              "unavailable_reason": null
+            },
+            "queue_wait_ms": {
+              "value": 0.0,
+              "unit": "ms",
+              "sample_count": 1056,
+              "unavailable_reason": null
+            },
+            "queue_depth_max": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 1056,
+              "unavailable_reason": null
+            },
+            "queue_depth_mean": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 1056,
+              "unavailable_reason": null
+            },
+            "unfinished_work_count": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 1056,
+              "unavailable_reason": null
+            },
+            "unavailable_slot_seconds": {
+              "value": 0.0,
+              "unit": "slot-seconds",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "cost_credits_per_hour": {
+              "value": 10.0,
+              "unit": "credits/hour",
+              "sample_count": 1,
+              "unavailable_reason": null
+            },
+            "stored_bytes": {
+              "value": 668991488.0,
+              "unit": "bytes",
+              "sample_count": 638,
+              "unavailable_reason": null
+            },
+            "capacity_rejections": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 638,
+              "unavailable_reason": null
+            }
+          },
+          "__design__": {
+            "cost_credits_per_hour": {
+              "value": 42.0,
+              "unit": "credits/hour",
+              "sample_count": 3,
+              "unavailable_reason": null
+            },
+            "recovery_time_ms": {
+              "value": null,
+              "unit": "ms",
+              "sample_count": 0,
+              "unavailable_reason": "no interval fault"
+            }
+          }
+        },
+        "requirement_outcomes": [
+          {
+            "requirement_id": "R01",
+            "scenario_id": "cold_cdn",
+            "seed": 101,
+            "operation_id": "get_photo",
+            "status": "pass",
+            "measured": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cdn-101:R01:get_photo"
+            ]
+          },
+          {
+            "requirement_id": "R02",
+            "scenario_id": "cold_cdn",
+            "seed": 101,
+            "operation_id": "get_photo",
+            "status": "pass",
+            "measured": {
+              "value": 52.138,
+              "unit": "ms",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cdn-101:R02:get_photo"
+            ]
+          },
+          {
+            "requirement_id": "R03",
+            "scenario_id": "cold_cdn",
+            "seed": 101,
+            "operation_id": "put_photo",
+            "status": "pass",
+            "measured": {
+              "value": 1.0,
+              "unit": "fraction",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cdn-101:R03:put_photo"
+            ]
+          },
+          {
+            "requirement_id": "R04",
+            "scenario_id": "cold_cdn",
+            "seed": 101,
+            "operation_id": "put_photo",
+            "status": "pass",
+            "measured": {
+              "value": 21.328,
+              "unit": "ms",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cdn-101:R04:put_photo"
+            ]
+          },
+          {
+            "requirement_id": "R05",
+            "scenario_id": "cold_cdn",
+            "seed": 101,
+            "operation_id": "get_photo",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 9098,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cdn-101:R05:get_photo"
+            ]
+          },
+          {
+            "requirement_id": "R06",
+            "scenario_id": "cold_cdn",
+            "seed": 101,
+            "operation_id": "put_photo",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cdn-101:R06:put_photo"
+            ]
+          },
+          {
+            "requirement_id": "R07",
+            "scenario_id": "cold_cdn",
+            "seed": 101,
+            "operation_id": "put_photo",
+            "status": "pass",
+            "measured": {
+              "value": 0.0,
+              "unit": "count",
+              "sample_count": 486,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cdn-101:R07:put_photo"
+            ]
+          },
+          {
+            "requirement_id": "R08",
+            "scenario_id": "cold_cdn",
+            "seed": 101,
+            "operation_id": null,
+            "status": "pass",
+            "measured": {
+              "value": 42.0,
+              "unit": "credits/hour",
+              "sample_count": 3,
+              "unavailable_reason": null
+            },
+            "evidence_ids": [
+              "cold_cdn-101:R08:design"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "evidence_id": "cold_cdn-101:R01:get_photo",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 1.0,
+            "scope": "cold_cdn/seed=101/get_photo/[60000000,360000000)us",
+            "sample_count": 9098,
+            "artifact_ref": "case:cold_cdn-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cdn-101:R02:get_photo",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 52.138,
+            "scope": "cold_cdn/seed=101/get_photo/[60000000,360000000)us",
+            "sample_count": 9098,
+            "artifact_ref": "case:cold_cdn-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cdn-101:R03:put_photo",
+            "type": "success_rate",
+            "unit": "fraction",
+            "value": 1.0,
+            "scope": "cold_cdn/seed=101/put_photo/[60000000,360000000)us",
+            "sample_count": 486,
+            "artifact_ref": "case:cold_cdn-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cdn-101:R04:put_photo",
+            "type": "response_p95_ms",
+            "unit": "ms",
+            "value": 21.328,
+            "scope": "cold_cdn/seed=101/put_photo/[60000000,360000000)us",
+            "sample_count": 486,
+            "artifact_ref": "case:cold_cdn-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cdn-101:R05:get_photo",
+            "type": "object_invalid_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "cold_cdn/seed=101/get_photo/[60000000,360000000)us",
+            "sample_count": 9098,
+            "artifact_ref": "case:cold_cdn-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cdn-101:R06:put_photo",
+            "type": "acknowledged_write_missing_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "cold_cdn/seed=101/put_photo/[60000000,360000000)us",
+            "sample_count": 486,
+            "artifact_ref": "case:cold_cdn-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cdn-101:R07:put_photo",
+            "type": "object_capacity_violation_count",
+            "unit": "count",
+            "value": 0.0,
+            "scope": "cold_cdn/seed=101/put_photo/[60000000,360000000)us",
+            "sample_count": 486,
+            "artifact_ref": "case:cold_cdn-101:window:60000000:360000000"
+          },
+          {
+            "evidence_id": "cold_cdn-101:R08:design",
+            "type": "cost_credits_per_hour",
+            "unit": "credits/hour",
+            "value": 42.0,
+            "scope": "cold_cdn/seed=101/design/[60000000,360000000)us",
+            "sample_count": 3,
+            "artifact_ref": "case:cold_cdn-101:window:60000000:360000000"
+          }
+        ],
+        "trace_refs": [
+          "trace:cold_cdn-101-1203",
+          "trace:cold_cdn-101-1204",
+          "trace:cold_cdn-101-1205",
+          "trace:cold_cdn-101-1206",
+          "trace:cold_cdn-101-1207",
+          "trace:cold_cdn-101-1208",
+          "trace:cold_cdn-101-1209",
+          "trace:cold_cdn-101-1210",
+          "trace:cold_cdn-101-1211",
+          "trace:cold_cdn-101-1212",
+          "trace:cold_cdn-101-1213",
+          "trace:cold_cdn-101-1214",
+          "trace:cold_cdn-101-1215",
+          "trace:cold_cdn-101-1216",
+          "trace:cold_cdn-101-1217",
+          "trace:cold_cdn-101-1218",
+          "trace:cold_cdn-101-1220",
+          "trace:cold_cdn-101-1219",
+          "trace:cold_cdn-101-1221",
+          "trace:cold_cdn-101-1222",
+          "trace:cold_cdn-101-1223",
+          "trace:cold_cdn-101-1224",
+          "trace:cold_cdn-101-1225",
+          "trace:cold_cdn-101-1226",
+          "trace:cold_cdn-101-1227",
+          "trace:cold_cdn-101-1228",
+          "trace:cold_cdn-101-1229",
+          "trace:cold_cdn-101-1230",
+          "trace:cold_cdn-101-1231",
+          "trace:cold_cdn-101-1232",
+          "trace:cold_cdn-101-1233",
+          "trace:cold_cdn-101-1234",
+          "trace:cold_cdn-101-1235",
+          "trace:cold_cdn-101-1236",
+          "trace:cold_cdn-101-1237",
+          "trace:cold_cdn-101-1238",
+          "trace:cold_cdn-101-1239",
+          "trace:cold_cdn-101-1240",
+          "trace:cold_cdn-101-1241",
+          "trace:cold_cdn-101-1242",
+          "trace:cold_cdn-101-1243",
+          "trace:cold_cdn-101-1244",
+          "trace:cold_cdn-101-1245",
+          "trace:cold_cdn-101-1246",
+          "trace:cold_cdn-101-1247",
+          "trace:cold_cdn-101-1248",
+          "trace:cold_cdn-101-1249",
+          "trace:cold_cdn-101-1250",
+          "trace:cold_cdn-101-1251",
+          "trace:cold_cdn-101-1252",
+          "trace:cold_cdn-101-1253",
+          "trace:cold_cdn-101-1255",
+          "trace:cold_cdn-101-1254",
+          "trace:cold_cdn-101-1256",
+          "trace:cold_cdn-101-1257",
+          "trace:cold_cdn-101-1259",
+          "trace:cold_cdn-101-1258",
+          "trace:cold_cdn-101-1260",
+          "trace:cold_cdn-101-1261",
+          "trace:cold_cdn-101-1262",
+          "trace:cold_cdn-101-1263",
+          "trace:cold_cdn-101-1264",
+          "trace:cold_cdn-101-1265",
+          "trace:cold_cdn-101-1266",
+          "trace:cold_cdn-101-1267",
+          "trace:cold_cdn-101-1268",
+          "trace:cold_cdn-101-1269",
+          "trace:cold_cdn-101-1270",
+          "trace:cold_cdn-101-1271",
+          "trace:cold_cdn-101-1272",
+          "trace:cold_cdn-101-1273",
+          "trace:cold_cdn-101-1274",
+          "trace:cold_cdn-101-1275",
+          "trace:cold_cdn-101-1277",
+          "trace:cold_cdn-101-1276",
+          "trace:cold_cdn-101-1279",
+          "trace:cold_cdn-101-1278",
+          "trace:cold_cdn-101-1280",
+          "trace:cold_cdn-101-1281",
+          "trace:cold_cdn-101-1282",
+          "trace:cold_cdn-101-1283",
+          "trace:cold_cdn-101-1284",
+          "trace:cold_cdn-101-1285",
+          "trace:cold_cdn-101-1286",
+          "trace:cold_cdn-101-1287",
+          "trace:cold_cdn-101-1288",
+          "trace:cold_cdn-101-1289",
+          "trace:cold_cdn-101-1290",
+          "trace:cold_cdn-101-1291",
+          "trace:cold_cdn-101-1292",
+          "trace:cold_cdn-101-1293",
+          "trace:cold_cdn-101-1294",
+          "trace:cold_cdn-101-1295",
+          "trace:cold_cdn-101-1296",
+          "trace:cold_cdn-101-1297",
+          "trace:cold_cdn-101-1298",
+          "trace:cold_cdn-101-1299",
+          "trace:cold_cdn-101-1300",
+          "trace:cold_cdn-101-1301",
+          "trace:cold_cdn-101-1302"
+        ]
+      }
+    }
+  ]
+}
