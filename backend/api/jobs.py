@@ -24,6 +24,11 @@ def now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def completion_eligible(manifest: RunManifest | dict[str, Any]) -> bool:
+    data = manifest if isinstance(manifest, dict) else manifest.model_dump(mode="json")
+    return data["mode"] == "assessment" and data["execution_status"] == "completed" and data["assessment_status"] == "pass" and data.get("trusted_workload", False) and not data.get("comparison_id")
+
+
 def run_child(root: str, run_id: str, challenge_data: dict, design_data: dict, cases_data: list[dict], messages: Any, cancel: Any) -> None:
     from backend.assessment import assess_suite
     from backend.simulation import run_case
@@ -143,7 +148,7 @@ class Jobs:
         manifest = self.store.run_manifest(run_id)
         manifest.update(execution_status=status, assessment_status=assessment_status, finished_at=now(), error=error)
         self.store.save_run_manifest(manifest)
-        if status == "completed" and assessment_status == "pass" and manifest["mode"] == "assessment" and manifest.get("trusted_workload", False) and not manifest.get("comparison_id"):
+        if completion_eligible(manifest):
             progress_path = self.store.path("progress").with_suffix(".json")
             progress = self.store.read_json(progress_path) if progress_path.exists() else {}
             progress[manifest["challenge_id"]] = {"run_id": run_id, "challenge_version": manifest["challenge_version"], "design_hash": manifest["design_hash"], "completed_at": manifest["finished_at"]}

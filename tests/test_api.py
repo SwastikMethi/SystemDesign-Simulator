@@ -48,6 +48,63 @@ def test_passing_comparison_candidate_does_not_award_completion(tmp_path):
     assert not store.path("progress").with_suffix(".json").exists()
 
 
+def test_deleting_credited_run_ignores_passing_comparison_candidate(tmp_path):
+    from datetime import datetime, timezone
+    from backend.api.models import RunManifest
+    from backend.storage import Store
+
+    store = Store(tmp_path)
+    common = dict(mode="assessment", execution_status="completed", assessment_status="pass", design_id="design-test", revision_id="revision-test", challenge_id="product-catalogue", challenge_version="0.1.0", challenge_hash="hash", engine_version="0.1.0", assessment_version="0.1.0", profile_version="0.1.0", profile_hash="hash", workload_generator_version="1", design_hash="hash", workload_hash="hash", run_config_hash="hash", workload_bundle_id="bundle-test", case_ids=["case-test"], created_at=datetime.now(timezone.utc), finished_at=datetime.now(timezone.utc))
+    store.save_run_manifest(RunManifest(run_id="run-credited", **common).model_dump(mode="json"))
+    store.save_run_manifest(RunManifest(run_id="run-candidate", comparison_id="comparison-deleted", **common).model_dump(mode="json"))
+    store.write_json(store.path("progress").with_suffix(".json"), {"product-catalogue": {"run_id": "run-credited"}})
+    http = client(tmp_path)
+    assert http.delete("/api/v1/runs/run-credited").status_code == 200
+    assert "product-catalogue" not in store.read_json(store.path("progress").with_suffix(".json"))
+
+
+def test_comparison_rejects_changed_required_fault_binding(tmp_path, monkeypatch):
+    import backend.api as api
+    from datetime import datetime, timezone
+    from backend.api.models import RunManifest
+    from backend.content import load_challenge
+    from backend.contracts import AssessmentResult, Fault, design_hash
+    from backend.simulation import fault_bindings
+    from backend.storage import Store, digest
+    from backend.workloads import GENERATOR_VERSION, bundle_hash, generate_case
+
+    challenge = load_challenge("product-catalogue")
+    scenario = challenge.scenarios[0].model_copy(update={"faults": [Fault(type="app_instance_unavailable", at_s=30, target_component_type="app_service")]})
+    challenge = challenge.model_copy(update={"scenarios": [scenario, *challenge.scenarios[1:]]})
+    monkeypatch.setattr(api, "load_challenge", lambda challenge_id: challenge)
+    baseline = load_fixture("product-catalogue", "reference")
+    candidate = baseline.model_copy(update={"design_id": "design-renamed", "revision_id": "revision-renamed", "nodes": [node.model_copy(update={"id": "app-renamed"}) if node.id == "app" else node for node in baseline.nodes], "edges": [edge.model_copy(update={"source": "app-renamed" if edge.source == "app" else edge.source, "target": "app-renamed" if edge.target == "app" else edge.target}) for edge in baseline.edges]})
+    case = generate_case(challenge, scenario.id, challenge.workload.assessment_seeds[0])
+    assert fault_bindings(challenge, baseline, case) != fault_bindings(challenge, candidate, case)
+    installed = load_challenge("product-catalogue")
+    clear_scenario = next(s for s in installed.scenarios if any(f.type == "clear_cache" for f in s.faults))
+    clear_case = generate_case(installed, clear_scenario.id, installed.workload.assessment_seeds[0])
+    assert fault_bindings(installed, baseline, clear_case) == fault_bindings(installed, candidate, clear_case) == []
+    store = Store(tmp_path)
+    store.save_design(baseline)
+    store.save_design(candidate)
+    bundle_id, run_id, case_id = "bundle-test", "run-baseline", f"{case.scenario_id}-{case.seed}"
+    workload_digest = bundle_hash([case])
+    challenge_digest = digest(challenge.model_dump(mode="json"))
+    store.write_gzip_jsonl(store.path("workloads", bundle_id, case_id).with_suffix(".jsonl.gz"), [case.model_dump(mode="json")])
+    store.write_json(store.path("workloads", bundle_id, "manifest").with_suffix(".json"), {"trusted": True, "challenge_id": challenge.challenge_id, "challenge_version": challenge.version, "challenge_hash": challenge_digest, "generator_version": GENERATOR_VERSION, "workload_hash": workload_digest})
+    manifest = RunManifest(run_id=run_id, mode="assessment", execution_status="completed", assessment_status="pass", design_id=baseline.design_id, revision_id=baseline.revision_id, challenge_id=challenge.challenge_id, challenge_version=challenge.version, challenge_hash=challenge_digest, engine_version="0.1.0", assessment_version="0.1.0", profile_version="0.1.0", profile_hash=api.profile_hash(), workload_generator_version=GENERATOR_VERSION, design_hash=design_hash(baseline), workload_hash=workload_digest, run_config_hash="config", workload_bundle_id=bundle_id, case_ids=[case_id], created_at=datetime.now(timezone.utc))
+    store.save_run_manifest(manifest.model_dump(mode="json"))
+    store.write_json(store.path("runs", run_id, "assessment").with_suffix(".json"), AssessmentResult(status="pass", case_results=[], requirement_outcomes=[]).model_dump(mode="json"))
+    http = client(tmp_path)
+    response = http.post("/api/v1/comparisons", json={"baseline_run_id": run_id, "candidates": [{"design_id": candidate.design_id, "revision_id": candidate.revision_id}]})
+    assert response.status_code == 202, response.text
+    record = http.get(f"/api/v1/comparisons/{response.json()['comparison_id']}").json()
+    assert record["status"] == "completed"
+    assert not record["candidate_run_ids"]
+    assert "fault" in record["rejected_candidates"][0]["validation_error"]
+
+
 def create_design(http, fixture="reference"):
     design = load_fixture("product-catalogue", fixture)
     response = http.post("/api/v1/designs", json={"challenge_id": design.challenge_id, "challenge_version": design.challenge_version, "nodes": [n.model_dump(mode="json") for n in design.nodes], "edges": [e.model_dump(mode="json") for e in design.edges]})
@@ -136,6 +193,25 @@ def test_export_import_rejects_unsafe_zip(tmp_path):
         bad.writestr("manifest.json", json.dumps({"schema_version": 1, "platform": "ai-system-design-simulator"}))
         bad.writestr("../.env", "AISD_AI_API_KEY=secret")
     assert http.post("/api/v1/imports", files={"file": ("bad.zip", raw.getvalue(), "application/zip")}).status_code == 422
+
+
+def test_import_validates_all_entries_before_saving_design(tmp_path):
+    from backend.storage import Store
+
+    http = client(tmp_path)
+    created = create_design(http)
+    exported = http.post("/api/v1/exports", json={"design_ids": [created["design_id"]]})
+    source = http.get(exported.json()["download_url"]).content
+    raw = io.BytesIO()
+    with zipfile.ZipFile(io.BytesIO(source)) as original, zipfile.ZipFile(raw, "w") as bad:
+        for name in original.namelist():
+            bad.writestr(name, original.read(name))
+        bad.writestr("workloads/bad-bundle/manifest.json", "{malformed")
+    before = Store(tmp_path).ids("designs")
+    response = http.post("/api/v1/imports", files={"file": ("bad.zip", raw.getvalue(), "application/zip")})
+    assert response.status_code == 422, response.text
+    assert Store(tmp_path).ids("designs") == before
+    assert Store(tmp_path).ids("workloads") == []
 
 
 def test_assessment_comparison_preserves_loser_and_progress(tmp_path):
@@ -228,3 +304,19 @@ def test_review_opt_in_and_rejected_model_output_is_saved(tmp_path, monkeypatch)
     assert calls == [1]
     assert review["status"] == "failed" and review["raw_response"]
     assert review["validation_errors"] and "test-secret" not in json.dumps(review)
+    from backend.coach import ProviderOutputError
+    def malformed(*args):
+        raise ProviderOutputError("provider returned malformed JSON", "{bad-json", None, 2)
+    monkeypatch.setattr(api, "request_review", malformed)
+    accepted = http.post(f"/api/v1/runs/{run_id}/reviews", json={"consent": True})
+    assert accepted.status_code == 202
+    review_id = accepted.json()["review_id"]
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        review = http.get(f"/api/v1/runs/{run_id}/reviews/{review_id}").json()
+        if review["status"] != "queued":
+            break
+        time.sleep(.05)
+    assert review["status"] == "failed"
+    assert review["raw_response"] == "{bad-json"
+    assert review["validation_errors"]

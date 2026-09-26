@@ -18,6 +18,19 @@ PLACEHOLDER = re.compile(r"\{\{evidence:([A-Za-z0-9:_./-]+)\}\}")
 CALC = re.compile(r"\{\{calc:(subtract|add)\|([A-Za-z0-9:_./-]+)\|([A-Za-z0-9:_./-]+)\}\}")
 NUMBER = re.compile(r"(?<![A-Za-z])\d+(?:\.\d+)?(?:%|\b)")
 WORDED_NUMBER = re.compile(r"\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|hundred|thousand|million|billion|twice|double|half|percent|percentage|threefold|fourfold)\b", re.I)
+OVERALL_VERDICT = re.compile(
+    r"\b(?:assessment|run|design|system|solution|candidate|overall(?:\s+(?:result|status|assessment))?|you|all\s+(?:hard\s+)?requirements|every\s+requirement)\b(?:\W+\w+){0,6}\W+\b(?:pass(?:ed|es)?|fail(?:ed|s)?|succeed(?:ed|s)?|met|meets|satisf(?:ied|ies)|compliant)\b"
+    r"|\b(?:pass(?:ed|es)?|fail(?:ed|s)?|met|meets|satisf(?:ied|ies))\b(?:\W+\w+){0,3}\W+\b(?:all|every)\s+(?:hard\s+)?requirements?\b",
+    re.I,
+)
+
+
+class ProviderOutputError(ValueError):
+    def __init__(self, message: str, raw_response: str, usage: dict[str, Any] | None, latency_ms: int):
+        super().__init__(message)
+        self.raw_response = raw_response
+        self.usage = usage
+        self.latency_ms = latency_ms
 
 
 class Observation(Strict):
@@ -85,9 +98,11 @@ def validate_review(payload: dict[str, Any], evidence: list[EvidenceItem], desig
             if ref not in known or known[ref].value is None:
                 raise ValueError("unsupported evidence placeholder")
         stripped = PLACEHOLDER.sub("", CALC.sub("", value))
+        for requirement in challenge.requirements:
+            stripped = re.sub(rf"\b{re.escape(requirement.id)}\b", "", stripped)
         if NUMBER.search(stripped) or WORDED_NUMBER.search(stripped):
             raise ValueError("numerical claim must use evidence placeholder")
-        if re.search(r"\b(?:verdict|assessment status|overall status)\s*(?:is|:)", value, re.I):
+        if re.search(r"\b(?:verdict|assessment status|overall status)\s*(?:is|:)", value, re.I) or OVERALL_VERDICT.search(value):
             raise ValueError("coach cannot state assessment verdict")
     return review
 
@@ -138,10 +153,18 @@ def request_review(challenge: Challenge, design: DesignRevision, evidence: list[
                 if response.status_code == 429 or response.status_code >= 500:
                     raise httpx.HTTPStatusError("transient provider error", request=response.request, response=response)
                 response.raise_for_status()
-                raw = response.json()
-                content = raw["choices"][0]["message"]["content"]
-                parsed = json.loads(content)
-                usage = raw.get("usage")
+                latency_ms = round((time.monotonic() - started) * 1000)
+                content = response.text
+                usage = None
+                try:
+                    raw = response.json()
+                    usage = raw.get("usage") if isinstance(raw, dict) else None
+                    content = raw["choices"][0]["message"]["content"]
+                    if not isinstance(content, str):
+                        raise TypeError("provider content is not text")
+                    parsed = json.loads(content)
+                except (ValueError, TypeError, KeyError, IndexError) as exc:
+                    raise ProviderOutputError("provider returned malformed JSON", content if isinstance(content, str) else json.dumps(content), usage, latency_ms) from exc
                 return parsed, content, usage if isinstance(usage, dict) else None, round((time.monotonic() - started) * 1000)
             except (httpx.TimeoutException, httpx.TransportError, httpx.HTTPStatusError) as exc:
                 last_exc = exc

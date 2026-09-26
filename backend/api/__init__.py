@@ -22,12 +22,13 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import ValidationError
 
-from backend.api.jobs import ASSESSMENT_VERSION, ENGINE_VERSION, Jobs, now
+from backend.api.jobs import ASSESSMENT_VERSION, ENGINE_VERSION, Jobs, completion_eligible, now
 from backend.api.models import *
 from backend.content import list_challenges, load_challenge, load_fixture
-from backend.coach import PROMPT_VERSION, render_review, request_review, validate_review
+from backend.coach import PROMPT_VERSION, ProviderOutputError, render_review, request_review, validate_review
 from backend.contracts import PROFILES, SETTINGS, Challenge, DesignRevision, apply_patch, compile_design, design_hash, validate_draft
 from backend.storage import Store, digest, new_id, valid_id
+from backend.simulation import fault_bindings
 from backend.workloads import GENERATOR_VERSION, WorkloadCase, bundle_hash, generate_case
 
 PROFILE_VERSION = "0.1.0"
@@ -430,7 +431,7 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
             progress = store().read_json(progress_path)
             if progress.get(manifest.challenge_id, {}).get("run_id") == run_id:
                 alternatives = [_manifest(store(), item) for item in store().ids("runs")]
-                passing = [item for item in alternatives if item.challenge_id == manifest.challenge_id and item.mode == "assessment" and item.execution_status == "completed" and item.assessment_status == "pass" and item.trusted_workload]
+                passing = [item for item in alternatives if item.challenge_id == manifest.challenge_id and completion_eligible(item)]
                 if passing:
                     newest = max(passing, key=lambda item: item.finished_at)
                     progress[manifest.challenge_id] = {"run_id": newest.run_id, "challenge_version": newest.challenge_version, "design_hash": newest.design_hash, "completed_at": newest.finished_at.isoformat()}
@@ -528,6 +529,8 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
                 current.update(raw_response=raw, usage=usage, latency_ms=latency)
                 validated = validate_review(parsed, evidence, design, challenge)
                 current.update(render_review(validated, evidence), status="completed")
+            except ProviderOutputError as exc:
+                current.update(status="failed", error=str(exc)[:500], validation_errors=[str(exc)[:500]], raw_response=exc.raw_response, usage=exc.usage, latency_ms=exc.latency_ms)
             except Exception as exc:
                 current.update(status="failed", error=str(exc)[:500], validation_errors=[str(exc)[:500]])
             current["finished_at"] = now()
@@ -554,6 +557,7 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
         challenge = _challenge(baseline.challenge_id, baseline.challenge_version)
         base_design = _design(store(), baseline.design_id, baseline.revision_id)
         candidates: list[DesignRevision] = []
+        candidate_indices: list[int] = []
         rejected: list[dict[str, Any]] = []
         seen_hashes = {baseline.design_hash}
         for index, choice in enumerate(body.candidates):
@@ -573,6 +577,7 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
                     raise ValueError("Candidate repeats baseline or another candidate")
                 seen_hashes.add(candidate_hash)
                 candidates.append(candidate)
+                candidate_indices.append(index)
             except (ValueError, ValidationError, HTTPException) as exc:
                 rejected.append({"index": index, "status": "rejected", "validation_error": exc.detail["message"] if isinstance(exc, HTTPException) else str(exc)[:500], "candidate": choice.model_dump(mode="json")})
         bundle_path = store().path("workloads", baseline.workload_bundle_id, "manifest").with_suffix(".json")
@@ -590,6 +595,15 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
                 raise problem(409, "compatibility", "Workload case is unavailable") from None
         if bundle_hash(cases) != baseline.workload_hash:
             raise problem(409, "compatibility", "Workload content hash differs")
+        baseline_bindings = [fault_bindings(challenge, base_design, case) for case in cases]
+        compatible_candidates = []
+        for index, candidate in zip(candidate_indices, candidates):
+            changed = [f"{case.scenario_id}-{case.seed}" for case, binding in zip(cases, baseline_bindings) if fault_bindings(challenge, candidate, case) != binding]
+            if changed:
+                rejected.append({"index": index, "status": "rejected", "validation_error": f"Required fault binding changes in case {changed[0]}", "candidate": body.candidates[index].model_dump(mode="json")})
+            else:
+                compatible_candidates.append(candidate)
+        candidates = compatible_candidates
         key_path = store().path("idempotency", digest(f"comparison:{idempotency_key}")) .with_suffix(".json") if idempotency_key else None
         with app.state.lock:
             if key_path and key_path.exists():
@@ -745,52 +759,98 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
                 raise problem(422, "unsafe_zip", "ZIP has unsupported entries")
             if info.file_size > MAX_IMPORT_BYTES or (info.compress_size and info.file_size > info.compress_size * 100):
                 raise problem(422, "unsafe_zip", "ZIP entry exceeds limits")
-        if "manifest.json" not in archive.namelist():
+        entries: dict[str, bytes] = {}
+        for info in infos:
+            if info.is_dir():
+                continue
+            if info.filename in entries:
+                raise problem(422, "invalid_zip", "ZIP contains duplicate entries")
+            try:
+                entries[info.filename] = archive.read(info)
+            except (zipfile.BadZipFile, RuntimeError, OSError, ValueError):
+                raise problem(422, "invalid_zip", "ZIP contains unreadable entries") from None
+
+        parsed_json: dict[str, Any] = {}
+        for name, content in entries.items():
+            if name.endswith(".json"):
+                try:
+                    parsed_json[name] = json.loads(content)
+                except (ValueError, UnicodeError):
+                    raise problem(422, "invalid_zip", f"Invalid JSON: {name}") from None
+
+        def read_json_entry(name: str) -> dict[str, Any]:
+            try:
+                value = parsed_json[name]
+            except KeyError:
+                raise problem(422, "invalid_zip", f"Invalid JSON: {name}") from None
+            if not isinstance(value, dict):
+                raise problem(422, "invalid_zip", f"Expected JSON object: {name}")
+            return value
+
+        if "manifest.json" not in entries:
             raise problem(422, "invalid_zip", "Evidence manifest missing")
-        manifest = json.loads(archive.read("manifest.json"))
+        manifest = read_json_entry("manifest.json")
         if manifest.get("schema_version") != 1 or manifest.get("platform") != "ai-system-design-simulator":
             raise problem(422, "invalid_zip", "Unsupported evidence manifest")
         import_id = new_id("import")
-        imported_design_ids = []
-        imported_bundle_ids = []
-        imported_run_ids = []
+        prepared_designs: list[DesignRevision] = []
+        prepared_bundles: list[tuple[str, Challenge, list[WorkloadCase], dict[str, Any], bool]] = []
+        prepared_runs: list[tuple[Path, bytes]] = []
+        imported_design_ids: list[str] = []
+        imported_bundle_ids: list[str] = []
+        imported_run_ids: list[str] = []
         design_map: dict[str, str] = {}
         for info in infos:
             path = Path(info.filename)
-            if info.is_dir() or path.parts[0] != "designs" or len(path.parts) != 3 or not info.filename.endswith(".json"):
+            if info.is_dir() or path.parts[0] != "designs":
                 continue
+            if len(path.parts) != 3 or not info.filename.endswith(".json"):
+                raise problem(422, "invalid_zip", "Invalid design entry")
             try:
-                raw = json.loads(archive.read(info))
+                raw = read_json_entry(info.filename)
                 original = DesignRevision.model_validate(raw)
                 c = _challenge(original.challenge_id, original.challenge_version)
                 if validate_draft(original, c):
                     raise ValueError("invalid design")
                 new_design_id = design_map.setdefault(original.design_id, new_id("design"))
                 revision = original.model_copy(update={"design_id": new_design_id, "revision_id": new_id("revision"), "parent_revision_id": None, "created_at": datetime.now(timezone.utc)})
-                store().save_design(revision)
+                prepared_designs.append(revision)
                 if new_design_id not in imported_design_ids:
                     imported_design_ids.append(new_design_id)
             except (ValueError, ValidationError, KeyError) as exc:
                 raise problem(422, "invalid_design", str(exc)) from None
-        source_bundles = {Path(info.filename).parts[1] for info in infos if not info.is_dir() and Path(info.filename).parts[0] == "workloads" and len(Path(info.filename).parts) > 1}
-        for source_id in source_bundles:
-            valid_id(source_id)
+        source_bundles = {Path(name).parts[1] for name in entries if Path(name).parts[0] == "workloads" and len(Path(name).parts) > 1}
+        for source_id in sorted(source_bundles):
+            try:
+                valid_id(source_id)
+            except ValueError:
+                raise problem(422, "invalid_zip", "Invalid workload bundle ID") from None
             prefix = f"workloads/{source_id}/"
-            names = [name for name in archive.namelist() if name.startswith(prefix) and not name.endswith("/")]
+            names = [name for name in entries if name.startswith(prefix)]
             if prefix + "manifest.json" not in names or any(not name.endswith((".json", ".jsonl.gz")) or len(Path(name).parts) != 3 for name in names):
                 raise problem(422, "invalid_zip", "Incomplete workload bundle")
-            raw_manifest = json.loads(archive.read(prefix + "manifest.json"))
-            challenge = _challenge(raw_manifest.get("challenge_id", ""), raw_manifest.get("challenge_version"))
+            raw_manifest = read_json_entry(prefix + "manifest.json")
+            if not isinstance(raw_manifest.get("case_hashes"), dict) or not raw_manifest["case_hashes"]:
+                raise problem(422, "invalid_zip", "Workload case manifest is missing")
+            expected_names = {prefix + "manifest.json", *(prefix + str(case_id) + ".jsonl.gz" for case_id in raw_manifest["case_hashes"])}
+            if set(names) != expected_names:
+                raise problem(422, "invalid_zip", "Unexpected workload entries")
+            try:
+                challenge = _challenge(raw_manifest.get("challenge_id", ""), raw_manifest.get("challenge_version"))
+            except HTTPException:
+                raise problem(422, "invalid_zip", "Unknown workload challenge") from None
             cases = []
-            for case_id in raw_manifest.get("case_hashes", {}):
-                valid_id(case_id)
+            for case_id in raw_manifest["case_hashes"]:
+                try:
+                    valid_id(case_id)
+                except ValueError:
+                    raise problem(422, "invalid_zip", "Invalid workload case ID") from None
                 name = prefix + case_id + ".jsonl.gz"
                 if name not in names:
                     raise problem(422, "invalid_zip", "Workload case missing")
                 try:
-                    with archive.open(name) as compressed:
-                        with gzip.GzipFile(fileobj=compressed) as expanded:
-                            content = expanded.read(MAX_IMPORT_BYTES + 1)
+                    with gzip.GzipFile(fileobj=io.BytesIO(entries[name])) as expanded:
+                        content = expanded.read(MAX_IMPORT_BYTES + 1)
                     if len(content) > MAX_IMPORT_BYTES:
                         raise ValueError("expanded workload case exceeds limit")
                     case = WorkloadCase.model_validate(json.loads(content.splitlines()[0]))
@@ -807,18 +867,36 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
             canonical_verified = len(cases) == len(canonical_cases) and bundle_hash(cases) == bundle_hash(canonical_cases)
             bundle_id = new_id("bundle")
             imported_bundle_ids.append(bundle_id)
-            for case in cases:
-                store().write_gzip_jsonl(store().path("workloads", bundle_id, f"{case.scenario_id}-{case.seed}").with_suffix(".jsonl.gz"), [case.model_dump(mode="json")])
-            store().write_json(store().path("workloads", bundle_id, "manifest").with_suffix(".json"), {"bundle_id": bundle_id, "challenge_id": challenge.challenge_id, "challenge_version": challenge.version, "challenge_hash": digest(challenge.model_dump(mode="json")), "generator_version": raw_manifest.get("generator_version"), "workload_hash": bundle_hash(cases), "case_hashes": {f"{case.scenario_id}-{case.seed}": digest(case.model_dump(mode="json")) for case in cases}, "trusted": False, "canonical_verified": canonical_verified, "import_id": import_id}, immutable=True)
+            prepared_bundles.append((bundle_id, challenge, cases, raw_manifest, canonical_verified))
         for info in infos:
             path = Path(info.filename)
             if not info.is_dir() and path.parts[0] == "runs" and len(path.parts) > 1:
-                run_id = valid_id(path.parts[1])
+                if len(path.parts) < 3:
+                    raise problem(422, "invalid_zip", "Invalid run evidence entry")
+                try:
+                    run_id = valid_id(path.parts[1])
+                except ValueError:
+                    raise problem(422, "invalid_zip", "Invalid run ID") from None
                 if run_id not in imported_run_ids:
                     imported_run_ids.append(run_id)
                 destination = store().path("imports", import_id, "runs", run_id).joinpath(*path.parts[2:])
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                store().write_bytes(destination, archive.read(info), immutable=True)
+                prepared_runs.append((destination, entries[info.filename]))
+        try:
+            for revision in prepared_designs:
+                store().save_design(revision)
+            for bundle_id, challenge, cases, raw_manifest, canonical_verified in prepared_bundles:
+                for case in cases:
+                    store().write_gzip_jsonl(store().path("workloads", bundle_id, f"{case.scenario_id}-{case.seed}").with_suffix(".jsonl.gz"), [case.model_dump(mode="json")])
+                store().write_json(store().path("workloads", bundle_id, "manifest").with_suffix(".json"), {"bundle_id": bundle_id, "challenge_id": challenge.challenge_id, "challenge_version": challenge.version, "challenge_hash": digest(challenge.model_dump(mode="json")), "generator_version": raw_manifest.get("generator_version"), "workload_hash": bundle_hash(cases), "case_hashes": {f"{case.scenario_id}-{case.seed}": digest(case.model_dump(mode="json")) for case in cases}, "trusted": False, "canonical_verified": canonical_verified, "import_id": import_id}, immutable=True)
+            for destination, content in prepared_runs:
+                store().write_bytes(destination, content, immutable=True)
+        except Exception:
+            for design_id in imported_design_ids:
+                shutil.rmtree(store().path("designs", design_id), ignore_errors=True)
+            for bundle_id in imported_bundle_ids:
+                shutil.rmtree(store().path("workloads", bundle_id), ignore_errors=True)
+            shutil.rmtree(store().path("imports", import_id), ignore_errors=True)
+            raise
         return ImportResult(imported_design_ids=imported_design_ids, imported_workload_bundle_ids=imported_bundle_ids, imported_run_ids=imported_run_ids)
 
     site = Path(frontend_dir) if frontend_dir is not None else Path(__file__).resolve().parents[2] / "frontend" / "dist"
