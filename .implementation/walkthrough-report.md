@@ -32,10 +32,17 @@ Each fixture completed its one assessment case. Preview regression checks also v
 - The first post-implementation browser run stalled on an overly strict test label locator. The accessibility snapshot showed combobox “Profile”; changing the test to that role/name resolved it without altering production behavior.
 - Inspected the wide library, narrow Guide and narrow passing result screenshots in `frontend/screenshots/walkthrough-*.png`.
 
-The first full browser sweep passed the 11 existing tests, but both new journeys reached their 20-second assessment wait while the shared simulation worker was still processing other tests' longer exercises. Their waits now match the existing preview/assessment integration tests (60/120 seconds, with 240 seconds for the whole journey). Assertions still require completed, passing real results. The final rerun and independent review are pending.
+The first full browser sweep passed the 11 existing tests, but both new journeys reached their 20-second assessment wait while the shared simulation worker was still processing other tests' longer exercises. Their waits now match the existing preview/assessment integration tests (60/120 seconds, with 240 seconds for the whole journey). Assertions still require completed, passing real results. The final full rerun on `c2620e5` passed **all 13 browser tests in 3.9 minutes**, including the two walkthrough journeys alongside the original exercises.
+
+The existing local app was refreshed on port 8770. Its installed challenge endpoint returned `first-design` with one operation and one required assessment case. Test runs use a separate temporary data directory.
+
+## Independent review
+
+`gpt-6-astra` reviewed immutable range `fcbd00e..c2620e5`, the approved plan, numerical evidence and screenshots. **No Critical, Important or Minor findings; no behaviors declined for judgment.** The reviewer confirmed original challenge compatibility, shared registration, instruction/control alignment, existing focus/save protections, the intended numerical lesson and usable narrow layouts. Approval was conditional on the full browser rerun, which subsequently passed as recorded above.
 
 ## Execution decisions
 
 - Continued in the clean existing feature checkout to keep the running local workspace consistent. Cost if wrong: move the completed commit to a separate checkout.
-- The completion wrapper runs the full browser suite once after the focused journeys and implementation commit, avoiding a duplicate full run. A failing final suite will be fixed before completion.
+- Used the completion wrapper for the full browser suite after focused journeys and the implementation commit, avoiding a redundant preliminary full sweep. Its observed queue-wait failure justified the corrected rerun, which passed. Cost if wrong: fix any final-suite failure before completion.
+- Ran the independent read-only review against the immutable commit while the final browser rerun completed. Cost if wrong: cover any later source correction with a failing regression and green suite; no source corrections were needed after review.
 - Keep the completed changes on the current feature branch; merging and publishing were not requested.
