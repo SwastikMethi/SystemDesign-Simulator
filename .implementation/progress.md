@@ -18,7 +18,13 @@
 Ruling: The provided folder is a new documentation-only workspace with no existing Git repository or branch. Initialize a dedicated feature branch in place; a second worktree provides no existing code isolation benefit. Cost if wrong: relocate the checkout later without changing project behavior.
 
 Task 1: in progress; implementer /root/contracts; BASE 1b280c8.
+Task 1: initial implementation eb79736, 12 tests passing; review /root/contracts_review requires strict per-component exported settings schema and rejection of nonfinite challenge rates. Fix round 1 in progress.
+Task 1: fix round 1 implemented in 98bf6c8; 14 tests passing, schemas regenerated; scoped review pending.
+Task 1: minor (deferred): input integer strings are coerced by Pydantic while exported schema requires integer values.
+Task 1: minor (deferred): operation_ids reordering changes the numerical design hash despite equivalent operation routing.
 Task 2: pending.
 Task 3: pending.
 Task 4: pending.
 Task 5: pending.
+
+Ruling: After the shared contracts pass review, use the dispatching-parallel-agents skill for disjoint engine and application-service implementations, followed by frontend once HTTP shapes are published. The frozen handoff is .implementation/interfaces.md; owners do not modify each other's modules. This replaces serial dispatch only for these independent implementation surfaces and retains task reviews and real integration tests. Cost if wrong: interface mismatch caught and repaired at integration, without merging unverified behavior.
