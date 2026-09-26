@@ -406,12 +406,14 @@ def compile_design(design: DesignRevision, challenge: Challenge, *, _branch: boo
     findings = validate_draft(design, challenge)
     if findings:
         raise ValueError("; ".join(f.message for f in findings))
+    # Route selection and all consumers share the hash's canonical array order.
+    design = design.model_copy(update={"nodes": sorted(design.nodes, key=lambda n: n.id), "edges": sorted(design.edges, key=lambda e: e.id)})
     if sum(n.type == "client" for n in design.nodes) != 1:
         raise ValueError("runnable route requires exactly one client")
     nodes = {n.id: n for n in design.nodes}
     routes: dict[str, CompiledRoute] = {}
     client = next(n for n in design.nodes if n.type == "client")
-    for operation in challenge.operations:
+    for operation in sorted(challenge.operations, key=lambda op: op.id):
         selected_nodes: list[str] = [client.id]
         request_edges: list[str] = []
         miss_edges: list[str] = []
@@ -499,7 +501,7 @@ def compile_design(design: DesignRevision, challenge: Challenge, *, _branch: boo
 def design_hash(design: DesignRevision) -> str:
     data = {"challenge_id": design.challenge_id, "challenge_version": design.challenge_version,
             "nodes": sorted(({"id": n.id, "type": n.type, "profile_id": n.profile_id, "instance_count": n.instance_count, "settings": n.settings} for n in design.nodes), key=lambda n: n["id"]),
-            "edges": sorted((e.model_dump(mode="json") for e in design.edges), key=lambda e: e["id"])}
+            "edges": sorted(({**e.model_dump(mode="json"), "operation_ids": sorted(e.operation_ids)} for e in design.edges), key=lambda e: e["id"])}
     return hashlib.sha256(json.dumps(data, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 

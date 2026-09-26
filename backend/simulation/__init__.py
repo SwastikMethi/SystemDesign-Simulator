@@ -253,6 +253,7 @@ class Engine:
                  constant_service=False, propagation_us=2000, bandwidth_bytes_s=100*(1<<20), max_events=MAX_EVENTS):
         self.challenge, self.design, self.workload = challenge, design, workload
         self.compiled = compile_design(design, challenge)
+        self.design = design = self.compiled.design
         if (workload.challenge_id, workload.challenge_version) != (challenge.challenge_id, challenge.version):
             raise ValueError('workload/challenge mismatch')
         if len(workload.arrivals)>MAX_ARRIVALS or workload.drain_end_us>MAX_DURATION_US:

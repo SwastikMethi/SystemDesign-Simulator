@@ -431,3 +431,36 @@ def test_reducing_instances_cannot_remove_frozen_outage_target():
     assert all(r.status=='incomplete' for r in artifact.result.requirement_outcomes)
     assert any(item.type=='termination' and 'fault instance missing' in item.value for item in artifact.result.evidence)
     assert not e.fault_ends # Invalid target never installs an unsafe recovery callback.
+
+
+def test_equivalent_array_orders_keep_fault_bindings_routes_and_outcomes():
+    import random
+    from backend.contracts import DesignRevision, Fault, compile_design, design_hash
+    from backend.simulation import fault_bindings
+    from backend.workloads import ScheduledFault
+
+    c=load_challenge('url-shortener'); data=load_fixture(c.challenge_id,'initial').model_dump(mode='json')
+    app=next(n for n in data['nodes'] if n['id']=='app')
+    data['nodes'] += [dict(app,id='app-b'),dict(app,id='lb',type='load_balancer',profile_id='lb.small.v1',settings={})]
+    data['edges'][0]['target']='lb'
+    op=[o.id for o in c.operations]
+    data['edges'] += [dict(id='lb-app',source='lb',target='app',kind='request',operation_ids=op),
+        dict(id='lb-app-b',source='lb',target='app-b',kind='request',operation_ids=op),
+        dict(id='app-b-sql',source='app-b',target='sql',kind='request',operation_ids=op)]
+    # Also cover shared queue/worker dispatch order.
+    for challenge,design in [(c,DesignRevision.model_validate(data)),shared_worker_design()]:
+        w=case(challenge,[arrival(challenge,i,time=200_000+i*100_000) for i in range(20)])
+        w.faults=[ScheduledFault(time_us=100_000,fault=Fault(type='app_instance_unavailable',at_s=0,end_s=1))]
+        expected=run_case(challenge,design,w)
+        assert expected.outcomes[0].status=='dependency_error'
+        for seed in range(5):
+            rng=random.Random(seed); permuted=design.model_copy(deep=True)
+            rng.shuffle(permuted.nodes); rng.shuffle(permuted.edges)
+            for edge in permuted.edges: edge.operation_ids.reverse()
+            assert design_hash(permuted)==design_hash(design)
+            assert compile_design(permuted,challenge).routes==compile_design(design,challenge).routes
+            assert fault_bindings(challenge,permuted,w)==fault_bindings(challenge,design,w)
+            actual=run_case(challenge,permuted,w)
+            assert actual.outcomes==expected.outcomes and actual.jobs==expected.jobs
+            assert actual.traces==expected.traces and actual.snapshots==expected.snapshots
+            assert actual.result==expected.result

@@ -41,6 +41,14 @@ def test_hash_excludes_labels_positions_and_revision_metadata():
     assert design_hash(design) == design_hash(DesignRevision.model_validate(data))
 
 
+def test_integer_string_boundary_normalizes_to_canonical_integer():
+    data = load_fixture("team-notes", "initial").model_dump(mode="json")
+    data["nodes"][0]["instance_count"] = "1"
+    normalized = DesignRevision.model_validate(data).model_dump(mode="json")
+    assert type(normalized["nodes"][0]["instance_count"]) is int
+    assert normalized["nodes"][0]["instance_count"] == 1
+
+
 def test_invalid_patch_rejected_and_input_untouched():
     challenge = load_challenge("team-notes")
     design = load_fixture(challenge.challenge_id, "initial")

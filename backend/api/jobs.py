@@ -16,7 +16,7 @@ from backend.contracts import AssessmentResult, CaseResult, Challenge, DesignRev
 from backend.storage import Store
 from backend.workloads import WorkloadCase
 
-ENGINE_VERSION = "0.1.0"
+ENGINE_VERSION = "0.1.1"
 ASSESSMENT_VERSION = "0.1.0"
 
 
