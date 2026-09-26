@@ -293,17 +293,24 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
                     raise problem(409, "idempotency_conflict", "Key already used with different input")
                 return RunAccepted(run_id=record["id"])
             run_id = new_id("run")
-            if not body.workload_bundle_id:
-                for case in cases:
-                    store().write_gzip_jsonl(store().path("workloads", bundle_id, f"{case.scenario_id}-{case.seed}").with_suffix(".jsonl.gz"), [case.model_dump(mode="json")])
-                store().write_json(store().path("workloads", bundle_id, "manifest").with_suffix(".json"), dict(bundle_id=bundle_id, challenge_id=c.challenge_id, challenge_version=c.version, challenge_hash=digest(c.model_dump(mode="json")), generator_version=GENERATOR_VERSION, workload_hash=workload_digest, case_hashes={f"{case.scenario_id}-{case.seed}": digest(case.model_dump(mode="json")) for case in cases}, trusted=True), immutable=True)
             manifest = RunManifest(run_id=run_id, mode=body.mode, execution_status="queued", assessment_status="not_evaluated", design_id=design.design_id, revision_id=design.revision_id, challenge_id=c.challenge_id, challenge_version=c.version, challenge_hash=digest(c.model_dump(mode="json")), engine_version=ENGINE_VERSION, assessment_version=ASSESSMENT_VERSION, profile_version=PROFILE_VERSION, profile_hash=profile_hash(), workload_generator_version=GENERATOR_VERSION, design_hash=compiled.design_hash, workload_hash=workload_digest, run_config_hash=config_hash, workload_bundle_id=bundle_id, case_ids=[f"{case.scenario_id}-{case.seed}" for case in cases], created_at=datetime.now(timezone.utc), artifact_refs={"assessment": f"runs/{run_id}/assessment.json"}, trusted_workload=not imported_workload or canonical_assessment)
-            store().save_run_manifest(manifest.model_dump(mode="json"))
-            if not jobs().enqueue(run_id, c, design, cases):
-                store().manifest_path(run_id).unlink(missing_ok=True)
-                raise problem(503, "queue_full", "Simulation queue is full", retryable=True)
-            if key_path:
-                store().write_json(key_path, {"body_hash": digest(body.model_dump(mode="json")), "id": run_id}, immutable=True)
+            try:
+                if not body.workload_bundle_id:
+                    for case in cases:
+                        store().write_gzip_jsonl(store().path("workloads", bundle_id, f"{case.scenario_id}-{case.seed}").with_suffix(".jsonl.gz"), [case.model_dump(mode="json")])
+                    store().write_json(store().path("workloads", bundle_id, "manifest").with_suffix(".json"), dict(bundle_id=bundle_id, challenge_id=c.challenge_id, challenge_version=c.version, challenge_hash=digest(c.model_dump(mode="json")), generator_version=GENERATOR_VERSION, workload_hash=workload_digest, case_hashes={f"{case.scenario_id}-{case.seed}": digest(case.model_dump(mode="json")) for case in cases}, trusted=True), immutable=True)
+                store().save_run_manifest(manifest.model_dump(mode="json"))
+                if key_path:
+                    store().write_json(key_path, {"body_hash": digest(body.model_dump(mode="json")), "id": run_id}, immutable=True)
+                if not jobs().enqueue(run_id, c, design, cases):
+                    raise problem(503, "queue_full", "Simulation queue is full", retryable=True)
+            except Exception:
+                if key_path:
+                    key_path.unlink(missing_ok=True)
+                shutil.rmtree(store().path("runs", run_id), ignore_errors=True)
+                if not body.workload_bundle_id:
+                    shutil.rmtree(store().path("workloads", bundle_id), ignore_errors=True)
+                raise
             return RunAccepted(run_id=run_id)
 
     @app.get("/api/v1/runs/{run_id}", response_model=RunManifest)
