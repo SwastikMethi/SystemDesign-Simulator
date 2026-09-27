@@ -16,3 +16,4 @@ playwright-report/
 .coverage
 *.egg-info/
 .implementation/screenshots/demo-*.png
+output
