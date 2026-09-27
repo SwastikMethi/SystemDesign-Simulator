@@ -114,6 +114,45 @@
         }
       }
     },
+    "/api/v1/challenges/{challenge_id}/reference": {
+      "get": {
+        "summary": "Reference Answer",
+        "operationId": "reference_answer_api_v1_challenges__challenge_id__reference_get",
+        "parameters": [
+          {
+            "name": "challenge_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Challenge Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferenceAnswer"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/challenges/{challenge_id}/fixtures/{name}": {
       "get": {
         "summary": "Fixture",
@@ -2964,9 +3003,21 @@
             "type": "string",
             "enum": [
               "hint",
-              "explain"
+              "explain",
+              "answer"
             ],
             "title": "Mode"
+          },
+          "source_guidance_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Guidance Id"
           },
           "focus": {
             "anyOf": [
@@ -3160,9 +3211,21 @@
             "type": "string",
             "enum": [
               "hint",
-              "explain"
+              "explain",
+              "answer"
             ],
             "title": "Mode"
+          },
+          "source_guidance_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Guidance Id"
           },
           "focus": {
             "anyOf": [
@@ -3880,6 +3943,25 @@
           "rps"
         ],
         "title": "RateSegment"
+      },
+      "ReferenceAnswer": {
+        "properties": {
+          "design": {
+            "$ref": "#/components/schemas/DesignRevision"
+          },
+          "explanation": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Explanation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "design",
+          "explanation"
+        ],
+        "title": "ReferenceAnswer"
       },
       "RequestOutcome": {
         "properties": {

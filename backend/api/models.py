@@ -54,6 +54,11 @@ class ChallengeList(Strict):
     items: list[ChallengeSummary]
 
 
+class ReferenceAnswer(Strict):
+    design: DesignRevision
+    explanation: str = Field(min_length=1)
+
+
 class DesignInput(Strict):
     challenge_id: str
     challenge_version: str = "0.1.0"
@@ -198,7 +203,8 @@ class ReviewRecord(Strict):
 
 class GuidanceRequest(Strict):
     revision_id: str
-    mode: Literal["hint", "explain"]
+    mode: Literal["hint", "explain", "answer"]
+    source_guidance_id: str | None = None
     focus: str | None = Field(default=None, max_length=160)
     evidence_step: bool = False
     consent: Literal[True]
@@ -213,7 +219,8 @@ class GuidanceRecord(Strict):
     guidance_id: str
     design_id: str
     revision_id: str
-    mode: Literal["hint", "explain"]
+    mode: Literal["hint", "explain", "answer"]
+    source_guidance_id: str | None = None
     focus: str | None = None
     evidence_step: bool = False
     status: Literal["queued", "completed", "failed"]

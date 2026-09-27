@@ -24,7 +24,7 @@ from pydantic import ValidationError
 
 from backend.api.jobs import ASSESSMENT_VERSION, ENGINE_VERSION, Jobs, completion_eligible, now
 from backend.api.models import *
-from backend.content import list_challenges, load_challenge, load_fixture
+from backend.content import list_challenges, load_challenge, load_fixture, load_reference_explanation
 from backend.coach import GUIDANCE_PROMPT_VERSION, PROMPT_VERSION, ProviderOutputError, render_review, request_guidance, request_review, validate_guidance, validate_review
 from backend.contracts import PROFILES, SETTINGS, Challenge, DesignRevision, apply_patch, compile_design, design_hash, validate_draft
 from backend.storage import Store, digest, new_id, valid_id
@@ -175,6 +175,11 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     def challenge(challenge_id: str, version: str | None = None):
         return _challenge(challenge_id, version)
 
+    @app.get("/api/v1/challenges/{challenge_id}/reference", response_model=ReferenceAnswer)
+    def reference_answer(challenge_id: str):
+        _challenge(challenge_id)
+        return ReferenceAnswer(design=load_fixture(challenge_id, "reference"), explanation=load_reference_explanation(challenge_id))
+
     @app.get("/api/v1/challenges/{challenge_id}/fixtures/{name}", response_model=DesignRevision)
     def fixture(challenge_id: str, name: str):
         if name not in {"initial", "reference"}:
@@ -220,19 +225,27 @@ def create_app(data_dir: Path | None = None, frontend_dir: Path | None = None) -
     def create_guidance(design_id: str, body: GuidanceRequest):
         design = _design(store(), design_id, body.revision_id)
         challenge = _challenge(design.challenge_id, design.challenge_version)
-        if body.mode == "explain" and body.evidence_step:
+        if body.mode != "hint" and body.evidence_step:
             raise problem(422, "invalid_guidance", "Evidence step applies only to hints")
+        source = None
+        if body.source_guidance_id is not None:
+            if body.mode != "answer":
+                raise problem(422, "invalid_guidance", "A source hint applies only to answers")
+            source = get_guidance(design_id, body.source_guidance_id)
+            if source.design_id != design.design_id or source.revision_id != design.revision_id or source.mode != "hint" or source.status != "completed" or not source.question:
+                raise problem(422, "invalid_guidance", "Choose a completed hint for this saved revision, or ask a new question")
+        focus = source.focus if source else body.focus
         settings = health()
         if not settings.ai_configured:
             raise problem(503, "provider_unavailable", "AI provider is not configured", retryable=True)
         guidance_id = new_id("guidance")
-        record = GuidanceRecord(guidance_id=guidance_id, design_id=design.design_id, revision_id=design.revision_id, mode=body.mode, focus=body.focus, evidence_step=body.evidence_step, status="queued", provider=os.getenv("AISD_AI_BASE_URL"), model=settings.ai_model, prompt_version=GUIDANCE_PROMPT_VERSION, created_at=datetime.now(timezone.utc))
+        record = GuidanceRecord(guidance_id=guidance_id, design_id=design.design_id, revision_id=design.revision_id, mode=body.mode, source_guidance_id=body.source_guidance_id, focus=focus, evidence_step=body.evidence_step, status="queued", provider=os.getenv("AISD_AI_BASE_URL"), model=settings.ai_model, prompt_version=GUIDANCE_PROMPT_VERSION, created_at=datetime.now(timezone.utc))
         path = store().path("designs", design.design_id, "guidance", guidance_id).with_suffix(".json")
         store().write_json(path, record.model_dump(mode="json"))
         def work():
             current = record.model_dump(mode="json")
             try:
-                parsed, raw, usage, latency = request_guidance(challenge, design, body.mode, body.focus, body.evidence_step)
+                parsed, raw, usage, latency = request_guidance(challenge, design, body.mode, focus, body.evidence_step, {"question": source.question, "explanation": source.explanation} if source else None)
                 current.update(raw_response=raw, usage=usage, latency_ms=latency)
                 validated = validate_guidance(parsed, body.mode, body.evidence_step, challenge, design)
                 current.update(validated.model_dump(mode="json"), status="completed")

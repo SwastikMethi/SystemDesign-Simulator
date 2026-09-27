@@ -26,6 +26,11 @@ def load_fixture(challenge_id: str, fixture_name: str) -> DesignRevision:
     return DesignRevision.model_validate_json((CONTENT / "fixtures" / challenge_id / f"{fixture_name}.json").read_text())
 
 
+def load_reference_explanation(challenge_id: str) -> str:
+    load_challenge(challenge_id)
+    return json.loads((CONTENT / "reference-answers.json").read_text())[challenge_id]
+
+
 def export_json_schemas(directory: Path) -> None:
     directory.mkdir(parents=True, exist_ok=True)
     for name, model in (("challenge", Challenge), ("design-revision", DesignRevision), ("request-outcome", RequestOutcome), ("job-outcome", JobOutcome), ("case-result", CaseResult), ("assessment-result", AssessmentResult)):

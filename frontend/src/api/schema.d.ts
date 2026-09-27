@@ -72,6 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/challenges/{challenge_id}/reference": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Reference Answer */
+        get: operations["reference_answer_api_v1_challenges__challenge_id__reference_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/challenges/{challenge_id}/fixtures/{name}": {
         parameters: {
             query?: never;
@@ -1090,7 +1107,9 @@ export interface components {
              * Mode
              * @enum {string}
              */
-            mode: "hint" | "explain";
+            mode: "hint" | "explain" | "answer";
+            /** Source Guidance Id */
+            source_guidance_id?: string | null;
             /** Focus */
             focus?: string | null;
             /**
@@ -1151,7 +1170,9 @@ export interface components {
              * Mode
              * @enum {string}
              */
-            mode: "hint" | "explain";
+            mode: "hint" | "explain" | "answer";
+            /** Source Guidance Id */
+            source_guidance_id?: string | null;
             /** Focus */
             focus?: string | null;
             /**
@@ -1406,6 +1427,12 @@ export interface components {
             end_s: number;
             /** Rps */
             rps: number;
+        };
+        /** ReferenceAnswer */
+        ReferenceAnswer: {
+            design: components["schemas"]["DesignRevision"];
+            /** Explanation */
+            explanation: string;
         };
         /** RequestOutcome */
         RequestOutcome: {
@@ -2006,6 +2033,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Challenge"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reference_answer_api_v1_challenges__challenge_id__reference_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                challenge_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReferenceAnswer"];
                 };
             };
             /** @description Validation Error */
