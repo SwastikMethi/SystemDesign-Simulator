@@ -23,15 +23,17 @@ For frontend development, keep the backend running and run `npm run dev` inside 
 
 ## First exercise
 
-Choose **Start walkthrough** above the challenge list for **Your first design**, a 3–5 minute practice task. Its Guide checklist stays available throughout:
+Choose **Start walkthrough** above the challenge list for **Your first design**, a short guided practice task. Spotlights point to the actual controls and advance as you complete each action:
 
-1. Inspect **Client → App → Database** and the three requirements.
-2. Choose **Preview**, then inspect the failed latency requirement **R02**.
-3. Return to **Architecture**, select **Database**, and change its **Profile** from `sql.small.v1` to `sql.medium.v1`.
+1. Start with an empty canvas. Add **Client**, **App service**, and **SQL database**, then connect their `read_note` routes using the Inspector or canvas ports.
+2. Read the requirements and choose **Preview**. Follow a recorded request through the diagram, then inspect the latency requirement **R02**.
+3. Return to **Architecture** and change the database **Profile** from `sql.small.v1` to `sql.medium.v1`.
 4. Choose **Assess design** and check that all three requirements pass within the 50 credits/hour budget.
 5. Open the passed assessment from **Saved work** to revisit its results.
 
-Runs save your draft automatically. Preview cannot earn completion. The walkthrough uses real simulation results and needs no AI provider.
+Use **Skip guide** and **Resume guide** without changing your draft. Restarting asks before discarding unsaved changes. Runs save your draft automatically; only a passing assessment earns completion. The walkthrough uses real simulation results and needs no AI provider.
+
+Results automatically select a recorded request. **Teaching pace** slows its events so you can follow each connection, while timestamps and measurements retain their recorded values. Play restarts at the beginning after the request ends. Choose **System overview** for the full simulation timeline, or use **Next frame** and **Reduced motion** to inspect events without moving markers.
 
 ## Continue with a full challenge
 

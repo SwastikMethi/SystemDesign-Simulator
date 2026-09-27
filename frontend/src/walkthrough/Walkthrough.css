@@ -1,0 +1,9 @@
+.guide-spotlight { position: fixed; z-index: 60; border: 1px solid var(--text); border-radius: 7px; box-shadow: 0 0 0 9999px #0009; pointer-events: none; }
+.guide-spotlight.guide-flow { box-shadow: 0 0 0 9999px #0005; }
+.walkthrough-guide { position: fixed; z-index: 61; width: min(280px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: 20px; background: #171717; color: var(--text); border: 1px solid #727272; border-radius: 8px; box-shadow: 0 12px 40px #000a; }
+.guide-progress { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 10px; letter-spacing: .06em; margin-bottom: 14px; font-variant-numeric: tabular-nums; }
+.walkthrough-guide h2 { font-size: 17px; margin-bottom: 10px; }
+.walkthrough-guide p { font-size: 13px; line-height: 1.65; color: #d1d1d1; }
+.guide-actions { display: flex; flex-wrap: wrap; gap: 4px; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--border); }
+.guide-actions button { min-height: 32px; padding: 4px 6px; color: var(--muted); font-size: 11px; }
+.walkthrough-guide .guide-recovery { color: var(--warn); }
