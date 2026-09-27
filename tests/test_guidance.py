@@ -1,4 +1,5 @@
 import json
+import re
 import time
 
 import pytest
@@ -189,6 +190,12 @@ def test_guidance_provider_schema_matches_requested_mode(monkeypatch, mode, evid
         assert fields["explanation"].get("type") == ("string" if mode != "hint" or evidence_step else "null")
         if mode != "hint" or evidence_step:
             assert fields["explanation"].get("minLength", 0) >= 1
+            # Pronoun "one" was still emitted by the live provider despite the
+            # qualitative-only prompt, then rejected by the claims guard.
+            pattern = fields["explanation"].get("pattern", "")
+            assert re.search(pattern, "This approach requires adding one.") is None
+            assert re.search(pattern, "One cache handles repeated reads.") is None
+            assert re.search(pattern, payload["explanation"]) is not None
         assert fields["authored_refs"]["items"].get("enum") == context["authored_refs"]
         if mode == "hint":
             assert fields["question"].get("minLength", 0) >= 1

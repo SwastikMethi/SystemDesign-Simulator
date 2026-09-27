@@ -47,7 +47,7 @@ async function learnerJourney(page: Page, testInfo: TestInfo, width: number, hei
   await expect(reference).toContainText('synchronous')
   await reference.getByRole('button', { name: 'Close', exact: true }).click()
   await expect(page.locator('.revision-badge')).toHaveText(revisionBefore!)
-  await page.getByRole('tab', { name: 'Results', exact: true }).click()
+  await page.getByRole('tab', { name: /^Results/ }).click()
   await expect(page.locator('.run-control')).toHaveText(resultBefore!)
   // Supply a separately saved alternative for the comparison; revealing never applies it.
   const fixture = await (await page.request.get('/api/v1/challenges/product-catalogue/fixtures/reference')).json()
