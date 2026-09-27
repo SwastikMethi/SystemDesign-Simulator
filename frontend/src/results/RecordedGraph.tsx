@@ -12,6 +12,8 @@ type Props = {
   timeUs: number
   playing?: boolean
   reducedMotion?: boolean
+  label?: string
+  caption?: string
 }
 type Change = 'added' | 'removed' | 'changed' | 'same'
 type GraphNode = Node<{ design: DesignNode; state?: Record<string, number>; change: Change; changes: string[]; event?: string }, 'recorded'>
@@ -73,7 +75,7 @@ function RecordedEdge({ sourceX, sourceY, targetX, targetY, markerEnd, data }: E
 const nodeTypes: NodeTypes = { recorded: RecordedNode }
 const edgeTypes = { recorded: RecordedEdge }
 
-export function RecordedGraph({ design, baseline, snapshot, trace, timeUs, playing = false, reducedMotion = false }: Props) {
+export function RecordedGraph({ design, baseline, snapshot, trace, timeUs, playing = false, reducedMotion = false, label = 'Recorded architecture', caption }: Props) {
   const { nodes, edges, descriptions, currentEvent } = useMemo(() => {
     const priorNodes = new Map(baseline?.nodes.map(node => [node.id, node]) || [])
     const priorEdges = new Map(baseline?.edges.map(edge => [edge.id, edge]) || [])
@@ -125,14 +127,14 @@ export function RecordedGraph({ design, baseline, snapshot, trace, timeUs, playi
     })
   }, [nodes, setNodes])
 
-  return <section className={`recorded-graph ${playing ? 'recorded-playing' : ''}`} aria-label="Recorded architecture">
+  return <section className={`recorded-graph ${playing ? 'recorded-playing' : ''}`} aria-label={label}>
     <div className="recorded-canvas" aria-hidden="true">
       <ReactFlow key={`${design.revision_id}:${baseline?.revision_id || ''}`} nodes={renderedNodes} onNodesChange={onNodesChange} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} fitView fitViewOptions={{ padding: .16 }} minZoom={.25} maxZoom={1.5} nodesDraggable={false} nodesConnectable={false} elementsSelectable={false} zoomOnDoubleClick={false} proOptions={{ hideAttribution: true }}>
         <Background color="var(--grid)" gap={20} size={1} />
       </ReactFlow>
     </div>
     <div className="recorded-legend" aria-label="Architecture legend">
-      <span>Recorded revision {design.revision_id}</span>
+      <span>{caption ?? `Recorded revision ${design.revision_id}`}</span>
       <span>Drag canvas to inspect connections</span>
       {baseline && <><span className="recorded-added">+ Added</span><span className="recorded-removed">− Removed</span><span className="recorded-changed">~ Changed</span></>}
       {trace && <span>{trace.operation_id} · {trace.request_id} · {Math.max(0, timeUs / 1000).toFixed(2)} ms{currentEvent ? ` · ${currentEvent}` : ''}</span>}

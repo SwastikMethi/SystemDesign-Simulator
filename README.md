@@ -40,7 +40,7 @@ Results automatically select a recorded request. **Teaching pace** slows its eve
 1. Open **Product catalogue**, inspect the requirements, and start with its initial design.
 2. Use **Preview** for a short experiment, then **Assess design** for all required scenarios and five seeds. Preview cannot earn completion.
 3. Inspect a failed requirement and its trace or aggregate evidence. Playback only reads saved results.
-4. Change the architecture or reveal the reference after an attempt. Compare the saved revision with the immutable assessed baseline.
+4. Use **View reference solution** in Requirements or the AI coach to inspect an architecture, its settings and reasoning, even before a run. The preview is read-only and preserves your draft. Make your own changes, then compare the saved revision with the immutable assessed baseline.
 5. Inspect both improvements and regressions, adopt a revision explicitly, and export the evidence from saved work.
 
 Edits create unassessed changes; they never rewrite an earlier result. Comparisons use the same incoming workload and rank passing alternatives by fictional credits/hour. Equal-cost alternatives remain tied. A failed or interrupted run cannot complete a challenge.
@@ -55,7 +55,7 @@ export AISD_AI_MODEL='your-model-id'
 export AISD_AI_API_KEY='your-key'
 ```
 
-Use an OpenAI-compatible Chat Completions endpoint with JSON-schema response support. Provider calls require an explicit guidance or review action and consent. Explain and Hint use a saved draft and authored challenge context; reviews use recorded results. The key stays on the server. AI never changes the deterministic verdict, and a proposed patch must pass the same validation as a manual edit. Missing usage or provider cost remains unknown. Invalid responses retain their errors for inspection.
+Use an OpenAI-compatible Chat Completions endpoint with JSON-schema response support. Provider calls require an explicit guidance or review action and consent. Explain, Hint and Answer use a saved draft and authored challenge context; reviews use recorded results. Choose **Answer → Show answer** for direct guidance, or **Show answer** below a hint to answer that specific question. Answers also use the authored reference explanation. Reference previews work without AI. The key stays on the server. AI never changes the deterministic verdict, and a proposed patch must pass the same validation as a manual edit. Missing usage or provider cost remains unknown. Invalid responses retain their errors for inspection.
 
 ## Verification
 

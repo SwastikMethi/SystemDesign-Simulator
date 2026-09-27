@@ -22,6 +22,7 @@ export type Comparison = S['ComparisonRecord']
 export type CollectionItem = S['CollectionItem']
 export type SavedSnapshot = S['SavedSnapshot']
 export type Guidance = S['GuidanceRecord']
+export type ReferenceAnswer = S['ReferenceAnswer']
 
 const base = '/api/v1'
 
@@ -41,6 +42,7 @@ export const api = {
   challenges: () => request<S['ChallengeList']>('/challenges'),
   challenge: (id: string) => request<Challenge>(`/challenges/${encodeURIComponent(id)}`),
   fixture: (id: string, name: 'initial' | 'reference') => request<Design>(`/challenges/${encodeURIComponent(id)}/fixtures/${name}`),
+  reference: (id: string) => request<ReferenceAnswer>(`/challenges/${encodeURIComponent(id)}/reference`),
   validate: (challenge: Challenge, nodes: DesignNode[], edges: DesignEdge[]) => request<Validation>('/designs/validate', json({ challenge_id: challenge.challenge_id, challenge_version: challenge.version, nodes, edges })),
   createDesign: (challenge: Challenge, nodes: DesignNode[], edges: DesignEdge[]) => request<S['DesignCreated']>('/designs', json({ challenge_id: challenge.challenge_id, challenge_version: challenge.version, nodes, edges })),
   createRevision: (designId: string, parentId: string, nodes: DesignNode[], edges: DesignEdge[]) => request<S['DesignCreated']>(`/designs/${encodeURIComponent(designId)}/revisions`, json({ parent_revision_id: parentId, nodes, edges })),

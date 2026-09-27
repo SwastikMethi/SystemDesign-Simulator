@@ -310,6 +310,9 @@ summary { cursor: pointer; }
 .guidance-answer { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
 .guidance-answer h3 { margin-top: 16px; }
 .guidance-answer .secondary { margin-top: 16px; }
+.guidance-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.guidance-source { margin-top: 16px; padding: 12px 16px; background: var(--bg); border-left: 2px solid var(--control-border); }
+.guidance-source p { margin: 6px 0 0; }
 
 /* Local history, feedback and native dialogs */
 .history-table .table-head, .history-row { grid-template-columns: 48px minmax(240px, 2fr) 160px 120px 120px; min-width: 820px; }
@@ -334,6 +337,18 @@ summary { cursor: pointer; }
 .modal li { padding-left: 4px; margin-bottom: 12px; }
 .modal.disclosure button { margin-right: 8px; }
 .guidance-modal { width: 540px; }
+.reference-modal { width: 1000px; }
+.reference-modal > section { margin-top: 24px; }
+.reference-modal .recorded-canvas { height: clamp(280px, 38vh, 420px); }
+.reference-explanation { max-width: 80ch; }
+.reference-components { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+.reference-component { min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 6px; }
+.reference-component h4, .reference-component p { margin: 0 0 8px; }
+.reference-component dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 12px; font-size: 13px; }
+.reference-component dd { min-width: 0; }
+.reference-connections ul { list-style: none; padding: 0; }
+.reference-connections li { display: flex; flex-wrap: wrap; gap: 4px 20px; justify-content: space-between; padding: 12px 0; border-top: 1px solid var(--border); }
+.reference-connections span { color: var(--muted); }
 .settings dl { grid-template-columns: 1fr 1fr; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
 @media (max-width: 1279px) {

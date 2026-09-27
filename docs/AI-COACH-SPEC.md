@@ -10,7 +10,7 @@ The application remains usable without an AI provider. Show deterministic findin
 
 ## 2. Provider boundary
 
-Use a server-side adapter for review, bounded patch suggestions, and pre-run guidance (Explain/Hint). These operations share the provider transport, timeout, retry and metadata rules. Configuration includes provider/base URL, model ID and credential reference. Provider choice is left configurable because the user's available endpoint is not fixed for this project.
+Use a server-side adapter for review, bounded patch suggestions, and pre-run guidance (Explain/Hint/Answer). These operations share the provider transport, timeout, retry and metadata rules. Configuration includes provider/base URL, model ID and credential reference. Provider choice is left configurable because the user's available endpoint is not fixed for this project.
 
 Record prompt version, provider/model identifier, timestamps, latency, raw response, parsed response and validation errors. Token/currency fields remain null if not returned or reliably calculable. Do not mix provider spending with infrastructure credits.
 
@@ -67,11 +67,15 @@ The comparison objective defaults to minimum credits/hour among fully passing ca
 
 **Hint:** start with a question, then point to evidence on request. Avoid immediately handing over a complete answer.
 
+**Answer:** give direct qualitative guidance when the learner explicitly chooses Show answer. Answer the selected saved hint when supplied, otherwise the entered focus or the challenge. Use the authored reference explanation as context. Require a nonempty explanation, no opening question, and no hint evidence step; retain the restrictions on invented measurements and assessment verdicts.
+
+**Reference solution:** show the existing reference architecture, settings, operation connections and authored explanation in a read-only preview. This is available on explicit reveal before a run and without an AI provider. Viewing a reference does not save or replace the draft, reset undo or lesson progress, change results, or complete the exercise. It describes an acceptable approach rather than a mandatory topology.
+
 **Review:** explain observed failures after assessment.
 
 **Experiment:** propose and test a change. Keep component/route edits inspectable.
 
-Explain and Hint are available for a saved, schema-safe draft, including an incomplete architecture. They send authored challenge/profile context and the frozen design revision, with no invented run or measured outcomes. Label this context as authored rather than observed. Hint initially returns a question; the learner explicitly requests the evidence step. Save the guidance, source revision, provider metadata and validation errors independently of simulation results. The same explicit consent and provider-unavailable behavior applies as for reviews.
+Explain, Hint and Answer are available for a saved, schema-safe draft, including an incomplete architecture. They send authored challenge/profile context and the frozen design revision, with no invented run or measured outcomes. Label this context as authored rather than observed. Hint initially returns a question; the learner explicitly requests the evidence step. Answer also sends the reference explanation and, when selected, the hint question and explanation resolved by the server. The optional source_guidance_id must identify a completed hint in the same design and revision; retries retain that source. Save the guidance, source revision, provider metadata and validation errors independently of simulation results. The same explicit consent and provider-unavailable behavior applies as for reviews.
 
 Suggested copy: “The database had a growing waiting queue during the burst. Adding app instances might increase pressure on it. Compare that change with caching repeated reads.” Use conditional language until the comparison exists.
 
