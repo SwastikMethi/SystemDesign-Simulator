@@ -55,7 +55,7 @@ The challenge library opens into a desktop-first canvas. A requirements panel re
 
 Quick preview gives immediate feedback but cannot mark a challenge complete. Assess design runs the full versioned suite. The results panel shows requirement outcomes before cost/latency comparisons and AI advice.
 
-AI hints are opt-in. Before a first attempt, offer questions and explanations; reveal a complete proposed design only on an explicit learner action. The user may inspect a reference approach after an attempt. It is one acceptable approach, not an answer key the learner must match.
+AI hints are opt-in. Offer questions and explanations, with direct AI answers available through an explicit Show answer action. View reference solution reveals an architecture, settings, and authored reasoning on demand, including before a first attempt and without AI. This read-only preview preserves the learner's draft and progress. It is one acceptable approach, not an answer key the learner must match; revealing it does not complete the exercise.
 
 ## 7. Comparison behavior
 
