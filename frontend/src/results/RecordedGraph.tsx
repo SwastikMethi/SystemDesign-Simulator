@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { Background, BaseEdge, Handle, Position, ReactFlow, getStraightPath, type Edge, type EdgeProps, type Node, type NodeProps, type NodeTypes } from '@xyflow/react'
+import { useLayoutEffect, useMemo } from 'react'
+import { Background, BaseEdge, Handle, Position, ReactFlow, getStraightPath, useNodesState, type Edge, type EdgeProps, type Node, type NodeProps, type NodeTypes } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import type { Design, DesignEdge, DesignNode, Snapshot, Trace } from '../api/client'
 import './RecordedGraph.css'
@@ -116,10 +116,18 @@ export function RecordedGraph({ design, baseline, snapshot, trace, timeUs, playi
     const currentEvent = latest ? `${words(latest.event)}${typeof latest.details?.status === 'string' ? ` · ${latest.details.status}` : ''}` : undefined
     return { nodes: graphNodes, edges: graphEdges, descriptions, currentEvent }
   }, [design, baseline, snapshot, trace, timeUs, reducedMotion])
+  const [renderedNodes, setNodes, onNodesChange] = useNodesState(nodes)
+  useLayoutEffect(() => {
+    setNodes(previous => {
+      const measured = new Map(previous.map(node => [node.id, node.measured]))
+      // Keep React Flow's measurements when animation changes node data.
+      return nodes.map(node => ({ ...node, measured: measured.get(node.id) }))
+    })
+  }, [nodes, setNodes])
 
   return <section className={`recorded-graph ${playing ? 'recorded-playing' : ''}`} aria-label="Recorded architecture">
     <div className="recorded-canvas" aria-hidden="true">
-      <ReactFlow key={`${design.revision_id}:${baseline?.revision_id || ''}`} nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} fitView fitViewOptions={{ padding: .16 }} minZoom={.25} maxZoom={1.5} nodesDraggable={false} nodesConnectable={false} elementsSelectable={false} zoomOnDoubleClick={false} proOptions={{ hideAttribution: true }}>
+      <ReactFlow key={`${design.revision_id}:${baseline?.revision_id || ''}`} nodes={renderedNodes} onNodesChange={onNodesChange} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} fitView fitViewOptions={{ padding: .16 }} minZoom={.25} maxZoom={1.5} nodesDraggable={false} nodesConnectable={false} elementsSelectable={false} zoomOnDoubleClick={false} proOptions={{ hideAttribution: true }}>
         <Background color="var(--grid)" gap={20} size={1} />
       </ReactFlow>
     </div>

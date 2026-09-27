@@ -7,3 +7,4 @@
 .guide-actions { display: flex; flex-wrap: wrap; gap: 4px; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--border); }
 .guide-actions button { min-height: 32px; padding: 4px 6px; color: var(--muted); font-size: 11px; }
 .walkthrough-guide .guide-recovery { color: var(--warn); }
+@media (min-width: 900px) { .replay-workspace.guided-replay { grid-template-columns: minmax(0, 1fr) 280px; } }
