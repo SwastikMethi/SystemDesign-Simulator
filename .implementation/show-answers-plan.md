@@ -31,3 +31,12 @@ Interfaces: consume the Task 1 API and generated types. Source answer takes its 
 ## Review focus
 
 Check source ownership/revision validation, provider schema matching Answer, stale polling and mode changes, retry context, reference modal focus return, no draft/run/lesson mutations, all six authored explanations matching their fixtures, and old guidance record compatibility. Do not read or include .env or .env.example secrets in review output.
+
+## Completion
+
+Implemented and independently reviewed on 2026-09-27; no review findings remain.
+
+- Backend: `.venv/bin/python -m pytest -q` — 103 passed; existing Starlette deprecation warning.
+- Frontend: 13 unit tests and 22 browser tests passed; production build passed with the existing bundle-size advisory.
+- Live provider: standalone and hint-specific answers passed the existing response validation.
+- Local backend restarted with the existing environment; health and reference endpoint checks passed.
