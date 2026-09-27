@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play, Save } from 'lucide-react'
 import type { Challenge, Case, Design, Metric, Outcome, Results, Run, Snapshot, Trace } from '../api/client'
 import { api } from '../api/client'
 import { RecordedGraph } from './RecordedGraph'
 import { evidenceTarget, outcomeKey } from './evidence'
+import { createTimeline, explainEvent, playheadAt, recordedAt } from './replay'
 
 type Props = { challenge: Challenge; run: Run; results: Results | null; onError: (message: string) => void }
 const words = (value: string) => value.replaceAll('_', ' ')
@@ -20,28 +21,53 @@ export function ResultsView({ challenge, run, results, onError }: Props) {
   const [snapshots, setSnapshots] = useState<Snapshot[]>([])
   const [timeUs, setTimeUs] = useState(0)
   const [playing, setPlaying] = useState(false)
-  const [speed, setSpeed] = useState(1)
+  const [speed, setSpeed] = useState('teaching')
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const [failureWindow, setFailureWindow] = useState('')
+  const [recordingLoading, setRecordingLoading] = useState(false)
+  const [recordingError, setRecordingError] = useState('')
+  const [snapshotError, setSnapshotError] = useState('')
+  const [designError, setDesignError] = useState('')
+  const [retry, setRetry] = useState(0)
   const selectedCase: Case | undefined = cases.find(c => c.case_id === caseId) || cases[0]
   const selectedOutcome = selectedCase?.requirement_outcomes.find(o => outcomeKey(o) === selectedOutcomeKey)
   const displayedMetrics = Object.entries(selectedCase?.operation_metrics || {}).filter(([operation]) => operationId === 'all' || operation === operationId).flatMap(([operation, values]) => Object.entries(values).map(([name, metric]) => ({ operation, name, metric })))
-  const maxTime = Math.max(snapshots.at(-1)?.time_us || 0, trace?.events.at(-1)?.time_us || 0)
+  const times = useMemo(() => {
+    if (!traceId) return snapshots.map(item => item.time_us)
+    const end = trace?.events.at(-1)?.time_us || 0
+    // Include recorded link wait/travel boundaries so even a short transfer after a long queue stays visible.
+    return (trace?.events || []).flatMap(event => {
+      if (!['downstream_started', 'response_sent'].includes(event.event)) return [event.time_us]
+      const waitEnd = event.time_us + Number(event.details?.queue_wait_us || 0)
+      const travelEnd = waitEnd + Number(event.details?.transfer_us || 0) + Number(event.details?.propagation_us || 0)
+      return [event.time_us, waitEnd, travelEnd].filter(time => time <= end)
+    })
+  }, [traceId, trace, snapshots])
+  const timeline = useMemo(() => createTimeline(times, Boolean(traceId) && speed === 'teaching'), [times, speed, traceId])
+  const minTime = timeline[0]?.timeUs || 0
+  const maxTime = timeline.at(-1)?.timeUs || 0
+  const currentTime = useRef(timeUs)
+  currentTime.current = timeUs
+  const ready = Boolean(design && timeline.length && !recordingLoading && !(traceId ? recordingError : snapshotError))
+  const currentEvent = trace?.events.filter(event => event.time_us <= timeUs).at(-1)
   const snapshot = useMemo(() => [...snapshots].reverse().find(item => item.time_us <= timeUs) || snapshots[0], [snapshots, timeUs])
   const markers = useMemo(() => (trace?.events || []).slice(0, 100), [trace])
 
   useEffect(() => {
     let active = true
-    setDesign(null)
-    api.revision(run.design_id, run.revision_id).then(value => { if (active) setDesign(value) }).catch(error => { if (active) onError(error.message) })
+    setDesign(null); setDesignError('')
+    api.revision(run.design_id, run.revision_id).then(value => { if (active) setDesign(value) }).catch(error => { if (active) setDesignError(error.message) })
     return () => { active = false }
-  }, [run.design_id, run.revision_id])
+  }, [run.design_id, run.revision_id, retry])
+  useEffect(() => {
+    setTimeUs(0); setPlaying(false); setTraceId(selectedCase?.trace_refs[0] || ''); setTrace(null); setFailureWindow('')
+  }, [run.run_id, selectedCase?.case_id])
   useEffect(() => {
     let active = true
-    setSnapshots([]); setTimeUs(0); setPlaying(false); setTraceId(''); setTrace(null); setFailureWindow('')
-    if (selectedCase) api.snapshots(run.run_id, selectedCase.case_id).then(page => { if (active) setSnapshots(page.items) }).catch(error => { if (active) onError(error.message) })
+    setSnapshots([]); setSnapshotError('')
+    if (selectedCase) api.snapshots(run.run_id, selectedCase.case_id).then(page => { if (active) setSnapshots(page.items) }).catch(error => { if (active) setSnapshotError(error.message) })
     return () => { active = false }
-  }, [run.run_id, selectedCase?.case_id])
+  }, [run.run_id, selectedCase?.case_id, retry])
   useEffect(() => {
     if (!selectedCase || !selectedOutcome) return
     const target = evidenceTarget(selectedCase, selectedOutcome)
@@ -49,21 +75,27 @@ export function ResultsView({ challenge, run, results, onError }: Props) {
   }, [run.run_id, selectedCase?.case_id, selectedOutcomeKey])
   useEffect(() => {
     let active = true
-    setTrace(null)
-    if (selectedCase && traceId) api.trace(run.run_id, selectedCase.case_id, traceId).then(item => { if (active) { setTrace(item); setTimeUs(item.events[0]?.time_us || 0) } }).catch(error => { if (active) onError(error.message) })
+    setTrace(null); setPlaying(false); setRecordingError(''); setRecordingLoading(Boolean(traceId))
+    if (selectedCase && traceId && selectedCase.trace_refs.includes(traceId)) api.trace(run.run_id, selectedCase.case_id, traceId).then(item => {
+      if (active) { setTrace(item); setTimeUs(item.events[0]?.time_us || 0); setRecordingLoading(false) }
+    }).catch(error => { if (active) { setRecordingError(error.message); setRecordingLoading(false) } })
+    else setRecordingLoading(false)
     return () => { active = false }
-  }, [run.run_id, selectedCase?.case_id, traceId])
+  }, [run.run_id, selectedCase?.case_id, traceId, retry])
   useEffect(() => {
-    if (!playing || !maxTime) return
-    let frame = 0, last = 0
+    if (!playing || !ready || maxTime <= minTime) return
+    let frame = 0
+    const start = performance.now(), offset = playheadAt(timeline, currentTime.current)
+    const rate = speed === 'teaching' ? 1 : Number(speed)
     const tick = (now: number) => {
-      if (last) setTimeUs(value => { const next = Math.min(maxTime, value + (now-last) * 1000 * speed); if (next >= maxTime) setPlaying(false); return next })
-      last = now
+      const next = recordedAt(timeline, offset + (now - start) * rate)
+      setTimeUs(next)
+      if (next >= maxTime) { setPlaying(false); return }
       frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [playing, maxTime, speed])
+  }, [playing, ready, timeline, minTime, maxTime, speed])
 
   const inspect = (outcome: Outcome) => {
     setSelectedOutcomeKey(outcomeKey(outcome))
@@ -80,7 +112,7 @@ export function ResultsView({ challenge, run, results, onError }: Props) {
   }
   const step = (direction: -1 | 1) => {
     setPlaying(false)
-    const times = [...new Set([...snapshots, ...(trace?.events || [])].map(item => item.time_us))].sort((a,b) => a-b)
+    const times = timeline.map(point => point.timeUs)
     const target = direction > 0 ? times.find(value => value > timeUs) : times.filter(value => value < timeUs).at(-1)
     if (target !== undefined) setTimeUs(target)
   }
@@ -95,12 +127,16 @@ export function ResultsView({ challenge, run, results, onError }: Props) {
       {selectedOutcome && <section className="evidence-section"><h3>Evidence for {selectedOutcome.requirement_id}{selectedOutcome.operation_id ? ` · ${selectedOutcome.operation_id}` : ''}</h3><p>{challenge.requirements.find(r => r.id === selectedOutcome.requirement_id)?.description}</p><div className="evidence-grid">{(selectedOutcome?.evidence_ids || []).map(id => { const evidence = selectedCase?.evidence.find(item => item.evidence_id === id); return <div className="evidence-item" key={id}><strong>{id}</strong><span>{evidence ? `${evidence.value ?? 'Unavailable'} ${evidence.unit} · ${evidence.sample_count} samples` : 'Source artifact'}</span><small>{evidence?.scope || ''}</small></div> })}</div>{failureWindow && <p>{failureWindow}</p>}<p className="muted">An aggregate requirement is supported by its scenario window and measurements; one request alone does not prove the cause.</p></section>}
       <div className="replay-workspace">
       <section className="playback"><div className="panel-heading"><div><h3>Replay</h3><p>{selectedCase?.scenario_id} · seed {selectedCase?.seed} · virtual time {(timeUs/1_000_000).toFixed(2)} s</p></div><button className="secondary" disabled={!snapshot} onClick={saveEvidence}><Save size={15}/> Save moment</button></div>
-        <div className="playback-controls"><button aria-label="Previous frame" disabled={!snapshot || timeUs <= 0} onClick={() => step(-1)}><ChevronLeft size={18}/></button><button aria-label={playing ? 'Pause replay' : 'Play replay'} disabled={!maxTime} onClick={() => setPlaying(!playing)}>{playing ? <Pause size={18}/> : <Play size={18}/>}</button><button aria-label="Next frame" disabled={!snapshot || timeUs >= maxTime} onClick={() => step(1)}><ChevronRight size={18}/></button><input aria-label="Replay position" type="range" min="0" max={maxTime} value={timeUs} onChange={e => { setPlaying(false); setTimeUs(Number(e.target.value)) }}/><label>Speed <select value={speed} onChange={e => setSpeed(Number(e.target.value))}>{[.5,1,2,4].map(value => <option key={value} value={value}>{value}×</option>)}</select></label><label className="check"><input type="checkbox" checked={reducedMotion} onChange={e => setReducedMotion(e.target.checked)}/> Reduced motion</label></div>
-        <p className="playback-note">1× follows recorded virtual time in real time. Counts come from snapshots; selecting a trace follows its recorded events.</p>
+        <div className="playback-controls"><button aria-label="Previous frame" disabled={!ready || timeUs <= minTime} onClick={() => step(-1)}><ChevronLeft size={18}/></button><button data-guide="play" aria-label={playing ? 'Pause replay' : 'Play replay'} disabled={!ready || maxTime <= minTime} onClick={() => { if (!playing && timeUs >= maxTime) setTimeUs(minTime); setPlaying(!playing) }}>{playing ? <Pause size={18}/> : <Play size={18}/>}</button><button aria-label="Next frame" disabled={!ready || timeUs >= maxTime} onClick={() => step(1)}><ChevronRight size={18}/></button><input aria-label="Replay position" type="range" min={minTime} max={maxTime} step="any" disabled={!ready} value={Math.max(minTime, Math.min(maxTime, timeUs))} onChange={e => { setPlaying(false); setTimeUs(Number(e.target.value)) }}/><label>Speed <select value={traceId ? speed : speed === 'teaching' ? '1' : speed} onChange={e => setSpeed(e.target.value)}>{traceId && <option value="teaching">Teaching pace</option>}{[.5,1,2,4].map(value => <option key={value} value={value}>{value}× real time</option>)}</select></label><label className="check"><input type="checkbox" checked={reducedMotion} onChange={e => setReducedMotion(e.target.checked)}/> Reduced motion</label></div>
+        <p className="playback-note">{traceId && speed === 'teaching' ? 'Animation slowed for explanation. Timestamps and measurements show the actual recorded time.' : '1× follows recorded virtual time in real time. Counts come from snapshots.'}{reducedMotion && ' Motion is off; use Next frame to follow each event.'}</p>
+        {(designError || recordingError || (!traceId && snapshotError)) ? <p role="alert" className="notice">Recording unavailable: {designError || recordingError || snapshotError} <button onClick={() => setRetry(value => value + 1)}>Retry recording</button></p>
+          : recordingLoading || !design ? <p role="status">Loading recording…</p>
+          : !timeline.length ? <p className="notice">{traceId ? 'This request has no recorded events. Choose another request or System overview.' : 'No recorded snapshots are available for this case.'}</p> : null}
+        {trace && design && <p className="replay-explanation" data-guide="flow" role="status">{explainEvent(currentEvent, design)}</p>}
         {design && <RecordedGraph design={design} snapshot={snapshot} trace={trace || undefined} timeUs={timeUs} playing={playing} reducedMotion={reducedMotion}/>}
-        {trace && <div className="marker-track"><span>Recorded trace events</span><div>{markers.map((event,i) => <button title={`${words(event.event)} at ${event.time_us} µs`} key={i} className="marker" style={{ left: `${100*event.time_us/Math.max(1,maxTime)}%` }} onClick={() => { setPlaying(false); setTimeUs(event.time_us) }}/>)}</div><small>{trace.events.length > 100 ? 'Sampled traffic · first 100 markers shown' : `${markers.length} recorded markers`}{reducedMotion ? ' · motion disabled' : ''}</small></div>}
+        {trace && <div className="marker-track"><span>Recorded trace events</span><div>{markers.map((event,i) => <button title={`${words(event.event)} at ${event.time_us} µs`} key={i} className="marker" style={{ left: `${100*(event.time_us-minTime)/Math.max(1,maxTime-minTime)}%` }} onClick={() => { setPlaying(false); setTimeUs(event.time_us) }}/>)}</div><small>{trace.events.length > 100 ? 'Sampled traffic · first 100 markers shown' : `${markers.length} recorded markers`}{reducedMotion ? ' · motion disabled' : ''}</small></div>}
       </section>
-      <section className="trace-section"><h3>Recorded request path</h3><label>Trace <select value={traceId} onChange={e => setTraceId(e.target.value)}><option value="">Choose recorded trace</option>{selectedCase?.trace_refs.map(ref => <option key={ref} value={ref}>{ref}</option>)}</select></label>{trace && <><p>{trace.operation_id} · request {trace.request_id}</p><ol className="trace-events">{trace.events.map((event,i) => <li key={i}><button className="text-button" onClick={() => { setPlaying(false); setTimeUs(event.time_us) }}><time>{(event.time_us/1000).toFixed(2)} ms</time><strong>{words(event.event)}</strong><span>{event.node_id || event.edge_id || ''}</span></button></li>)}</ol></>}</section>
+      <section className="trace-section"><h3>Recorded request path</h3><label>Trace <select value={traceId} onChange={e => { setPlaying(false); setTimeUs(0); setTraceId(e.target.value) }}><option value="">System overview</option>{selectedCase?.trace_refs.map((ref, index) => <option key={ref} value={ref}>Request {index + 1} · {ref}</option>)}</select></label>{!selectedCase?.trace_refs.length && <p>No individual request recordings are available. System overview shows any saved snapshots.</p>}{trace && <><p>{trace.operation_id} · request {trace.request_id}</p><ol className="trace-events">{trace.events.map((event,i) => <li key={i}><button className={`text-button ${currentEvent === event ? 'active' : ''}`} aria-current={currentEvent === event ? 'step' : undefined} onClick={() => { setPlaying(false); setTimeUs(event.time_us) }}><time>{(event.time_us/1000).toFixed(2)} ms</time><strong>{words(event.event)}</strong><span>{design?.nodes.find(node => node.id === event.node_id)?.label || event.node_id || event.edge_id || ''}</span></button></li>)}</ol></>}</section>
       </div>
       <details className="metric-section">
         <summary>Operation metrics <span>{displayedMetrics.length} measurements</span></summary>

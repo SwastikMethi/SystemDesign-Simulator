@@ -408,3 +408,5 @@ summary { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+.replay-explanation { margin: 12px 0; padding: 12px 16px; border-left: 2px solid var(--text); background: var(--surface); color: var(--text); line-height: 1.6; min-height: 52px; }
+.trace-events button.active { color: var(--text); background: var(--surface-hover, var(--surface)); border-left: 2px solid var(--text); }

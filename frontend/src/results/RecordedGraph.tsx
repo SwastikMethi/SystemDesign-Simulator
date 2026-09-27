@@ -81,7 +81,7 @@ export function RecordedGraph({ design, baseline, snapshot, trace, timeUs, playi
     const currentEdgeIds = new Set(design.edges.map(edge => edge.id))
     const events = trace?.events.filter(event => event.time_us <= timeUs) || []
     const latest = events.at(-1)
-    const activeNode = latest?.node_id || undefined
+    const activeNode = latest?.node_id || (latest?.event === 'terminal_outcome' ? design.nodes.find(node => node.type === 'client')?.id : undefined)
     const activeEdge = latest?.edge_id || undefined
     const transfer = activeEdge && latest && (latest.event === 'downstream_started' || latest.event === 'response_sent') ? latest : undefined
     const wait = transfer ? Number(transfer.details?.queue_wait_us || 0) : 0
@@ -119,7 +119,7 @@ export function RecordedGraph({ design, baseline, snapshot, trace, timeUs, playi
 
   return <section className={`recorded-graph ${playing ? 'recorded-playing' : ''}`} aria-label="Recorded architecture">
     <div className="recorded-canvas" aria-hidden="true">
-      <ReactFlow key={`${design.revision_id}:${baseline?.revision_id || ''}`} nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} fitView fitViewOptions={{ padding: .16 }} minZoom={.7} maxZoom={1.5} nodesDraggable={false} nodesConnectable={false} elementsSelectable={false} zoomOnDoubleClick={false} proOptions={{ hideAttribution: true }}>
+      <ReactFlow key={`${design.revision_id}:${baseline?.revision_id || ''}`} nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} fitView fitViewOptions={{ padding: .16 }} minZoom={.25} maxZoom={1.5} nodesDraggable={false} nodesConnectable={false} elementsSelectable={false} zoomOnDoubleClick={false} proOptions={{ hideAttribution: true }}>
         <Background color="var(--grid)" gap={20} size={1} />
       </ReactFlow>
     </div>
