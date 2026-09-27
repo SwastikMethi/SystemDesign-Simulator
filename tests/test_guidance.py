@@ -163,6 +163,46 @@ def test_guidance_adapter_marks_hostile_label_untrusted_without_run_evidence(mon
     assert usage is None and latency >= 0
 
 
+@pytest.mark.parametrize("mode,evidence_step", [("hint", False), ("hint", True), ("explain", False)])
+def test_guidance_provider_schema_matches_requested_mode(monkeypatch, mode, evidence_step):
+    import httpx
+    import backend.coach as coach
+    from backend.content import load_challenge
+
+    design = load_fixture("product-catalogue", "initial")
+    challenge = load_challenge(design.challenge_id)
+    payload = {
+        "question": "Where should the request go next?" if mode == "hint" else None,
+        "explanation": "The app service forwards data requests to storage." if mode == "explain" or evidence_step else None,
+        "authored_refs": [f"requirement:{challenge.requirements[0].id}"] if evidence_step else [],
+    }
+    actual_client = httpx.AsyncClient
+
+    def handler(request):
+        body = json.loads(request.content)
+        context = json.loads(body["messages"][1]["content"])
+        fields = body["response_format"]["json_schema"]["schema"]["properties"]
+        # A strict provider must be unable to return the observed empty Explain
+        # response or concatenate multiple authored IDs into one reference.
+        assert fields["question"].get("type") == ("string" if mode == "hint" else "null")
+        assert fields["explanation"].get("type") == ("string" if mode == "explain" or evidence_step else "null")
+        if mode == "explain" or evidence_step:
+            assert fields["explanation"].get("minLength", 0) >= 1
+        assert fields["authored_refs"]["items"].get("enum") == context["authored_refs"]
+        if mode == "hint":
+            assert fields["question"].get("minLength", 0) >= 1
+            assert fields["authored_refs"].get("minItems", 0) >= 1 if evidence_step else fields["authored_refs"].get("maxItems") == 0
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(payload)}}]})
+
+    monkeypatch.setattr(coach.httpx, "AsyncClient", lambda: actual_client(transport=httpx.MockTransport(handler)))
+    monkeypatch.setenv("AISD_AI_BASE_URL", "http://127.0.0.1:9999")
+    monkeypatch.setenv("AISD_AI_MODEL", "test")
+    monkeypatch.setenv("AISD_AI_API_KEY", "secret")
+    received, raw, _, _ = coach.request_guidance(challenge, design, mode, None, evidence_step)
+    assert coach.validate_guidance(received, mode, evidence_step, challenge, design).model_dump() == payload
+    assert json.loads(raw) == payload
+
+
 def test_total_deadline_diagnostics_are_saved(tmp_path, monkeypatch):
     import asyncio
     import httpx

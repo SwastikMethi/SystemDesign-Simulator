@@ -8,6 +8,31 @@ const gate = () => {
   return { wait, seen, release, requested }
 }
 
+test('guidance shows each failure once and can retry an explanation', async ({ page }) => {
+  const failure = 'explain requires an explanation and no hint step'
+  const explanation = 'The app service forwards data requests to storage.'
+  let retry = false
+  let record = {}
+  await page.route('**/api/v1/health', route => route.fulfill({ json: { status: 'ok', engine_version: 'test', ai_configured: true, ai_model: 'test' } }))
+  await page.route('**/api/v1/designs/*/guidance', async route => {
+    record = { ...route.request().postDataJSON(), guidance_id: 'test-guidance', design_id: route.request().url().split('/').at(-2), status: retry ? 'completed' : 'failed', error: retry ? null : failure, validation_errors: retry ? [] : [failure, failure], question: null, explanation: retry ? explanation : null, authored_refs: [] }
+    await route.fulfill({ status: 202, json: { guidance_id: 'test-guidance' } })
+  })
+  await page.route('**/api/v1/designs/*/guidance/test-guidance', route => route.fulfill({ json: record }))
+  await page.goto('/')
+  await page.locator('.challenge-card').first().getByRole('button', { name: 'Load starter' }).click()
+  await page.getByRole('dialog', { name: 'Getting started' }).getByRole('button', { name: 'Close', exact: true }).click()
+  await page.getByRole('button', { name: 'AI coach', exact: true }).click()
+  const coach = page.getByRole('dialog', { name: 'AI coach guidance' })
+  await coach.getByRole('button', { name: 'Explain', exact: true }).click()
+  await coach.getByRole('button', { name: 'Explain this design' }).click()
+  await expect(coach.getByText(failure, { exact: true })).toHaveCount(1)
+  retry = true
+  await coach.getByRole('button', { name: 'Explain this design' }).click()
+  await expect(coach.getByText(explanation, { exact: true })).toBeVisible()
+  await expect(coach.getByText(failure, { exact: true })).toHaveCount(0)
+})
+
 // Real catalogue/design endpoints with controlled recorded responses isolate child races.
 // The journey tests separately execute the full real simulation/comparison.
 async function recordedWorkspace(page: Page) {
